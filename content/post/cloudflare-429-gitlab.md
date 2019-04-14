@@ -1,6 +1,6 @@
 ---
 title: "Rant: CloudFlare, GitLab Pages, 429"
-date: 2019-10-25T12:00:00+00:00
+date: 2018-10-25T12:00:00+00:00
 draft: false
 ---
 
