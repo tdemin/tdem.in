@@ -81,3 +81,10 @@ pre {
 footer  {
   text-align: center;
 }
+
+blockquote {
+  font-style: italic;
+  font-size: 1rem;
+  border-left: 2px solid #333;
+  padding-left: 20px;
+}
