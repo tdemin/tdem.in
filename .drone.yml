@@ -8,6 +8,7 @@ steps:
   - name: output
     path: /static
   commands:
+  - rm -rf /static/*
   - hugo -d /static
   - htmlproofer /static --allow-hash-href --check-html --empty-alt-ignore --disable-external
   environment:
