@@ -88,3 +88,11 @@ blockquote {
   border-left: 2px solid #333;
   padding-left: 20px;
 }
+
+img {
+  max-width: 100%;
+}
+
+code {
+  white-space: inherit;
+}
