@@ -1,0 +1,19 @@
+kind: pipeline
+name: hugo build
+
+steps:
+- name: build
+  image: cibuilds/hugo
+  volumes:
+  - name: output
+    path: /static
+  commands:
+  - hugo -d /static
+  - htmlproofer /static --allow-hash-href --check-html --empty-alt-ignore --disable-external
+  environment:
+    HUGO_ENV: production
+
+volumes:
+- name: output
+  host:
+    path: /srv/static/blog.tdem.in

@@ -1,0 +1,12 @@
+baseURL = "https://blog.tdem.in/"
+languageCode = "en-us"
+title = "Timur Demin's Blog"
+theme = "basics"
+
+[author]
+    name = "Timur Demin"
+    email = "me@tdem.in"
+
+[params]
+    author = "Timur Demin"
+    email = "me@tdem.in"
