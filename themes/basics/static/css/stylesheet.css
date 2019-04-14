@@ -96,3 +96,11 @@ img {
 code {
   white-space: inherit;
 }
+
+/* home page fixes */
+
+@media (max-width: 720px) {
+  div.col-sm.post {
+    padding-left: 0px !important;
+  }
+}
