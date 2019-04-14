@@ -1,5 +1,5 @@
 body {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: auto;
     max-width: 50em;
 }
@@ -28,7 +28,7 @@ body {
 }
 
 .date-time-title {
-    font-family: 'Ubuntu Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
 }
 
 .blog-post-content {
@@ -65,7 +65,7 @@ h6  {
 }
 
 code {
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: 'Roboto Mono', monospace;
   white-space: pre;
   overflow-x: auto;
 }
