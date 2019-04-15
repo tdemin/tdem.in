@@ -8,8 +8,10 @@ steps:
   - name: output
     path: /static
   commands:
+  - hugo -d /tmp/static
+  - htmlproofer /tmp/static --allow-hash-href --check-html --empty-alt-ignore --disable-external
   - rm -rf /static/*
-  - hugo -d /static
+  - cp -r /tmp/static /static
   environment:
     HUGO_ENV: production
 
