@@ -11,7 +11,7 @@ steps:
   - hugo -d /tmp/static
   #- htmlproofer /tmp/static --allow-hash-href --check-html --empty-alt-ignore --disable-external
   - rm -rf /static/*
-  - cp -r /tmp/static /static
+  - cp -r /tmp/static/* /static/*
   - chown -R 1000:1000 /static
   environment:
     HUGO_ENV: production
