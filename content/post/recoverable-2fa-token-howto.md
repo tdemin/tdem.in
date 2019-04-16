@@ -4,7 +4,9 @@ date: 2017-10-27T12:00:00+00:00
 draft: false
 ---
 
-![](https://69.media.tumblr.com/2dfce6565e1af513ef972256171edd2b/tumblr_inline_pd7rqjIC7d1vumr7z_540.png)<p style="font-size:8pt;text-align:center;">_Image credit: [Auth0](https://auth0.com/learn/two-factor-authentication/)_</p>
+![](https://69.media.tumblr.com/2dfce6565e1af513ef972256171edd2b/tumblr_inline_pd7rqjIC7d1vumr7z_540.png)
+
+_Image credit: [Auth0](https://auth0.com/learn/two-factor-authentication/)_
 
 So you want to enable two-factor authentication for your online accounts? That’s fairly easy, made relatively painless by Google with its [Authenticator](https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&amp;amp;hl=en). Well, enabling 2FA isn’t the problem. There are other caveats to watch out for.
 
