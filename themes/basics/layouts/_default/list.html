@@ -3,7 +3,7 @@
   <ul class="posts_listing">
     {{ range where .Pages.ByDate.Reverse "Section" "post" }}
     <li>
-      <div class="row" id="posts">
+      <div class="row posts">
         <div class="d-none d-sm-block col-sm-3 date-time-title">
           <time>{{ .Date.Format "02 Jan 2006" }}</time>
         </div>
