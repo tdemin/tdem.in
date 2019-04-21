@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="/css/stylesheet.css">
         <link rel="alternate" type="application/rss+xml" href="/index.xml">{{ if eq .Section "post" }}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="{{ .Title }} - {{ .Site.Author.name }}">
+        <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
         {{ with .Page.Description }}<meta property="og:description" content="{{ .Page.Description }}">{{ end }}
         <meta property="og:url" content="{{ .Permalink }}">
         <meta>{{ end }}{{ if eq (add .Site.BaseURL "/") (add .Permalink "/") }}
