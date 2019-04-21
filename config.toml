@@ -10,3 +10,4 @@ theme = "basics"
 [params]
     author = "Timur Demin"
     email = "me@tdem.in"
+    description = "Random rants on technology, chess, and music"

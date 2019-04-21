@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -7,7 +7,16 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
         <title>{{.Title}}</title>
         <link rel="stylesheet" href="/css/stylesheet.css">
-        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">{{ if eq .Section "post" }}
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="{{ .Title }} - {{ .Site.Author.name }}">
+        {{ with .Page.Description }}<meta property="og:description" content="{{ .Page.Description }}">{{ end }}
+        <meta property="og:url" content="{{ .Permalink }}">
+        <meta>{{ end }}{{ if eq (add .Site.BaseURL "/") (add .Permalink "/") }}
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="{{ .Site.Author.name }}">
+        <meta property="og:description" content="{{ .Site.Params.description }}">
+        <meta property="og:url" content="{{ .Permalink }}">{{ end }}
     </head>
     <body>
       <div class="container-fluid">
