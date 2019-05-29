@@ -91,7 +91,16 @@ blockquote {
 
 img {
   max-width: 100%;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
+.img_subtitle, .quote_subtitle {
+  text-align: center;
+  display: block;
+}
+
 
 code {
   white-space: inherit;
