@@ -11,14 +11,17 @@ with `Win + Shift + Up`:
     global lastWindow
     ToScratchpad()
     {
-        WinGetClass, lastWindow, A
-        WinMinimize, ahk_class %lastWindow%
+        WinGetTitle, lastWindow, A
+        WinMinimize, %lastWindow%
     }
     FromScratchpad()
     {
-        WinActivate, ahk_class %lastWindow%
+        WinActivate, %lastWindow%
     }
     #Down::ToScratchpad()
     #+Up::FromScratchpad()
+
+_Update 06/11/2019_: the script was slightly tweaked to handle apps with more
+than one window better.
 
 [AHK]: https://autohotkey.com "a brilliant program for system automation"
