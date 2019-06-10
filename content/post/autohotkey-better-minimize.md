@@ -12,7 +12,7 @@ with `Win + Shift + Up`:
     ToScratchpad()
     {
         WinGetClass, lastWindow, A
-        WinMinimize, %lastWindow%
+        WinMinimize, ahk_class %lastWindow%
     }
     FromScratchpad()
     {
