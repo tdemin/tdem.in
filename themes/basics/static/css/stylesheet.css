@@ -2,6 +2,7 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: auto;
     max-width: 50em;
+    margin-bottom: 1em;
 }
 
 #page-title {
