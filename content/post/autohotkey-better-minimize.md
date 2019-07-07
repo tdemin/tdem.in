@@ -21,7 +21,27 @@ with `Win + Shift + Up`:
     #Down::ToScratchpad()
     #+Up::FromScratchpad()
 
-_Update 06/11/2019_: the script was slightly tweaked to handle apps with more
-than one window better.
+Now let's go even further and use a stack of windows for that purpose! The next
+snippet saves the list of windows you minimized that way in a stack, and
+restores them in order:
+
+    global lastWindows := Array() ; this line needs to be at the top of the file
+    ToScratchpad(windows)
+    {
+        WinGetTitle, lastWindow, A
+        WinMinimize, %lastWindow%
+        windows.Push(lastWindow)
+    }
+    FromScratchpad(windows)
+    {
+        lastWindow := windows.Pop()
+        WinActivate, %lastWindow%
+    }
+    #Down::ToScratchpad(lastWindows)
+    #+Up::FromScratchpad(lastWindows)
+
+The first line [has to be placed before the first return/hotkey][docs], or it
+won't be executed (and the script will not work).
 
 [AHK]: https://autohotkey.com "a brilliant program for system automation"
+[docs]: https://www.autohotkey.com/docs/Scripts.htm#auto "AHK docs on auto-execute"
