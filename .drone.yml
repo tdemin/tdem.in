@@ -8,11 +8,13 @@ steps:
   - name: output
     path: /static
   commands:
-  - hugo -d /tmp/static
+  - mkdir /tmp/src
+  - cp -r * /tmp/src
+  - hugo -d /tmp/static -s /tmp/src
   - htmlproofer /tmp/static --allow-hash-href --check-html --empty-alt-ignore --disable-external
-  - rm -rf /static/*
-  - cp -r /tmp/static/* /static
-  - chown -R 1000:1000 /static
+  - sudo rm -rf /static/*
+  - sudo cp -r /tmp/static/* /static
+  - sudo chown -R 1000:1000 /static
   environment:
     HUGO_ENV: production
 
