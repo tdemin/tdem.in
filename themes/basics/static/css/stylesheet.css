@@ -99,6 +99,7 @@ img {
 .img_subtitle, .quote_subtitle {
   text-align: center;
   display: block;
+  font-style: italic;
 }
 
 

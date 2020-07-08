@@ -28,7 +28,7 @@ Telegram's secret chats are like OTR in XMPP—an old encryption protocol that d
 
 > OTR has significant usability drawbacks for inter-client mobility. As OTR sessions exist between exactly two clients, the chat history will not be synchronized across other clients of the involved parties. Furthermore, OTR chats are only possible if both participants are currently online, due to how the rolling key agreement scheme of OTR works.
 
-<span class="quote_subtitle">_Introduction to XEP-0384, the motivation to replace OTR_</span>
+<span class="quote_subtitle">Introduction to XEP-0384, the motivation to replace OTR</span>
 
 _Secret chats don't work on Telegram Desktop_. Here comes another problem of the secret chats — they are only available on the mobile phones (and on the Telegram client from App Store). Telegram Desktop, the official Telegram app for Windows, macOS and Linux, doesn't support secret chats, while this feature was first requested at [June 1, 2014](https://github.com/telegramdesktop/tdesktop/issues/5). There were many requests since then ([1](https://github.com/telegramdesktop/tdesktop/issues/118), [2](https://github.com/telegramdesktop/tdesktop/issues/619), [3](https://github.com/telegramdesktop/tdesktop/issues/871), etc), but secret chats are still unimplemented as of Jule 5 in the official desktop app of the messenger which claims itself secure.
 
@@ -43,7 +43,7 @@ Any security protocol should be independently audited to be trusted on being sec
 The lack of winners noted by Pavel Durov is the thing he mostly admires when claiming the protocol security. Why is a marketing promotional better than an independent expert audit which would state things better? We only have to guess and hope the protocol is really secure.
 ![image](https://69.media.tumblr.com/f7b8134db0d7e4c3c24b0d2abe18b248/tumblr_inline_p1m4e1wF0q1vumr7z_540.png)
 
-<span class="img_subtitle">_[xkcd #153](https://xkcd.com/153/)_</span>
+<span class="img_subtitle">[xkcd #153](https://xkcd.com/153/)</span>
 
 ## Spreading fear and doubt
 
@@ -55,7 +55,7 @@ The development of a new crypto is a hard task to accomplish. The cryptoexperts 
 If the protocol is sound from the bad guys, it is safe and sound from anyone, so predicting the protocol to be found vulnerable in just 5 years sounds more like spreading [FUD](https://en.wikipedia.org/wiki/Fear,_uncertainty_and_doubt "Fear, uncertainty and doubt") among people to help promoting Telegram. Not only it doesn't look like a fair play, it's a very dangerous thing to do as people trusting Durov probably will just abandon on things after such statements.
 ![image](https://69.media.tumblr.com/06f1a00577ef9417f633f8d9540c011f/tumblr_inline_p1m4g3kaD11vumr7z_540.png)
 
-<span class="img_subtitle">[_xkcd #1820_](https://xkcd.com/1820/)</span>
+<span class="img_subtitle">[xkcd #1820](https://xkcd.com/1820/)</span>
 
 Undermining the competitors isn't a good thing to do. Undermining them with spreading FUD among people is even worse.
 

@@ -3,6 +3,9 @@ languageCode = "en-us"
 title = "Timur Demin's Blog"
 theme = "basics"
 
+[markup.goldmark.renderer]
+    unsafe = true
+
 [author]
     name = "Timur Demin"
     email = "me@tdem.in"
