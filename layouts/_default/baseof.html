@@ -21,14 +21,7 @@
   </head>
   <body>
     <div class="container-fluid">
-      <nav class="navbar navbar-expand-md navbar-light">
-        <div id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-item nav-link {{ if eq .Permalink "/"}}active{{ end }}" href="/">Home</a>
-            <a class="nav-item nav-link" href="/index.xml">RSS</a>
-          </div>
-        </div>
-      </nav>
+      {{ partial "nav" .}}
       {{ block "content" .}}
       This is the baseof template.
       {{ end }}
