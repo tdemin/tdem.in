@@ -1,6 +1,7 @@
 $black: black;
 $pre-bg: #efefef;
 $pre-border: #bbb;
+$pre-hl: #555;
 
 $font-fg: 'Roboto', sans-serif;
 $font-code: 'Roboto Mono', monospace;
@@ -126,4 +127,8 @@ nav#TableOfContents {
 
 small p {
     margin-bottom: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bolder;
 }
