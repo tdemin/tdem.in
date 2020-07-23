@@ -1,5 +1,12 @@
+$black: black;
+$pre-bg: #efefef;
+$pre-border: #bbb;
+
+$font-fg: 'Roboto', sans-serif;
+$font-code: 'Roboto Mono', monospace;
+
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: $font-fg;
     margin: auto;
     max-width: 50em;
     margin-bottom: 1em;
@@ -7,116 +14,116 @@ body {
 
 #page-title {
     text-align: center;
-}
-
-#page-title h1 a {
-    color: black;
-    font-size: 2.7rem;
+    h1 a {
+        color: $black;
+        font-size: 2.7rem;
+    }
+    a:hover, .post a:hover {
+        text-decoration: underline;
+    }
 }
 
 .post a {
-    color: black;
+    color: $black;
 }
 
 #author-name h6 a {
-  color: black;
-  font-weight: normal;
-  font-size: small;
-}
-
-#page-title a:hover, .post a:hover {
-    text-decoration: underline;
+    color: $black;
+    font-weight: normal;
+    font-size: small;
 }
 
 .date-time-title {
-    font-family: 'Roboto Mono', monospace;
+    font-family: $font-code;
 }
 
 .blog-post-content {
-  padding-top: 1em;
-  padding-bottom: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
-.posts_listing li {
-  list-style-type: none;
+.posts_listing > li {
+    list-style-type: none;
 }
 
 h1 {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
 h2 {
-  font-size: 1.7rem;
+    font-size: 1.7rem;
 }
 
 h3 {
-  font-size: 1.4rem;
+    font-size: 1.4rem;
 }
 
-h4  {
-  font-size: 1.2rem;
+h4 {
+    font-size: 1.2rem;
 }
 
-h5  {
-  font-size: 1rem;
+h5 {
+    font-size: 1rem;
 }
 
 h6  {
-  font-size: 0.8rem;
+    font-size: 0.8rem;
 }
 
 code {
-  font-family: 'Roboto Mono', monospace;
-  white-space: pre;
-  overflow-x: auto;
+    font-family: $font-code;
+    white-space: pre;
+    overflow-x: auto;
 }
 
 pre {
-  overflow-x: auto;
-  padding: 5px 10px;
-  border: 2px solid #bbb;
-  background-color: #efefef
+    overflow-x: auto;
+    padding: 5px 10px;
+    border: 2px solid $pre-border;
+    background-color: $pre-bg;
 }
 
-footer  {
-  text-align: center;
+footer {
+    text-align: center;
 }
 
 blockquote {
-  font-style: italic;
-  font-size: 1rem;
-  border-left: 2px solid #333;
-  padding-left: 20px;
+    font-style: italic;
+    font-size: 1rem;
+    border-left: 2px solid $pre-border;
+    padding-left: 20px;
 }
 
 img {
-  max-width: 100%;
-  margin-top: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    max-width: 100%;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .img_subtitle, .quote_subtitle {
-  text-align: center;
-  display: block;
-  font-style: italic;
-}
-
-
-code {
-  white-space: inherit;
+    text-align: center;
+    display: block;
+    font-style: italic;
 }
 
 /* home page fixes */
 
 @media (max-width: 720px) {
-  div.col-sm.post {
-    padding-left: 0px !important;
-  }
+    div.col-sm.post {
+        padding-left: 0px !important;
+    }
 }
 
 /* post ToC */
 
 nav#TableOfContents {
-  margin: 16px;
+    margin: 16px;
+}
+
+/* whatever else comes to mind */
+
+small p {
+    margin-bottom: 0;
 }
