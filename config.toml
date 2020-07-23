@@ -26,3 +26,4 @@ author = "Timur Demin"
 email = "me@tdem.in"
 description = "Random rants on technology, chess, and music"
 home = "https://tdem.in"
+tocEnabled = false
