@@ -1,4 +1,4 @@
-baseURL = "https://blog.tdem.in/"
+baseURL = "https://tdem.in/"
 languageCode = "en-us"
 title = "Timur Demin's Blog"
 theme = "basics"
