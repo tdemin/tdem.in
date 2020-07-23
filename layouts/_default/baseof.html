@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+      <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+      <title>{{.Title}}</title>
+      {{ $style := resources.Get "main.scss" | resources.ToCSS | resources.Minify | resources.Fingerprint }}
+      <link rel="stylesheet" href="{{ $style.Permalink }}">
+      <link rel="alternate" type="application/rss+xml" href="/index.xml">{{ if eq .Section "post" }}
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
+      {{ with .Page.Description }}<meta property="og:description" content="{{ .Page.Description }}">{{ end }}
+      <meta property="og:url" content="{{ .Permalink }}">
+      <meta>{{ end }}{{ if eq (add .Site.BaseURL "/") (add .Permalink "/") }}
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{{ .Site.Author.name }}">
+      <meta property="og:description" content="{{ .Site.Params.description }}">
+      <meta property="og:url" content="{{ .Permalink }}">{{ end }}
+  </head>
+  <body>
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-md navbar-light">
+        <div id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link {{ if eq .Permalink "/"}}active{{ end }}" href="/">Home</a>
+            <a class="nav-item nav-link" href="/index.xml">RSS</a>
+          </div>
+        </div>
+      </nav>
+      {{ block "content" .}}
+      This is the baseof template.
+      {{ end }}
+      <footer>
+        <hr>
+        <small>
+          <p>
+            &copy; {{ now.Format "2006" }} <a href="{{ .Site.Params.home }}">{{ .Site.Params.author }}</a>.
+            Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based off <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+          </p>
+          <p>
+            All content on this page is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"> Creative Commons Attribution 4.0 International License</a>, unless noticed otherwise.
+          </p>
+        </small>
+      </footer>
+    </div>
+  </body>
+</html>
