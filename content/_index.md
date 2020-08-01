@@ -38,3 +38,4 @@ CS student at Ufa State Petroleum Technological University
 
 * **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
+* **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
