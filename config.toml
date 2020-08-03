@@ -26,4 +26,5 @@ author = "Timur Demin"
 email = "me@tdem.in"
 description = "Random rants on technology, chess, and music"
 home = "https://tdem.in"
+sourceCode = "https://git.tdem.in/tdemin/blog.tdem.in"
 tocEnabled = false
