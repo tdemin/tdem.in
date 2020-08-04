@@ -22,12 +22,14 @@ CS student at Ufa State Petroleum Technological University
     + [Amber CLI][amber_cli], the CLI client written in Go, currently unfinished
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
 * [backup][backup], a simple export script
+* [emdl][emdl] package on AUR, the Arch Linux user repository
 
 [amber]: https://git.tdem.in/tdemin/amber
 [amber_web]: https://git.tdem.in/tdemin/amber_web
 [amber_cli]: https://git.tdem.in/tdemin/amber_cli
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
+[emdl]: https://aur.archlinux.org/packages/emdl/
 
 #### Life changelog
 
