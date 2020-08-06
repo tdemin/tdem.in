@@ -1,9 +1,11 @@
 <section>
     <ul>
         {{ range . }}
-        <li>
-            <time class="bold">{{ .Date.Format "02 Jan 2006" }}</time>
-            <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
+        <li class="post">
+            <div class="header">
+                <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
+                <time class="bold">{{ .Date.Format "02 Jan 2006" }}</time>
+            </div>
         </li>
         {{ end }}
     </ul>

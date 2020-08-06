@@ -1,0 +1,4 @@
+{{ define "content" }}
+{{ .Content }}
+{{ partial "list" (where .Site.RegularPages.ByDate.Reverse "Section" "post") }}
+{{ end }}
