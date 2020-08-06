@@ -1,5 +1,5 @@
 ---
-title: "Remove duplicate files with PowerShell"
+title: "Removing duplicate files with PowerShell"
 date: 2019-12-02T22:02:37+05:00
 draft: false
 tags: ["PowerShell", "Windows", "file management", "hack"]
