@@ -2,6 +2,7 @@
 title: "Filtering Friendica posts in an RSS feed by tag"
 date: 2020-02-14T02:00:38+05:00
 draft: false
+tags: ["Friendica", "fediverse", "RSS", "Flask", "Python"]
 ---
 
 The current version of Friendica [doesn't appear to support filtering posts by

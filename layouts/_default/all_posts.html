@@ -1,4 +1,5 @@
 {{ define "content" }}
+<!-- TODO: rework content in /blog/ and /post/ -->
 {{ .Content }}
-{{ partial "list" . }}
+{{ partial "list" .Site.RegularPages.ByDate.Reverse }}
 {{ end }}

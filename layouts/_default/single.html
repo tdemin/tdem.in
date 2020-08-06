@@ -8,5 +8,16 @@
   <div class="blog-post-content">
     {{ .Content }}
   </div>
+  {{ if .Params.tags }}{{ if ge (.Params.tags | len) 0 }}
+  <!-- TODO: make the tag list look better -->
+  <div class="blog-post-tags">
+    <em class="bold">Tags:</em>
+    <ul>
+    {{ range (.GetTerms "tags") }}
+      <li class="tag"><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+    {{ end }}
+    </ul>
+  </div>
+  {{ end }}{{ end }}
 </div>
 {{ end }}

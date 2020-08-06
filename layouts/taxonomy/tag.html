@@ -1,0 +1,4 @@
+{{ define "content" }}
+<h1>All posts tagged {{ .Data.Term }}</h1>
+{{ partial "list" .Data.Pages }}
+{{ end }}

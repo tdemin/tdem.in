@@ -1,6 +1,6 @@
 <section>
     <ul class="posts_listing">
-        {{ range where .Site.RegularPages.ByDate.Reverse "Section" "post" }}
+        {{ range where . "Section" "post" }}
         <li>
         <div class="row posts">
             <div class="d-none d-sm-block col-sm-3 date-time-title">

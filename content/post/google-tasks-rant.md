@@ -2,6 +2,7 @@
 title: "Rant: Google Tasks"
 date: 2018-07-02T12:00:00+00:00
 draft: false
+tags: ["Google", "Google Tasks", "tasks management"]
 ---
 
 So far it looks like Tasks, Google's new app for task tracking, is missing a key feature supposed to push you to do stuff—the on-time reminders.

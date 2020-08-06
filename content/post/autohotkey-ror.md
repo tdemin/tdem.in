@@ -2,6 +2,7 @@
 title: "AutoHotkey Run-or-Raise"
 date: 2019-05-12T18:12:17+05:00
 draft: false
+tags: ["AutoHotkey", "Windows", "hack"]
 ---
 
 It is a common practice for some to use a Quake-style terminal. For those who

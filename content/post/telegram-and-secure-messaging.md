@@ -2,6 +2,7 @@
 title: "Telegram and Secure Messaging"
 date: 2017-07-05T12:00:00+00:00
 draft: false
+tags: ["Telegram", "messaging", "security", "privacy", "end-to-end encryption"]
 ---
 
 Telegram, as it states on its home page, is a secure messenger. Over the years it became a simple, powerful multi-device messenger which is selected as the main messaging platform by many people (the official Android app has more than [100 million installs](https://play.google.com/store/apps/details?id=org.telegram.messenger), for example).

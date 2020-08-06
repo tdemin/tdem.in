@@ -2,6 +2,7 @@
 title: "Status Update: July 2020"
 date: 2020-08-02T00:52:05+05:00
 draft: false
+tags: ["status update"]
 ---
 
 This has been a busy time.

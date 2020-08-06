@@ -2,6 +2,7 @@
 title: "Simple Mi Fit Login Issue Fix"
 date: 2018-06-01T12:00:00+00:00
 draft: false
+tags: ["hack", "Mi Band"]
 ---
 
 Some people experience issues with their Mi Bands: Mi Fit, the official Xiaomi's app for wearable electronics like their wristbands, simply doesn't login into the Mi Account, rendering you unable to set up your Mi Band.

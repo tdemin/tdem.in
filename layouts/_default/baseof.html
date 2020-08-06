@@ -8,12 +8,13 @@
       <title>{{.Title}}</title>
       {{ $style := resources.Get "main.scss" | resources.ToCSS | resources.Minify | resources.Fingerprint }}
       <link rel="stylesheet" href="{{ $style.Permalink }}">
-      <link rel="alternate" type="application/rss+xml" href="/index.xml">{{ if eq .Section "post" }}
-      <meta property="og:type" content="website">
-      <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">
-      {{ with .Page.Description }}<meta property="og:description" content="{{ .Page.Description }}">{{ end }}
+      <link rel="alternate" type="application/rss+xml" href="/index.xml">
+      {{ if eq .Section "post" }}<meta property="og:type" content="article">
+      <meta property="og:title" content="{{ .Title }} - {{ .Site.Title }}">{{ with .Page.Description }}
+      <meta property="og:description" content="{{ .Page.Description }}">{{ end }}
       <meta property="og:url" content="{{ .Permalink }}">
-      <meta>{{ end }}{{ if eq (add .Site.BaseURL "/") (add .Permalink "/") }}
+      {{ with .Params.tags }}{{ range . }}<meta property="og:article:tag" content="{{ . }}">{{ end }}{{ end }}
+      {{ end }}{{ if eq (add .Site.BaseURL "/") (add .Permalink "/") }}
       <meta property="og:type" content="website">
       <meta property="og:title" content="{{ .Site.Author.name }}">
       <meta property="og:description" content="{{ .Site.Params.description }}">

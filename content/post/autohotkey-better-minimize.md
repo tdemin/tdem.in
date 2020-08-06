@@ -2,6 +2,7 @@
 title: "AutoHotkey: Scratchpad"
 date: 2019-06-10T01:28:30+05:00
 draft: false
+tags: ["AutoHotkey", "hack", "Windows"]
 ---
 
 Another day, another hack. This [AutoHotkey][AHK] snippet preserves the last

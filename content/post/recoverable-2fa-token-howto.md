@@ -2,6 +2,7 @@
 title: "Recoverable 2FA Token HOWTO"
 date: 2017-10-27T12:00:00+00:00
 draft: false
+tags: ["two-factor authentication", "security"]
 ---
 
 So you want to enable two-factor authentication for your online accounts? That’s fairly easy, made relatively painless by Google with its [Authenticator](https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&amp;amp;hl=en). Well, enabling 2FA isn’t the problem. There are other caveats to watch out for.

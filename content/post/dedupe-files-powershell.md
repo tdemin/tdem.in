@@ -2,6 +2,7 @@
 title: "Remove duplicate files with PowerShell"
 date: 2019-12-02T22:02:37+05:00
 draft: false
+tags: ["PowerShell", "Windows", "file management", "hack"]
 ---
 
 Well, I finally decided to clean up the files from my storage drive.

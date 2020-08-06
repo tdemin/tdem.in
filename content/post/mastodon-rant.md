@@ -2,6 +2,7 @@
 title: "Rant: Mastodon"
 date: 2018-12-08T12:00:00+00:00
 draft: false
+tags: ["Mastodon", "fediverse"]
 ---
 
 Just scrolled through the timeline Instagram generates for me. 20 "blog posts" with boring "inspiring" descriptions trying to teach me life, 15 or about that from the official accounts, no posts I'd consider personal (i.e. random fun pics). Not even trying to open stories anymore, I don't really like being fed with video ads every 3 or 4 posts. That's the cancer that ate Instagram.
