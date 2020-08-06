@@ -5,6 +5,7 @@ $pre-hl: #555;
 
 $font-fg: 'Roboto', sans-serif;
 $font-code: 'Roboto Mono', monospace;
+$font-size: 1rem; // base point is h5
 
 body {
     font-family: $font-fg;
@@ -24,61 +25,24 @@ body {
     }
 }
 
-.post a {
-    color: $black;
-}
-
-#author-name h6 a {
-    color: $black;
-    font-weight: normal;
-    font-size: small;
-}
-
-.date-time-title {
-    font-family: $font-code;
-}
-
 .blog-post-content {
     padding-top: 1em;
     padding-bottom: 1em;
 }
 
-.posts_listing > li {
-    list-style-type: none;
-}
+h1 { font-size: $font-size * 2; }
+h2 { font-size: $font-size * 1.7; }
+h3 { font-size: $font-size * 1.4; }
+h4 { font-size: $font-size * 1.2; }
+h5 { font-size: $font-size; }
+h6 { font-size: $font-size * 0.8; }
 
-h1 {
-    font-size: 2rem;
-}
-
-h2 {
-    font-size: 1.7rem;
-}
-
-h3 {
-    font-size: 1.4rem;
-}
-
-h4 {
-    font-size: 1.2rem;
-}
-
-h5 {
-    font-size: 1rem;
-}
-
-h6  {
-    font-size: 0.8rem;
-}
-
-code {
+code, pre {
     font-family: $font-code;
     white-space: pre;
     overflow-x: auto;
 }
-
 pre {
-    overflow-x: auto;
     padding: 5px 10px;
     border: 2px solid $pre-border;
     background-color: $pre-bg;
@@ -109,14 +73,6 @@ img {
     font-style: italic;
 }
 
-/* home page fixes */
-
-@media (max-width: 720px) {
-    div.col-sm.post {
-        padding-left: 0px !important;
-    }
-}
-
 /* post ToC */
 
 nav#TableOfContents {
@@ -133,7 +89,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bolder;
 }
 
-em.bold {
+.bold {
     font-style: normal;
     font-weight: bolder;
 }
