@@ -1,12 +1,12 @@
 ---
 title: "Timur Demin"
-description: "CS student at Ufa State Petroleum Technological University"
+description: "Computer Science student at Ufa State Petroleum Technological University"
 draft: false
 ---
 
 ## Timur Demin
 
-CS student at Ufa State Petroleum Technological University
+Computer Science student at Ufa State Petroleum Technological University
 
 #### Contact info
 
