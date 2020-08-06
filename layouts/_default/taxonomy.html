@@ -1,0 +1,13 @@
+{{ define "content" }}
+<h1>{{ .Data.Plural | title }}</h1>
+{{ range $t, $pages := .Data.Terms }}
+<section>
+    <h4>{{ $t }}</h4>
+    <ul>
+        {{ range $pages }}
+        <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+        {{ end }}
+    </ul>
+</section>
+{{ end }}
+{{ end }}
