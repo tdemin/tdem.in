@@ -111,4 +111,20 @@ ul.tags {
         }
     }
     margin: 0.5rem;
+    summary {
+        // fix for reboot.scss
+        cursor: unset;
+    }
+}
+
+nav.pagination {
+    display: flex;
+    flex-direction: row;
+    .left {
+        text-align: start;
+    }
+    .right {
+        margin-left: auto;
+        text-align: end;
+    }
 }

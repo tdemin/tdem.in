@@ -1,8 +1,8 @@
 <nav rel="pagination" class="pagination">
     {{ if .HasPrev }}
-    <a href="{{ .Prev.URL }}">Page {{ .Prev.PageNumber }}</a>
+    <a class="left" href="{{ .Prev.URL }}">Page {{ .Prev.PageNumber }}</a>
     {{ end }}
     {{ if .HasNext }}
-    <a href="{{ .Next.URL }}">Page {{ .Next.PageNumber }}</a>
+    <a class="right" href="{{ .Next.URL }}">Page {{ .Next.PageNumber }}</a>
     {{ end }}
 </nav>
