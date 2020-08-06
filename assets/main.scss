@@ -137,3 +137,11 @@ em.bold {
     font-style: normal;
     font-weight: bolder;
 }
+
+ul.tags {
+    padding-inline-start: 0;
+    display: inline;
+    li.tag {
+        display: inline;
+    }
+}

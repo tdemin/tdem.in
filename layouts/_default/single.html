@@ -9,12 +9,12 @@
     {{ .Content }}
   </div>
   {{ if .Params.tags }}{{ if ge (.Params.tags | len) 0 }}
-  <!-- TODO: make the tag list look better -->
   <div class="blog-post-tags">
     <em class="bold">Tags:</em>
-    <ul>
-    {{ range (.GetTerms "tags") }}
-      <li class="tag"><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+    <ul class="tags">
+    {{ $tags := (.GetTerms "tags") }}
+    {{ range $index, $tag := $tags }}
+      <li class="tag"><a href="{{ $tag.Permalink }}">{{ $tag.LinkTitle }}</a></li>{{ if lt $index (sub ($tags | len) 1) }},{{ end }}
     {{ end }}
     </ul>
   </div>
