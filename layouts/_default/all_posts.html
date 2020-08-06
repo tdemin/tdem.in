@@ -1,4 +1,6 @@
 {{ define "content" }}
 {{ .Content }}
-{{ partial "list" .Site.RegularPages.ByDate.Reverse }}
+{{ $paginator := .Paginate (where .Site.RegularPages.ByDate.Reverse "Section" "post") 5 }}
+{{ partial "list_full" $paginator.Pages }}
+{{ partial "pagination.html" $paginator }}
 {{ end }}

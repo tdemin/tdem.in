@@ -3,11 +3,7 @@
 {{ range $t, $pages := .Data.Terms }}
 <section>
     <h4>{{ $t }}</h4>
-    <ul>
-        {{ range $pages }}
-        <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
-        {{ end }}
-    </ul>
+    {{ partial "list" $pages }}
 </section>
 {{ end }}
 {{ end }}
