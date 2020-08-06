@@ -9,6 +9,8 @@ Telegram, as it states on its home page, is a secure messenger. Over the years i
 
 Many people say Telegram really is a secure messenger. They trust Pavel Durov, its creator, they get overwhelmed with its promotion, they get obsessed. I will try to dissolve Telegram as a secure messenger suitable for private messaging from the end user's point of view.
 
+<!--more-->
+
 So, let's start with the main promotional Telegram's feature which was heavily advertised—the secret chats.
 
 ## Secret chats

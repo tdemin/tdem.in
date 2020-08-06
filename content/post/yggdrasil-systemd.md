@@ -16,6 +16,8 @@ This is a simple recipe on how to configure Yggdrasil with systemd-networkd and
 systemd-resolved while providing other devices on your local network with Ygg
 addresses and allowing them to use Ygg.
 
+<!--more-->
+
 Consider the following setup:
 
 + an always-on PC

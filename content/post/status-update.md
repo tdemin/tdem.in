@@ -13,6 +13,8 @@ designed to provide an API for flashing software. Thanks to that I'm now
 a lot more familiar with building web in Go, and am eager to build more
 things with it. <3
 
+<!--more-->
+
 I've started looking at lot more into [Yggdrasil][ygghome], a mesh
 networking software. As of right now I'm mainly using it as a VPN, as it
 provides every node with a static /64 subnet, so IPv6 exploration is a

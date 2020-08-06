@@ -11,6 +11,8 @@ I found a lot of duplicate files unnecessarily taking up my storage space. As
 looking through every single file on your hard disk is a tedious job, I wrote a
 little PowerShell script to assist me with that.
 
+<!--more-->
+
 ```ps1
 [CmdletBinding()]
 param (

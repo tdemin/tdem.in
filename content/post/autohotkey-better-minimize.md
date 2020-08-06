@@ -9,6 +9,8 @@ Another day, another hack. This [AutoHotkey][AHK] snippet preserves the last
 window you minimized with `Win + Down` and allows you to quickly unminimize it
 with `Win + Shift + Up`:
 
+<!--more-->
+
     global lastWindow
     ToScratchpad()
     {

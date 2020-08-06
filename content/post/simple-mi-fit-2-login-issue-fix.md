@@ -7,6 +7,8 @@ tags: ["hack", "Mi Band"]
 
 Some people experience issues with their Mi Bands: Mi Fit, the official Xiaomi's app for wearable electronics like their wristbands, simply doesn't login into the Mi Account, rendering you unable to set up your Mi Band.
 
+<!--more-->
+
 ![](https://69.media.tumblr.com/f3079699f4f82101a2caecb3f520a022/tumblr_inline_p9m217WJxi1vumr7z_500.png)
 
 This happened to me as well, though I've managed to work it through.

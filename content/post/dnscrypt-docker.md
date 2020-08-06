@@ -20,6 +20,8 @@ Unfortunately, leaving dnscrypt-proxy with its default settings while setting it
 as the default resolver breaks name resolution in Docker containers. Fixing this
 while not exposing a DNS resolver on the LAN is what's described below.
 
+<!--more-->
+
 ##### This post in short
 
 1. Create a dummy adapter, assign a private network IP to it.

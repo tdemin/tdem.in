@@ -7,6 +7,8 @@ tags: ["two-factor authentication", "security"]
 
 So you want to enable two-factor authentication for your online accounts? That’s fairly easy, made relatively painless by Google with its [Authenticator](https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&amp;amp;hl=en). Well, enabling 2FA isn’t the problem. There are other caveats to watch out for.
 
+<!--more-->
+
 First of all, _you can’t back up your token_. There isn’t an option for moving your keys to another device, your only option is to use so-called recovery codes that are meant to be entered if the token is lost. Google suggests to write those codes somewhere in a safe place, and most of the other services who offer 2FA do. But well, this means storing those codes in an insecure way.
 
 Another problem is directly pointed out from the first one: _you can’t generate codes with multiple devices_. Changing device in most 2FA systems means your previous phone will no longer generate codes that work.

@@ -12,7 +12,9 @@ use a terminal emulator program like Tilda on Linux or ConEmu on Windows.
 
 Sometimes you might want the same behaviour for the utilities that do not
 support Quake-style windows by themselves. Luckily, you can still achieve this
-with a simple [AutoHotkey][AHK] script I've come up with:
+with a simple [AutoHotkey][AHK] script I've come up with.
+
+<!--more-->
 
     RunOrRaise(class, run)
     {

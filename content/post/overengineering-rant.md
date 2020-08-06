@@ -14,6 +14,8 @@ that:
 export default withStyles(styles)(connect(mapStateToProps)(MyComponent));
 ```
 
+<!--more-->
+
 This simple line contains at least 5 functions in it. Let's tear this
 down right-to-left:
 

@@ -12,7 +12,11 @@ feed. Appending `?tag=XXX` to an RSS feed URI seems to be silently ignored.
 As I wanted a custom feed that only has music posts in it, I wrote a quick and
 dirty feed crawler in Python/Flask that removes all posts that do not have a
 single mention of the specified tag in it. The whole program only took 50
-minutes to write. After deployment the feed is available at
+minutes to write.
+
+<!--more-->
+
+After deployment the feed is available at
 `/tag?token=some_token` where `tag` is the text we're searching for in the feed
 content and `some_token` is whatever you set with `FRIENDICA_TOKEN` (only needed
 so that Googlebot doesn't accidentally flood Friendica with requests).
