@@ -2,6 +2,7 @@
 title: "Timur Demin"
 description: "Computer Science student at Ufa State Petroleum Technological University"
 draft: false
+avatar: /avatar.jpg
 ---
 
 ## Timur Demin
@@ -22,11 +23,13 @@ Computer Science student at Ufa State Petroleum Technological University
     + [Amber CLI][amber_cli], the CLI client written in Go, currently unfinished
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
 * [backup][backup], a simple export script
+* [syg_go][syg_go], an Yggdrasil address miner written in Go
 * [emdl][emdl] package on AUR, the Arch Linux user repository
 
 [amber]: https://git.tdem.in/tdemin/amber
 [amber_web]: https://git.tdem.in/tdemin/amber_web
 [amber_cli]: https://git.tdem.in/tdemin/amber_cli
+[syg_go]: https://git.tdem.in/tdemin/syg_go
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
 [emdl]: https://aur.archlinux.org/packages/emdl/
