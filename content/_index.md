@@ -22,7 +22,7 @@ Computer Science student at Ufa State Petroleum Technological University
     + [Amber Web][amber_web], the web client built with TypeScript and React
     + [Amber CLI][amber_cli], the CLI client written in Go, currently unfinished
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
-* [backup][backup], a simple export script
+* [backup][backup], a simple backup script
 * [syg_go][syg_go], an Yggdrasil address miner written in Go
 * [emdl][emdl] package on AUR, the Arch Linux user repository
 
@@ -43,4 +43,5 @@ Computer Science student at Ufa State Petroleum Technological University
 
 * **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
+* **GitHub**: [@tdemin](https://github.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
