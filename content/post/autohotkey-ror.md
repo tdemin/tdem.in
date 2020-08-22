@@ -16,20 +16,22 @@ with a simple [AutoHotkey][AHK] script I've come up with.
 
 <!--more-->
 
-    RunOrRaise(class, run)
-    {
-        if WinActive(class) {
-            WinMinimize, %class%
-        }
-        else if WinExist(class) {
-            WinActivate, %class%
-        }
-        else {
-            Run, %run%
-        }
+```ahk
+RunOrRaise(class, run)
+{
+    if WinActive(class) {
+        WinMinimize, %class%
     }
-    ; run PowerShell on Win + Z
-    #z::RunOrRaise("ahk_exe powershell.exe", "powershell -NoLogo")
+    else if WinExist(class) {
+        WinActivate, %class%
+    }
+    else {
+        Run, %run%
+    }
+}
+; run PowerShell on Win + Z
+#z::RunOrRaise("ahk_exe powershell.exe", "powershell -NoLogo")
+```
 
 The first parameter is the [AHK window class][AHKWinTitle], and the second one
 is the command to be run if the window doesn't exist yet (usually the path to

@@ -11,37 +11,41 @@ with `Win + Shift + Up`:
 
 <!--more-->
 
-    global lastWindow
-    ToScratchpad()
-    {
-        WinGetTitle, lastWindow, A
-        WinMinimize, %lastWindow%
-    }
-    FromScratchpad()
-    {
-        WinActivate, %lastWindow%
-    }
-    #Down::ToScratchpad()
-    #+Up::FromScratchpad()
+```ahk
+global lastWindow
+ToScratchpad()
+{
+    WinGetTitle, lastWindow, A
+    WinMinimize, %lastWindow%
+}
+FromScratchpad()
+{
+    WinActivate, %lastWindow%
+}
+#Down::ToScratchpad()
+#+Up::FromScratchpad()
+```
 
 Now let's go even further and use a stack of windows for that purpose! The next
 snippet saves the list of windows you minimized that way in a stack, and
 restores them in order:
 
-    global lastWindows := Array() ; this line needs to be at the top of the file
-    ToScratchpad(windows)
-    {
-        WinGetTitle, lastWindow, A
-        WinMinimize, %lastWindow%
-        windows.Push(lastWindow)
-    }
-    FromScratchpad(windows)
-    {
-        lastWindow := windows.Pop()
-        WinActivate, %lastWindow%
-    }
-    #Down::ToScratchpad(lastWindows)
-    #+Up::FromScratchpad(lastWindows)
+```ahk
+global lastWindows := Array() ; this line needs to be at the top of the file
+ToScratchpad(windows)
+{
+    WinGetTitle, lastWindow, A
+    WinMinimize, %lastWindow%
+    windows.Push(lastWindow)
+}
+FromScratchpad(windows)
+{
+    lastWindow := windows.Pop()
+    WinActivate, %lastWindow%
+}
+#Down::ToScratchpad(lastWindows)
+#+Up::FromScratchpad(lastWindows)
+```
 
 The first line [has to be placed before the first return/hotkey][docs], or it
 won't be executed (and the script will not work).
