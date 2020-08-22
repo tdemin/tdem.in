@@ -44,7 +44,7 @@ _Secret chats just aren't usable_. The whole secret chats thing just does it the
 Any security protocol should be independently audited to be trusted on being secure. MTProto, the homegrown encryption protocol used by Telegram to encrypt messages, wasn't audited, but instead a [challenge was posted](https://telegram.org/blog/cryptocontest "$300000 for Cracking Telegram Encryption") by Pavel Durov to crack the secret chat he started with his brother.
 
 The lack of winners noted by Pavel Durov is the thing he mostly admires when claiming the protocol security. Why is a marketing promotional better than an independent expert audit which would state things better? We only have to guess and hope the protocol is really secure.
-![[xkcd #153](https://xkcd.com/153/)](https://69.media.tumblr.com/f7b8134db0d7e4c3c24b0d2abe18b248/tumblr_inline_p1m4e1wF0q1vumr7z_540.png)
+![[xkcd #153](https://xkcd.com/153/)](/img/xkcd-153.png)
 
 ## Spreading fear and doubt
 
@@ -54,7 +54,7 @@ Pavel Durov recently [stated](https://twitter.com/durov/status/87289101741811302
 The development of a new crypto is a hard task to accomplish. The cryptoexperts funded by the governments know there shouldn't be any backdoors, as any security tamper used by "good guys" can eventually be used by "bad guys".
 
 If the protocol is sound from the bad guys, it is safe and sound from anyone, so predicting the protocol to be found vulnerable in just 5 years sounds more like spreading [FUD](https://en.wikipedia.org/wiki/Fear,_uncertainty_and_doubt "Fear, uncertainty and doubt") among people to help promoting Telegram. Not only it doesn't look like a fair play, it's a very dangerous thing to do as people trusting Durov probably will just abandon on things after such statements.
-![[xkcd #1820](https://xkcd.com/1820/)](https://69.media.tumblr.com/06f1a00577ef9417f633f8d9540c011f/tumblr_inline_p1m4g3kaD11vumr7z_540.png)
+![[xkcd #1820](https://xkcd.com/1820/)](/img/xkcd-1820.png)
 
 Undermining the competitors isn't a good thing to do. Undermining them with spreading FUD among people is even worse.
 

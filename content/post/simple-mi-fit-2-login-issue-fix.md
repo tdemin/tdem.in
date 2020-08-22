@@ -9,7 +9,7 @@ Some people experience issues with their Mi Bands: Mi Fit, the official Xiaomi's
 
 <!--more-->
 
-![](https://69.media.tumblr.com/f3079699f4f82101a2caecb3f520a022/tumblr_inline_p9m217WJxi1vumr7z_500.png)
+![](/img/mi-fit-play-store-comment.png)
 
 This happened to me as well, though I've managed to work it through.
 
