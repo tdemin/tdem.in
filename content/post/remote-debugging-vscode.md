@@ -22,8 +22,6 @@ However:
 to work, failing to sign commit data.
 + SSH agent, if not using agent forwarding, won't allow you to add keys.
 + Opening local folders, even though RD can do it, just doesn't work for me.
-+ The Remote Development addon itself is proprietary software, which I don't
-think is a good fit for open source development.
 
 I'm doing Go development, so the hack I am describing applies to Go when using
 [Delve][delve] for debugging. Nonetheless, the approach doesn't change much if
