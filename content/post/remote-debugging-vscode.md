@@ -21,6 +21,7 @@ However:
 + Commit signing, if you have `GPG_TTY` and auto-signing enabled, doesn't seem
 to work, failing to sign commit data.
 + SSH agent, if not using agent forwarding, won't allow you to add keys.
++ Opening local folders, even though RD can do it, just doesn't work for me.
 + The Remote Development addon itself is proprietary software, which I don't
 think is a good fit for open source development.
 
@@ -81,7 +82,7 @@ tasks:
 
 The entire sequence can now be started with `task delve`. The dependencies
 ensure Delve is killed beforehand (`scp` won't work if the program is still
-running), and the binary is build and pushed to the target machine.
+running), and the binary is built and pushed to the target machine.
 
 ### Configuring the debugging profile
 
