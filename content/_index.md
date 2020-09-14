@@ -26,6 +26,8 @@ Computer Science student at Ufa State Petroleum Technological University
 * [syg_go][syg_go], an Yggdrasil address miner written in Go ([AUR package][sgaur])
 * [emdl][emdl] package on AUR, the Arch Linux user repository
 
+I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
+
 [amber]: https://git.tdem.in/tdemin/amber
 [amber_web]: https://git.tdem.in/tdemin/amber_web
 [amber_cli]: https://git.tdem.in/tdemin/amber_cli
@@ -34,6 +36,7 @@ Computer Science student at Ufa State Petroleum Technological University
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
 [emdl]: https://aur.archlinux.org/packages/emdl/
+[ygg]: https://yggdrasil-network.github.io
 
 #### Life changelog
 
