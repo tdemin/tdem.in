@@ -17,7 +17,7 @@ Computer Science student at Ufa State Petroleum Technological University
 
 #### Projects
 
-* Project Amber, a task list app with variable task nesting:
+* Project Amber, a task list app with variable task nesting ([live demo](https://amber.h.tdem.in)):
     + [Amber][amber], the API server in Python
     + [Amber Web][amber_web], the web client built with TypeScript and React
     + [Amber CLI][amber_cli], the CLI client written in Go, currently unfinished
