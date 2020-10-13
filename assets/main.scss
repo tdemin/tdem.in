@@ -169,3 +169,12 @@ hr {
         }
     }
 }
+
+@media (max-width: 480px) {
+    .post__header {
+        display: block !important;
+        h4 {
+            display: block !important;
+        }
+    }
+}
