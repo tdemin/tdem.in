@@ -31,7 +31,7 @@ Telegram's secret chats are like OTR in XMPP—an old encryption protocol that d
 
 > OTR has significant usability drawbacks for inter-client mobility. As OTR sessions exist between exactly two clients, the chat history will not be synchronized across other clients of the involved parties. Furthermore, OTR chats are only possible if both participants are currently online, due to how the rolling key agreement scheme of OTR works.
 
-<span class="quote_subtitle">Introduction to XEP-0384, the motivation to replace OTR</span>
+<span class="quote__subtitle">Introduction to XEP-0384, the motivation to replace OTR</span>
 
 _Secret chats don't work on Telegram Desktop_. Here comes another problem of the secret chats — they are only available on the mobile phones (and on the Telegram client from App Store). Telegram Desktop, the official Telegram app for Windows, macOS and Linux, doesn't support secret chats, while this feature was first requested at [June 1, 2014](https://github.com/telegramdesktop/tdesktop/issues/5). There were many requests since then ([1](https://github.com/telegramdesktop/tdesktop/issues/118), [2](https://github.com/telegramdesktop/tdesktop/issues/619), [3](https://github.com/telegramdesktop/tdesktop/issues/871), etc), but secret chats are still unimplemented as of Jule 5 in the official desktop app of the messenger which claims itself secure.
 

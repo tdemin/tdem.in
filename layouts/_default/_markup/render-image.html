@@ -1,7 +1,7 @@
 
-<p class="md__image">
+<p class="image">
     <a href="{{ .Destination | safeURL }}" target="_blank">
         <img src="{{ .Destination | safeURL }}" {{ if .Text }}alt="{{ .Text | plainify }}"{{ end }} />
     </a>
-    {{ if .Text }}<span class="img_subtitle">{{ .Text | safeHTML }}</span>{{ end }}
+    {{ if .Text }}<span class="image__subtitle">{{ .Text | safeHTML }}</span>{{ end }}
 </p>

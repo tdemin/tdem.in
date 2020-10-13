@@ -2,6 +2,9 @@ $black: black;
 $pre-bg: #efefef;
 $pre-border: #bbb;
 $pre-hl: #555;
+$link-color: #007bff;
+$code-color: #e83e8c;
+$code-black-color: #222222;
 
 $font-fg: 'Roboto', sans-serif;
 $font-code: 'Roboto Mono', monospace;
@@ -12,20 +15,16 @@ body {
     margin: auto;
     max-width: 50em;
     margin-bottom: 1em;
-}
-
-#page-title {
-    text-align: center;
-    h1 a {
-        color: $black;
-        font-size: 2.7rem;
+    line-height: 1.5;
+    .container {
+        padding: 0 16px;
     }
-    a:hover, .post a:hover {
-        text-decoration: underline;
+    footer {
+        margin-top: 1.25em;
     }
 }
 
-.blog-post-content {
+.post__content {
     padding-top: 1em;
     padding-bottom: 1em;
 }
@@ -42,10 +41,21 @@ code, pre {
     white-space: pre;
     overflow-x: auto;
 }
+p, ul, ol {
+    code {
+        color: $code-color;
+        font-size: 87.5%;
+    }
+}
+code {
+    word-break: break-word;
+}
 pre {
-    padding: 5px 10px;
+    padding: 4px 8px;
     border: 2px solid $pre-border;
     background-color: $pre-bg;
+    font-size: 87.5%;
+    font-weight: 400;
 }
 
 footer {
@@ -65,28 +75,38 @@ img {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    border: solid 1px #aaa;
 }
 
-.img_subtitle, .quote_subtitle {
+.image__subtitle, .quote__subtitle {
     text-align: center;
     display: block;
     font-style: italic;
 }
 
+p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
 /* post ToC */
 
-nav#TableOfContents {
+aside[rel="toc"] {
     margin: 16px;
 }
 
 /* whatever else comes to mind */
 
 small p {
+    margin-top: 0;
     margin-bottom: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: bolder;
+    margin-top: 0;
+    margin-bottom: .5rem;
+    line-height: 1.2;
 }
 
 .bold {
@@ -94,7 +114,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bolder;
 }
 
-ul.tags {
+.tags {
     padding-inline-start: 0;
     display: inline;
     li.tag {
@@ -103,28 +123,49 @@ ul.tags {
 }
 
 .post {
-    .header {
+    .post__header {
         display: flex;
         justify-content: space-between;
         h1, h2, h3, h4, h5, h6 {
             display: inline;
         }
     }
+}
+.container > section {
     margin: 0.5rem;
-    summary {
-        // fix for reboot.scss
-        cursor: unset;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    .pagination__left {
+        text-align: start;
+    }
+    .pagination__right {
+        margin-left: auto;
+        text-align: end;
     }
 }
 
-nav.pagination {
-    display: flex;
-    flex-direction: row;
-    .left {
-        text-align: start;
+a {
+    text-decoration: none;
+    color: $link-color;
+    &:visited {
+        color: $link-color;
     }
-    .right {
-        margin-left: auto;
-        text-align: end;
+}
+
+hr {
+    border: 1px solid rgba(0, 0, 0, .1);
+}
+
+.navbar-top {
+    padding: 1em;
+    .navbar-top__item {
+        margin-left: 0.8em;
+        color: grayscale($link-color);
+        &:hover {
+            color: darken(grayscale($link-color), 25%);
+        }
     }
 }
