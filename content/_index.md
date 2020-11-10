@@ -24,6 +24,7 @@ Computer Science student at Ufa State Petroleum Technological University
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
 * [backup][backup], a simple backup script
 * [syg_go][syg_go], an Yggdrasil address miner written in Go ([AUR package][sgaur])
+* [gmnhg][gmnhg], a tool that converts your [Hugo][hugo] site to [Gemini][gemini]
 * [emdl][emdl] package on AUR, the Arch Linux user repository
 
 I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
@@ -37,6 +38,9 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [backup]: https://git.tdem.in/tdemin/backup
 [emdl]: https://aur.archlinux.org/packages/emdl/
 [ygg]: https://yggdrasil-network.github.io
+[gmnhg]: https://git.tdem.in/tdemin/gmnhg
+[hugo]: https://gohugo.io
+[gemini]: https://gemini.circumlunar.space/
 
 #### Life changelog
 
