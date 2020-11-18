@@ -40,10 +40,10 @@ effort in keeping it updated less of a time waste.
 
 Looking good so far, looking forward to the last month of summer!
 
-![Photo by Safar Safarov on [Unsplash](https://unsplash.com/photos/MSN8TFhJ0is)](/img/coding-xps.jpg)
+![Photo by Safar Safarov on Unsplash](/img/coding-xps.jpg)
 
 [ygghome]: https://yggdrasil-network.github.io
-[yggdoc]: /post/yggdrasil-systemd/
+[yggdoc]: /post/yggdrasil-systemd
 [yggminer]: https://git.tdem.in/tdemin/syg_go
 [amber_cli]: https://git.tdem.in/tdemin/amber_cli
 [amber]: https://git.tdem.in/tdemin/amber

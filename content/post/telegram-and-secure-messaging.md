@@ -44,7 +44,7 @@ _Secret chats just aren't usable_. The whole secret chats thing just does it the
 Any security protocol should be independently audited to be trusted on being secure. MTProto, the homegrown encryption protocol used by Telegram to encrypt messages, wasn't audited, but instead a [challenge was posted](https://telegram.org/blog/cryptocontest "$300000 for Cracking Telegram Encryption") by Pavel Durov to crack the secret chat he started with his brother.
 
 The lack of winners noted by Pavel Durov is the thing he mostly admires when claiming the protocol security. Why is a marketing promotional better than an independent expert audit which would state things better? We only have to guess and hope the protocol is really secure.
-![[xkcd #153](https://xkcd.com/153/)](/img/xkcd-153.png)
+![xkcd #153](/img/xkcd-153.png)
 
 ## Spreading fear and doubt
 
@@ -54,13 +54,13 @@ Pavel Durov recently [stated](https://twitter.com/durov/status/87289101741811302
 The development of a new crypto is a hard task to accomplish. The cryptoexperts funded by the governments know there shouldn't be any backdoors, as any security tamper used by "good guys" can eventually be used by "bad guys".
 
 If the protocol is sound from the bad guys, it is safe and sound from anyone, so predicting the protocol to be found vulnerable in just 5 years sounds more like spreading [FUD](https://en.wikipedia.org/wiki/Fear,_uncertainty_and_doubt "Fear, uncertainty and doubt") among people to help promoting Telegram. Not only it doesn't look like a fair play, it's a very dangerous thing to do as people trusting Durov probably will just abandon on things after such statements.
-![[xkcd #1820](https://xkcd.com/1820/)](/img/xkcd-1820.png)
+![xkcd #1820](/img/xkcd-1820.png)
 
 Undermining the competitors isn't a good thing to do. Undermining them with spreading FUD among people is even worse.
 
 ## Source Code
 
-Telegram is a program with sources published under the [GNU General Public License v2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)&nbsp;[1]. Yet the only apps whose recent code is always available are Telegram Desktop and Telegram for Web while the mobile apps’ code is updated irregularly ([Android](https://github.com/DrKLO/Telegram/commits/master), [iOS](https://github.com/peter-iakovlev/Telegram/commits/public)).
+Telegram is a program with sources published under the [GNU General Public License v2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [1]. Yet the only apps whose recent code is always available are Telegram Desktop and Telegram for Web while the mobile apps’ code is updated irregularly ([Android](https://github.com/DrKLO/Telegram/commits/master), [iOS](https://github.com/peter-iakovlev/Telegram/commits/public)).
 
 The repos linked above face occasional updates with the interval close to 6 months or something about that. This is a rare case in the open source world, where the development almost always goes social, so you can see any interaction happened with the app’s code. But Telegram’s mobile apps development goes behind closed curtains: no pull requests are accepted, no issues are closed, commits do not link to individual changes, but instead consist of huge changesets pushed at once.
 

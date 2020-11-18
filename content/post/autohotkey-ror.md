@@ -37,7 +37,7 @@ The first parameter is the [AHK window class][AHKWinTitle], and the second one
 is the command to be run if the window doesn't exist yet (usually the path to
 the program).
 
-If you aren't familiar with AutoHotkey yet, I stronly recommend you to check it
+If you aren't familiar with AutoHotkey yet, I strongly recommend you to check it
 out, it's a lifesaver for those who are still running Windows for whatever
 reason: this program allows scripting system actions as complex as
 [tiling window management][bug.n], for instance.
