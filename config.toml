@@ -3,6 +3,8 @@ languageCode = "en-us"
 title = "Timur Demin's Blog"
 theme = "basics"
 
+ignoreFiles = [ "_index\\.gmi\\.md$" ]
+
 [markup.highlight]
 codeFences = true
 # guessSyntax = false
