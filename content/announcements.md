@@ -1,0 +1,27 @@
+---
+title: "Announcements"
+layout: "static"
+draft: false
+---
+
+PGP-signed messages declaring stuff I consider important.
+
+### OMEMO keys
+
+```
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+My OMEMO fingerprints for tdemin@jabber.at are:
+
+078b470b 86cfe508 7bdfe002 baf68429 9ee1c710 6a6a7794 f583a116 4670d629
+dd539066 aaee9300 fc5273c0 a0336498 ffcd70f0 cc67cd71 c2480911 2ed51534
+d60bf217 987f7ff6 f834325d afefd2c0 014d6386 7ec23604 50bfa838 c17b3c01
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQSdy0Ru9bAkz+iFgwKe3z+dkob6IAUCX709fAAKCRCe3z+dkob6
+IB/UAP94cyb4KfdTg1yLhczxGOopeKC7kyq8usXQ9+mF2f9CiQD5AZP2ys0eelMm
+cBuTCZRWeCAZIBdV9NMuU8PZVGvk5g8=
+=I3Lh
+-----END PGP SIGNATURE-----
+```

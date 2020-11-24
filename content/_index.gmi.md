@@ -17,10 +17,12 @@ wrote. Feel free to try it yourself!
 * Email: me@tdem.in
 * PGP key: 9DCB446EF5B024CFE88583029EDF3F9D9286FA20
 * XMPP: tdemin@jabber.at
+* Matrix: @tdemin:privacytools.io
 
 [The PGP key](/pgp.asc)
 [me@tdem.in](mailto:me@tdem.in)
 [tdemin@jabber.at](xmpp:tdemin@jabber.at)
+[OMEMO fingerprints and alike](/announcements.gmi)
 
 #### Projects
 
