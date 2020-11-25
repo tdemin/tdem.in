@@ -2,23 +2,36 @@ kind: pipeline
 name: hugo build
 
 steps:
-- name: build
+- name: hugo build
   image: cibuilds/hugo:0.73
   volumes:
-  - name: output
+  - name: hugo
     path: /static
   commands:
   - mkdir /tmp/src
   - cp -r * /tmp/src
   - hugo -d /tmp/static -s /tmp/src
   - htmlproofer /tmp/static --allow-hash-href --check-html --empty-alt-ignore --disable-external
-  - sudo rm -rf /static/*
-  - sudo cp -r /tmp/static/* /static
+  - sudo find /static -mindepth 1 -delete
+  - sudo cp -r /tmp/static /
   - sudo chown -R 1000:1000 /static
   environment:
     HUGO_ENV: production
+- name: gmnhg build
+  image: registry.git.tdem.in/gmnhg:v0.1.0
+  volumes:
+  - name: gmnhg
+    path: /static
+  commands:
+  - gmnhg -output /tmp/static
+  - find /static -mindepth 1 -delete
+  - cp -r /tmp/static /
+  - chown -R 1000:1000 /static
 
 volumes:
-- name: output
+- name: hugo
   host:
     path: /srv/static/blog.tdem.in
+- name: gmnhg
+  host:
+    path: /srv/static/gemini
