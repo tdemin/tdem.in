@@ -5,6 +5,10 @@ draft: false
 tags: ["VSCode", "programming", "development", "Linux", "Go"]
 ---
 
+This post is available in Russian [here][orig].
+
+[orig]: https://habr.com/en/post/516642/
+
 There's a certain point in life in which you realize you need to debug a
 program that simply cannot be run on your working machine due to reasons. In
 my case I have to debug a program that communicates with [iwd][iwd], the
