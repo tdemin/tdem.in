@@ -56,3 +56,4 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **GitHub**: [@tdemin](https://github.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
+* **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in) (generated with gmnhg)
