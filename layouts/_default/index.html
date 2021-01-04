@@ -1,4 +1,6 @@
 {{ define "content" }}
-{{ .Content }}
+<h1>{{ .Title }}</h1>
+<section>
 {{ partial "list" (where .Site.RegularPages.ByDate.Reverse "Section" "post") }}
+</section>
 {{ end }}

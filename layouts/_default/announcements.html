@@ -5,6 +5,8 @@
   <main class="post__content">
     {{ .Content }}
   </main>
-  {{ partial "announcement" (where .Site.RegularPages.ByDate.Reverse "Section" "announcements") }}
+  {{ range (where .Site.RegularPages.ByDate.Reverse "Section" "announcements") }}
+  {{ partial "announcement" . }}
+  {{ end }}
 </article>
 {{ end }}

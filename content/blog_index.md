@@ -1,7 +1,5 @@
 ---
-title: "Timur Demin's Blog"
+title: Index
 draft: false
-layout: all_posts_list
+layout: index
 ---
-
-# Index

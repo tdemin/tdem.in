@@ -1,12 +1,10 @@
-<section>
-    <ul>
-        {{ range . }}
-        <li class="post">
-            <div class="post__header">
-                <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
-                <time class="bold">{{ .Date.Format "02 Jan 2006" }}</time>
-            </div>
-        </li>
-        {{ end }}
-    </ul>
-</section>
+<ul>
+    {{ range . }}
+    <li class="post">
+        <div class="post__header">
+            <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
+            <time class="bold">{{ .Date.Format "02 Jan 2006" }}</time>
+        </div>
+    </li>
+    {{ end }}
+</ul>

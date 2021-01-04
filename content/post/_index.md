@@ -1,7 +1,5 @@
 ---
-title: "Timur Demin's Blog"
+title: All posts
 draft: false
 layout: all_posts
 ---
-
-# All posts

@@ -1,5 +1,4 @@
 ---
-title: "Timur Demin"
 description: "Computer Science student at Ufa State Petroleum Technological University"
 draft: false
 avatar: /avatar.jpg
