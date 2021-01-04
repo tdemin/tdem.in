@@ -1,0 +1,10 @@
+{{ define "content" }}
+{{ partial "toc" .}}
+<article class="post">
+  <h1 class="post__title">{{ .Title }}</h1>
+  <main class="post__content">
+    {{ .Content }}
+  </main>
+  {{ partial "announcement" (where .Site.RegularPages.ByDate.Reverse "Section" "announcements") }}
+</article>
+{{ end }}
