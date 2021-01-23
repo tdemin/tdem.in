@@ -1,5 +1,5 @@
 ---
 title: Index
 draft: false
-layout: index
+layout: blog_index
 ---
