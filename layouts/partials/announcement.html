@@ -1,5 +1,6 @@
 <div>
     {{- $fmtDate := .Date.Format "2006-01-02" -}}
-    <a href="#{{ printf "%s %s" $fmtDate .Title | urlize }}">#</a> <h4>{{ .Date.Format "2006-01-02" }} - {{ .Title }}</h4>
+    {{- $url := printf "%s %s" $fmtDate .Title | urlize -}}
+    <a id="{{ $url }}" href="#{{ $url }}">#</a> <h4>{{ .Date.Format "2006-01-02" }} - {{ .Title }}</h4>
     {{ .Content }}
 </div>
