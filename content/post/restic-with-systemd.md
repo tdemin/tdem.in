@@ -10,14 +10,14 @@ software. Designed to be simple to both use and script on any system, it doesn't
 include any OS-specific setup examples, which is precisely what this post
 describes.
 
-<!--more-->
-
 So what we're trying to achieve here:
 
 1. Automated backup runs daily at 12:00 AM (or any configurable time).
 2. The backup includes only important configuration files and data stores.
 3. The backup also includes all PostgreSQL databases, restorable with `psql -f`.
 4. The backup expands to an unlimited number of repos on need.
+
+<!--more-->
 
 This guide assumes we're backing up to a [rest-server][rest-server] instance
 running at `192.168.1.200`. The configuration should still be trivial to adapt
@@ -26,9 +26,16 @@ initialized a rest-server repo with
 `restic init -r rest:http://192.168.1.200/your-repo/`.
 
 For this we will need two systemd services, two correspondent timers, and a
-single helper script. Let's jump in to the files.
+single helper script.
 
 ## Backing up files/directories
+
+We'd rather not want to run restic as root for obvious reasons, so let's create
+a dedicated user:
+
+```
+# sudo useradd -m -N -s /usr/sbin/nologin restic
+```
 
 To backup files, we'll need this service along with its timer:
 
@@ -45,11 +52,12 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-User=root
+User=restic
 # runs restic backup on the files listed in /etc/restic/your-repo.files
 ExecStart=/usr/local/bin/restic backup --files-from /etc/restic/%I.files
 # source repo and password from /etc/restic/your-repo.env
 EnvironmentFile=/etc/restic/%I.env
+AmbientCapabilities=CAP_DAC_READ_SEARCH
 
 [Install]
 WantedBy=multi-user.target
@@ -64,7 +72,7 @@ WantedBy=multi-user.target
 Description=Run Restic at 12:00 AM
 
 [Timer]
-OnCalendar=*-*-* 12:00:00
+OnCalendar=*-*-* 0:00:00
 
 [Install]
 WantedBy=timers.target
@@ -80,10 +88,6 @@ readable as root, so set permissions accordingly):
 RESTIC_PASSWORD=your_repo_password
 RESTIC_REPOSITORY=rest:http://192.168.1.200/your-repo/
 ```
-
-> Note that restic already reads environment from `${HOME}/.resticrc` by itself.
-> Nonetheless, using that makes configuration dependent on the target user home
-> directory.
 
 We also have to supply restic with a file/directory list to back up:
 
@@ -112,10 +116,17 @@ we'll need a separate bash script:
 
 set -euo pipefail
 
-/usr/bin/sudo -u postgres pg_dumpall --clean \
+/usr/bin/sudo -u postgres /usr/bin/pg_dumpall --clean \
     | gzip --rsyncable \
     | /usr/local/bin/restic backup --host $1 --stdin \
         --stdin-filename postgres-$1.sql.gz
+```
+
+To run `pg_dumpall` as `postgres`, we'll need the following sudo rule in
+`/etc/sudoers`:
+
+```
+restic ALL=(postgres) NOPASSWD:/usr/bin/pg_dumpall --clean
 ```
 
 The unit file is as trivial as this:
@@ -132,7 +143,7 @@ Requires=postgresql.service
 
 [Service]
 Type=oneshot
-User=root
+User=restic
 ExecStart=/usr/local/bin/pgdump.sh %I
 EnvironmentFile=/etc/restic/%I.env
 
@@ -175,13 +186,6 @@ Test whether the whole backup system is working:
 These unit files allow backing up to an unlimited number of repos as long as the
 relevant configuration is provided through `/etc/restic/repo-name.{env,files}`.
 
-Notes:
-
-* The `restic-pg@.service` can be run as a non-root `postgres` user instead of
-    utilizing `sudo` directly.
-* restic can also be run as a non-root user if wanted. The official docs
-    [describe this fairly well][resticnonroot].
-
 ## Links / sources
 
 * [Recipe to backing up PostgreSQL in a Docker container][link1], originally
@@ -191,7 +195,6 @@ Notes:
 
 [restic]: https://restic.net
 [rest-server]: https://github.com/restic/rest-server
-[resticnonroot]: https://restic.readthedocs.io/en/stable/080_examples.html#backing-up-your-system-without-running-restic-as-root
 [link1]: https://forum.restic.net/t/recipe-to-snapshot-postgres-container/1707
 [systemd.service]: https://www.freedesktop.org/software/systemd/man/systemd.service.html
 [systemd.timer]: https://www.freedesktop.org/software/systemd/man/systemd.timer.html
