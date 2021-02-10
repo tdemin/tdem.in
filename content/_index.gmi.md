@@ -33,6 +33,9 @@ wrote. Feel free to try it yourself!
 [AUR package for syg_go][sgaur]
 [gmnhg, a tool that converts your Hugo site to Gemini][gmnhg]
 [emdl package on AUR, the Arch Linux user repository][emdl]
+[i3-gaps-desktop, a fork of i3wm that supports desktop managers][i3-gd]
+[i3-gaps-desktop AUR package][i3-gdaur]
+[airsonic-advanced AUR package][airsonic-advanced]
 
 I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
 
@@ -44,6 +47,9 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [emdl]: https://aur.archlinux.org/packages/emdl/
 [ygg]: https://yggdrasil-network.github.io
 [gmnhg]: https://git.tdem.in/tdemin/gmnhg
+[airsonic-advanced]: https://aur.archlinux.org/packages/airsonic-advanced-bin/
+[i3-gd]: https://git.tdem.in/tdemin/i3
+[i3-gdaur]: https://aur.archlinux.org/packages/i3-gaps-desktop/
 
 #### Links
 

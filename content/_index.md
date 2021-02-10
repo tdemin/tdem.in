@@ -26,8 +26,13 @@ Computer Science student at Ufa State Petroleum Technological University
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
 * [backup][backup], a simple backup script
 * [syg_go][syg_go], an Yggdrasil address miner written in Go ([AUR package][sgaur])
+* [i3-gaps-desktop][i3-gd], a fork of i3 window manager that supports desktop managers ([AUR package][i3-gdaur])
 * [gmnhg][gmnhg], a tool that converts your [Hugo][hugo] site to [Gemini][gemini]
-* [emdl][emdl] package on AUR, the Arch Linux user repository
+
+I maintain a number of packages on AUR, the Arch Linux user repository:
+
+* [airsonic-advanced][airsonic-advanced], the self-hostable music streaming software
+* [emdl][emdl], the manga reader
 
 I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
 
@@ -43,6 +48,9 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [gmnhg]: https://git.tdem.in/tdemin/gmnhg
 [hugo]: https://gohugo.io
 [gemini]: https://gemini.circumlunar.space/
+[airsonic-advanced]: https://aur.archlinux.org/packages/airsonic-advanced-bin/
+[i3-gd]: https://git.tdem.in/tdemin/i3
+[i3-gdaur]: https://aur.archlinux.org/packages/i3-gaps-desktop/
 
 #### Life changelog
 
