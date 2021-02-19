@@ -22,7 +22,7 @@ wrote. Feel free to try it yourself!
 [The PGP key](/pgp.asc)
 [me@tdem.in](mailto:me@tdem.in)
 [tdemin@jabber.at](xmpp:tdemin@jabber.at)
-[OMEMO fingerprints](/announcements/2020-01-02-omemo-keys.gmi)
+[OMEMO fingerprints](/announcements/2021-01-02-omemo.gmi)
 
 #### Projects
 
