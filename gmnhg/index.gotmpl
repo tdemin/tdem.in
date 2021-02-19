@@ -1,5 +1,4 @@
-{{ printf "%s" .Content -}}
-
+{{ printf "%s" .Content }}
 ### Blog entries
 {{ range $p := index .PostData "post" | sortPosts }}
 => /{{ $p.Link }} {{ $p.Metadata.PostDate.Format "2006-01-02 15:04" }} - {{ $p.Metadata.PostTitle }}

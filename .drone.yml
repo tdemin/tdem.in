@@ -18,7 +18,7 @@ steps:
   environment:
     HUGO_ENV: production
 - name: gmnhg build
-  image: registry.git.tdem.in/gmnhg:v0.1.0
+  image: registry.git.tdem.in/gmnhg:v0.1.1
   volumes:
   - name: gmnhg
     path: /static
