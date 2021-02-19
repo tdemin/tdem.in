@@ -5,6 +5,10 @@ draft: false
 tags: ["restic", "systemd", "Linux"]
 ---
 
+You can read the Russian version of this post [here][translation].
+
+[translation]: https://habr.com/ru/post/540096/
+
 [Restic][restic], the simple backup program, is a fairly well-known piece of
 software. Designed to be simple to both use and script on any system, it doesn't
 include any OS-specific setup examples, which is precisely what this post
