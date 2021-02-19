@@ -192,10 +192,10 @@ relevant configuration is provided through `/etc/restic/repo-name.{env,files}`.
 
 ## Links / sources
 
-* [Recipe to backing up PostgreSQL in a Docker container][link1], originally
-    used for the PostgreSQL backup script.
-* systemd docs: [systemd.service][systemd.service],
-    [systemd.timer][systemd.timer].
+[Recipe to backing up PostgreSQL in a Docker container][link1] used for the
+backup script was originally found on restic forum.  The excellent systemd docs
+([systemd.service][systemd.service], [systemd.timer][systemd.timer]) also helped
+a lot.
 
 [restic]: https://restic.net
 [rest-server]: https://github.com/restic/rest-server
