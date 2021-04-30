@@ -36,6 +36,7 @@ wrote. Feel free to try it yourself!
 [i3-gaps-desktop, a fork of i3wm that supports desktop managers][i3-gd]
 [i3-gaps-desktop AUR package][i3-gdaur]
 [airsonic-advanced AUR package][airsonic-advanced]
+[Networking guidebook for Ufa State Petroleum Technological University][gon]
 
 I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
 
@@ -50,6 +51,7 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [airsonic-advanced]: https://aur.archlinux.org/packages/airsonic-advanced-bin/
 [i3-gd]: https://git.tdem.in/tdemin/i3
 [i3-gdaur]: https://aur.archlinux.org/packages/i3-gaps-desktop/
+[gon]: /files/guidebook_networking.pdf
 
 #### Links
 

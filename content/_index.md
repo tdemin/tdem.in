@@ -52,6 +52,11 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [i3-gd]: https://git.tdem.in/tdemin/i3
 [i3-gdaur]: https://aur.archlinux.org/packages/i3-gaps-desktop/
 
+I wrote a [guidebook on networking][gon] with Linux for Ufa State Petroleum
+Technological University.
+
+[gon]: /files/guidebook_networking.pdf
+
 #### Life changelog
 
 * _Jun 2020 &ndash; Jul 2020:_ intern at JSC Nefteavtomatika, worked on internal network devices accounting software in Go
