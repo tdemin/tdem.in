@@ -19,23 +19,25 @@ Computer Science student at Ufa State Petroleum Technological University
 
 #### Projects
 
-* Project Amber, a task list app with variable task nesting ([live demo](https://amber.h.tdem.in)):
-    + [Amber][amber], the API server in Python
-    + [Amber Web][amber_web], the web client built with TypeScript and React
-    + [Amber CLI][amber_cli], the CLI client written in Go, currently unfinished
+* [akm][akm], an [age(1)][age] key manager and wrapper
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
 * [backup][backup], a simple backup script
 * [syg_go][syg_go], an Yggdrasil address miner written in Go ([AUR package][sgaur])
 * [i3-gaps-desktop][i3-gd], a fork of i3 window manager that supports desktop managers ([AUR package][i3-gdaur])
 * [gmnhg][gmnhg], a tool that converts your [Hugo][hugo] site to [Gemini][gemini]
+* Project Amber, a task list app with variable task nesting ([live demo](https://amber.h.tdem.in)):
+    + [Amber][amber], the API server in Python
+    + [Amber Web][amber_web], the web client built with TypeScript and React
+    + [Amber CLI][amber_cli], the CLI client written in Go, unfinished
 
 I maintain a number of packages on AUR, the Arch Linux user repository:
 
 * [airsonic-advanced][airsonic-advanced], the self-hostable music streaming software
-* [emdl][emdl], the manga reader
 
 I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
 
+[akm]: https://github.com/tdemin/akm
+[age]: https://github.com/FiloSottile/age
 [amber]: https://git.tdem.in/tdemin/amber
 [amber_web]: https://git.tdem.in/tdemin/amber_web
 [amber_cli]: https://git.tdem.in/tdemin/amber_cli
@@ -43,7 +45,6 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
-[emdl]: https://aur.archlinux.org/packages/emdl/
 [ygg]: https://yggdrasil-network.github.io
 [gmnhg]: https://git.tdem.in/tdemin/gmnhg
 [hugo]: https://gohugo.io

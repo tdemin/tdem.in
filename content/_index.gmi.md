@@ -26,6 +26,7 @@ wrote. Feel free to try it yourself!
 
 #### Projects
 
+[akm, an age(1) key manager and wrapper][akm]
 [Amber, a web-based task list app (with clients in Go/TypeScript)][amber]
 [scarlet_export, a program to export notes from Scarlet Notes][scarlet_export]
 [backup, a simple backup script][backup]
@@ -40,6 +41,7 @@ wrote. Feel free to try it yourself!
 
 I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
 
+[akm]: https://github.com/tdemin/akm
 [amber]: https://git.tdem.in/tdemin/amber
 [syg_go]: https://git.tdem.in/tdemin/syg_go
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
