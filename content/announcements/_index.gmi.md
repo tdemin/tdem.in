@@ -1,3 +1,4 @@
 ## Announcements
 
-PGP-signed messages declaring stuff I consider important.
+Messages declaring stuff I consider important. Signed with either GnuPG or
+minisign.
