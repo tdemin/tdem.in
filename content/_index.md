@@ -13,7 +13,7 @@ Computer Science student at Ufa State Petroleum Technological University
 * **Email**: [me@tdem.in](mailto:me@tdem.in)
 * **PGP key**: [9DCB 446E F5B0 24CF E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc)
 * **XMPP**: [tdemin@jabber.at](xmpp:tdemin@jabber.at) ([OMEMO fingerprints][prints])
-* **Matrix**: @tdemin:privacytools.io
+* **Matrix**: @tdemin:ru-matrix.org
 
 [prints]: /announcements
 
