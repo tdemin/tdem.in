@@ -60,13 +60,14 @@ Technological University.
 
 #### Life changelog
 
+* _Jul 2021_: successfully completed BSc (Comp) degree at Ufa State Petroleum Technological University
 * _Jun 2020 &ndash; Jul 2020:_ intern at JSC Nefteavtomatika, worked on internal network devices accounting software in Go
-* _Sep 2017 &ndash; present:_ CS student at Ufa State Petroleum Technological University
+* _Sep 2017 &ndash; Jul 2021:_ CS student at Ufa State Petroleum Technological University
 
 #### Links
 
-* **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin) (most projects go here)
-* **GitLab**: [@tdemin](https://gitlab.com/tdemin)
+* **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
 * **GitHub**: [@tdemin](https://github.com/tdemin)
+* **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
 * **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in) (generated with gmnhg)
