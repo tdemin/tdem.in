@@ -71,3 +71,5 @@ Technological University.
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
 * **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in) (generated with gmnhg)
+
++ **Music profile**: [music.tdem.in](https://music.tdem.in)
