@@ -112,6 +112,11 @@ Unless Git and other software projects start abandoning GnuPG, GnuPG and OpenPGP
 are unlikely to go anywhere, as being tied too deep into software codebases and
 seeing no perfect simple alternatives just yet.
 
+There's also a new OpenPGP library in Rust, [Sequoia][sequoia], which solves a
+number of issues associated with GnuPG (namely the monolith problem), but it
+doesn't look like any of the applications using GnuPG integrate with it just
+yet.
+
 Anyways, you can now encrypt me messages with age (or [akm][akm]), and verify my
 signatures with minisign with those [keys][keys]:
 
@@ -132,3 +137,4 @@ minisign: RWRltlKLStovfiGdhWNzla+GyANAL9ok1Bg15qCAq8oRPCGN6G4fjLj1
 [akm]: https://github.com/tdemin/akm "age key manager"
 [keys]: /announcements/#2021-05-27-age-%2f-minisign-public-keys
 [gpgmereference]: https://gnupg.org/documentation/manuals/gpgme.pdf
+[sequoia]: https://sequoia-pgp.org/
