@@ -3,7 +3,7 @@ name: hugo build
 
 steps:
 - name: hugo build
-  image: cibuilds/hugo:0.73
+  image: cibuilds/hugo:0.86
   volumes:
   - name: hugo
     path: /static
