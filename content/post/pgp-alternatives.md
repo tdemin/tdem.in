@@ -42,7 +42,6 @@ seriously assumes you're fine with entering something like this every time[^2]:
     -o file.enc file.txt 
 ```
 
-
 `age` also raises concerns by letting trivially discoverable bugs such as [this
 one][age-bug] slip in the release candidates. This one is for sure easily
 discoverable, as I ran into it while writing [akm][akm] in my first hours of
