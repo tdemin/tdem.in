@@ -65,4 +65,6 @@ As you might want to inspect the files before deleting them, this script simply
 prints their names to the standard output. For a quick oneliner that would purge
 every duplicate file found automatically, issue:
 
-    PS > Remove-Duplicates.ps1 C:\Some\Path | Select-Object -ExpandProperty Dupe | Remove-Item
+```
+PS > Remove-Duplicates.ps1 C:\Some\Path | Select-Object -ExpandProperty Dupe | Remove-Item
+```

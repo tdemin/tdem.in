@@ -13,6 +13,8 @@ wrapper[^1] to GnuPG), it being the de-facto implementation of
 OpenPGP, and its other problems, as commonly illustrated by [this post by
 Latacora][latacora].
 
+<!--more-->
+
 [gpgme]: https://gnupg.org/software/gpgme/index.html
 
 Theoretically, the program (or programs, thinking the Unix way) to replace GnuPG
