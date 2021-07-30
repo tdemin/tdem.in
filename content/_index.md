@@ -20,11 +20,11 @@ Computer Science student at Ufa State Petroleum Technological University
 #### Projects
 
 * [akm][akm], an [age(1)][age] key manager and wrapper
+* [syg_go][syg_go], an Yggdrasil address miner written in Go ([AUR package][sgaur])
+* [gmnhg][gmnhg], a tool that converts your [Hugo][hugo] site to [Gemini][gemini]
+* [i3-gaps-desktop][i3-gd], a fork of i3 window manager that supports desktop managers ([AUR package][i3-gdaur])
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
 * [backup][backup], a simple backup script
-* [syg_go][syg_go], an Yggdrasil address miner written in Go ([AUR package][sgaur])
-* [i3-gaps-desktop][i3-gd], a fork of i3 window manager that supports desktop managers ([AUR package][i3-gdaur])
-* [gmnhg][gmnhg], a tool that converts your [Hugo][hugo] site to [Gemini][gemini]
 * Project Amber, a task list app with variable task nesting ([live demo](https://amber.h.tdem.in)):
     + [Amber][amber], the API server in Python
     + [Amber Web][amber_web], the web client built with TypeScript and React

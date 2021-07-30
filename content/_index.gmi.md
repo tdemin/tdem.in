@@ -27,15 +27,14 @@ wrote. Feel free to try it yourself!
 #### Projects
 
 [akm, an age(1) key manager and wrapper][akm]
-[Amber, a web-based task list app (with clients in Go/TypeScript)][amber]
-[scarlet_export, a program to export notes from Scarlet Notes][scarlet_export]
-[backup, a simple backup script][backup]
 [syg_go, an Yggdrasil address miner written in Go][syg_go]
 [AUR package for syg_go][sgaur]
 [gmnhg, a tool that converts your Hugo site to Gemini][gmnhg]
-[emdl package on AUR, the Arch Linux user repository][emdl]
+[Amber, a web-based task list app (with clients in Go/TypeScript)][amber]
 [i3-gaps-desktop, a fork of i3wm that supports desktop managers][i3-gd]
 [i3-gaps-desktop AUR package][i3-gdaur]
+[scarlet_export, a program to export notes from Scarlet Notes][scarlet_export]
+[backup, a simple backup script][backup]
 [airsonic-advanced AUR package][airsonic-advanced]
 [Networking guidebook for Ufa State Petroleum Technological University][gon]
 
