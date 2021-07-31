@@ -42,13 +42,13 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 
 [akm]: https://github.com/tdemin/akm
 [amber]: https://git.tdem.in/tdemin/amber
-[syg_go]: https://git.tdem.in/tdemin/syg_go
+[syg_go]: https://github.com/tdemin/syg_go
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
 [emdl]: https://aur.archlinux.org/packages/emdl/
 [ygg]: https://yggdrasil-network.github.io
-[gmnhg]: https://git.tdem.in/tdemin/gmnhg
+[gmnhg]: https://github.com/tdemin/gmnhg
 [airsonic-advanced]: https://aur.archlinux.org/packages/airsonic-advanced-bin/
 [i3-gd]: https://git.tdem.in/tdemin/i3
 [i3-gdaur]: https://aur.archlinux.org/packages/i3-gaps-desktop/
@@ -56,8 +56,8 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 
 #### Links
 
-[Personal Git hosting](https://git.tdem.in/tdemin)
 [GitHub: @tdemin](https://github.com/tdemin)
+[Personal Git hosting](https://git.tdem.in/tdemin)
 [GitLab: @tdemin](https://gitlab.com/tdemin)
 [Russian blog on Habr](https://habr.com/en/users/tdemin/posts)
 [This page on the Web](https://tdem.in)

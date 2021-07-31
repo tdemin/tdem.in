@@ -41,12 +41,12 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [amber]: https://git.tdem.in/tdemin/amber
 [amber_web]: https://git.tdem.in/tdemin/amber_web
 [amber_cli]: https://git.tdem.in/tdemin/amber_cli
-[syg_go]: https://git.tdem.in/tdemin/syg_go
+[syg_go]: https://github.com/tdemin/syg_go
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
 [ygg]: https://yggdrasil-network.github.io
-[gmnhg]: https://git.tdem.in/tdemin/gmnhg
+[gmnhg]: https://github.com/tdemin/gmnhg
 [hugo]: https://gohugo.io
 [gemini]: https://gemini.circumlunar.space/
 [airsonic-advanced]: https://aur.archlinux.org/packages/airsonic-advanced-bin/
@@ -66,8 +66,8 @@ Technological University.
 
 #### Links
 
-* **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
 * **GitHub**: [@tdemin](https://github.com/tdemin)
+* **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
 * **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in) (generated with gmnhg)
