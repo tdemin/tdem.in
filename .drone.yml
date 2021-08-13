@@ -18,7 +18,7 @@ steps:
   environment:
     HUGO_ENV: production
 - name: gmnhg build
-  image: ghcr.io/tdemin/gmnhg:v0.1.2
+  image: ghcr.io/tdemin/gmnhg:v0.2.0
   volumes:
   - name: gmnhg
     path: /static
