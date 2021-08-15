@@ -43,7 +43,7 @@ What we're going to do basically sums up to this:
 2. Add a VSCode debug profile that would attach to the target machine.
 3. Make VSCode autostart the script on starting a debugging session.
 
-### Scripting building and Delve
+## Scripting building and Delve
 
 Delve, the Go debugger, supports running as a headless server for the clients
 to attach to. We need to run a binary remotely.
@@ -86,7 +86,7 @@ The entire sequence can now be started with `task delve`. The dependencies
 ensure Delve is killed beforehand (`scp` won't work if the program is still
 running), and the binary is built and pushed to the target machine.
 
-### Configuring the debugging profile
+## Configuring the debugging profile
 
 Long story short, here's how you configure `.vscode/launch.json` (assuming
 the [Go addon][VSCodeGoAddon] is installed):
@@ -118,7 +118,7 @@ the [Go addon][VSCodeGoAddon] is installed):
 }
 ```
 
-### Adding the pre-debug task
+## Adding the pre-debug task
 
 This is a matter of a single file as well, the `.vscode/tasks.json`:
 
@@ -145,7 +145,7 @@ This is a matter of a single file as well, the `.vscode/tasks.json`:
 }
 ```
 
-### Debugging
+## Debugging
 
 When done, you can now hit F5 and enter debug session.
 

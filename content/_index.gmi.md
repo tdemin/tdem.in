@@ -1,4 +1,4 @@
-## Timur Demin's Geminispace
+# Timur Demin's Geminispace
 
 Quick facts:
 
@@ -12,7 +12,7 @@ wrote. Feel free to try it yourself!
 
 [Visit my blog](/post/index.gmi)
 
-#### Contact info
+## Contact info
 
 * Email: me@tdem.in
 * PGP key: 9DCB446EF5B024CFE88583029EDF3F9D9286FA20
@@ -24,12 +24,12 @@ wrote. Feel free to try it yourself!
 [tdemin@404.city](xmpp:tdemin@404.city)
 [OMEMO fingerprints](/announcements/index.gmi)
 
-#### Projects
+## Projects
 
+[gmnhg, a tool that converts your Hugo site to Gemini][gmnhg]
 [akm, an age(1) key manager and wrapper][akm]
 [syg_go, an Yggdrasil address miner written in Go][syg_go]
 [AUR package for syg_go][sgaur]
-[gmnhg, a tool that converts your Hugo site to Gemini][gmnhg]
 [Amber, a web-based task list app (with clients in Go/TypeScript)][amber]
 [i3-gaps-desktop, a fork of i3wm that supports desktop managers][i3-gd]
 [i3-gaps-desktop AUR package][i3-gdaur]
@@ -54,12 +54,11 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [i3-gdaur]: https://aur.archlinux.org/packages/i3-gaps-desktop/
 [gon]: /files/guidebook_networking.pdf
 
-#### Links
+## Links
 
 [GitHub: @tdemin](https://github.com/tdemin)
 [Personal Git hosting](https://git.tdem.in/tdemin)
 [GitLab: @tdemin](https://gitlab.com/tdemin)
 [Russian blog on Habr](https://habr.com/en/users/tdemin/posts)
 [This page on the Web](https://tdem.in)
-
 [Music profile](https://music.tdem.in)

@@ -22,13 +22,13 @@ while not exposing a DNS resolver on the LAN is what's described below.
 
 <!--more-->
 
-##### This post in short
+This post in short:
 
 1. Create a dummy adapter, assign a private network IP to it.
 2. Make dnscrypt-proxy listen on this interface, change system DNS settings
    accordingly.
 
-### The problem
+## The problem
 
 Docker sets up DNS in containers by [copying host DNS settings][DockerDNS],
 reusing `/etc/resolv.conf` from the host.
@@ -40,7 +40,7 @@ network namespace, host's `127.0.0.1` and container's mean two different things.
 
 [DockerDNS]: https://docs.docker.com/config/containers/container-networking/#dns-services
 
-### The fix
+## The fix
 
 The easiest solution is to run dnscrypt-proxy on host's public IP address and
 then add this address to `/etc/resolv.conf`. This means we expose a DNS
@@ -50,7 +50,7 @@ Instead we'll create a `dummy` network adapter that is routable yet doesn't
 actually send any packets; it is routable from the container since Docker
 containers use the host machine as their default gateway.
 
-##### Creating the adapter
+### Creating the adapter
 
 If `dummy` kernel module is not loaded yet (`% lsmod | grep dummy` displays
 nothing), load it and enable its autostart:
@@ -92,7 +92,7 @@ Address=10.0.197.1/24
 DefaultRouteOnDevice=false
 ```
 
-##### Changing DNS settings
+### Changing DNS settings
 
 To bind dnscrypt-proxy to a new address, edit `listen_addresses` in
 `/etc/dnscrypt-proxy/dnscrypt-proxy.toml` and make it look like this:
@@ -108,7 +108,7 @@ Restart dnscrypt-proxy and then replace the text in `/etc/resolv.conf`
 nameserver 10.0.197.1
 ```
 
-##### Checking
+### Checking
 
 Run a new container:
 
@@ -119,7 +119,7 @@ nameserver 10.0.197.1
 # ping -c 1 ya.ru
 ```
 
-### Additional info
+## Additional info
 
 If you use a firewall (and you should be), then allow incoming traffic to
 `10.0.197.1:53` from the subnets Docker uses for containers.
