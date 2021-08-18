@@ -60,9 +60,14 @@ Technological University.
 
 #### Life changelog
 
-* _Jul 2021_: successfully completed BSc (Comp) degree at Ufa State Petroleum Technological University
-* _Jun 2020 &ndash; Jul 2020:_ intern at JSC Nefteavtomatika, worked on internal network devices accounting software in Go
-* _Sep 2017 &ndash; Jul 2021:_ CS student at Ufa State Petroleum Technological University
+* _Sep 2021 &ndash; present time_: MCS student at Ufa State Petroleum
+  Technological University
+* _Jul 2021_: successfully completed BSc (Comp) degree at Ufa State Petroleum
+  Technological University
+* _Jun 2020 &ndash; Jul 2020:_ intern at JSC Nefteavtomatika, worked on
+  internal network devices accounting software in Go
+* _Sep 2017 &ndash; Jul 2021:_ CS student at Ufa State Petroleum Technological
+  University
 
 #### Links
 
