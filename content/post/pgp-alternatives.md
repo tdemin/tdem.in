@@ -13,6 +13,8 @@ wrapper[^1] to GnuPG), it being the de-facto implementation of
 OpenPGP, and its other problems, as commonly illustrated by [this post by
 Latacora][latacora].
 
+[^1]: See section 3.1 of the [GPGME reference][gpgmereference] and others: a large number of functions, like `gpgme_get_dirinfo`, only make sense if GPGME was a command-line wrapper.
+
 <!--more-->
 
 [gpgme]: https://gnupg.org/software/gpgme/index.html
@@ -43,6 +45,8 @@ seriously assumes you're fine with entering something like this every time[^2]:
 % age -r age1h0ea8x07z33fc5lzkqj3kghup4g6jkzsaj6v86pgngwn7gs8q9es56lpwv \
     -o file.enc file.txt 
 ```
+
+[^2]: To be completely fair, you can more or less solve it with a wrapper. For this job I made [akm][akm], a shell script wrapper that will read recipient keys for you from `~/.akm` and pass them to `age`. It can also set your default encryption key for you unless you specify one on the command line.
 
 `age` also raises concerns by letting trivially discoverable bugs such as [this
 one][age-bug] slip in the release candidates. This one is for sure easily
@@ -125,14 +129,6 @@ signatures with minisign with those [keys][keys]:
 age: age1h0ea8x07z33fc5lzkqj3kghup4g6jkzsaj6v86pgngwn7gs8q9es56lpwv
 minisign: RWRltlKLStovfiGdhWNzla+GyANAL9ok1Bg15qCAq8oRPCGN6G4fjLj1
 ```
-
-[^1]: See section 3.1 of the [GPGME reference][gpgmereference] and others: a
-  large number of functions, like `gpgme_get_dirinfo`, only make sense if GPGME
-  was a command-line wrapper.
-[^2]: To be completely fair, you can more or less solve it with a wrapper. For
-  this job I made [akm][akm], a shell script wrapper that will read recipient
-  keys for you from `~/.akm` and pass them to `age`. It can also set your
-  default encryption key for you unless you specify one on the command line.
 
 [latacora]: https://latacora.micro.blog/2019/07/16/the-pgp-problem.html "The PGP problem"
 [akm]: https://github.com/tdemin/akm "age key manager"

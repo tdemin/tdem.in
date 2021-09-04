@@ -155,8 +155,7 @@ License v2][gplv2][^3]. Yet the only apps whose recent code is always available
 are Telegram Desktop and Telegram for Web while the mobile apps’ code is updated
 irregularly ([Android][android], [iOS][ios]).
 
-[^3]: The apps licensed under the GNU GPLv2 are [Telegram’s mobile apps][apps].
-  Telegram for Web and Telegram Desktop are licensed under the GNU GPLv3.
+[^3]: The apps licensed under the GNU GPLv2 are [Telegram’s mobile apps][apps]. Telegram for Web and Telegram Desktop are licensed under the GNU GPLv3.
 
 [gplv2]: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 [apps]: https://telegram.org/apps
