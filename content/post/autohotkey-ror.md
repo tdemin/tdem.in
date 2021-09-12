@@ -1,7 +1,6 @@
 ---
 title: "AutoHotkey Run-or-Raise"
 date: 2019-05-12T18:12:17+05:00
-draft: false
 tags: ["AutoHotkey", "Windows", "hack"]
 ---
 

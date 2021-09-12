@@ -1,7 +1,6 @@
 ---
 title: "GnuPG and its alternatives: the state in 2021"
 date: 2021-07-26T02:00:00+05:00
-draft: false
 tags: ["PGP", "GnuPG", "age", "minisign", "signify", "sigtool", "encryption", "cryptography", "privacy"]
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: "Telegram and Secure Messaging"
 date: 2017-07-05T12:00:00+00:00
-draft: false
 tags: ["Telegram", "messaging", "security", "privacy", "end-to-end encryption"]
 ---
 

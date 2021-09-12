@@ -1,21 +1,19 @@
 {{ define "content" }}
 {{ partial "toc" .}}
-<article class="post">
-  <h1 class="post__title">{{ .Title }}</h1>
-  <section class="post__header">
-    <time>{{ .Date.Format "02 Jan 2006" }}</time>
-  </section>
-  <main class="post__content">
-    {{ .Content }}
-  </main>
-  {{ if .Params.tags }}{{ if ge (.Params.tags | len) 0 }}
-  <section class="post__tags">
-    <em class="bold">Tags:</em>
-    <ul class="tags">{{ $tags := (.GetTerms "tags") }}{{ range $index, $tag := $tags }}
-      <li class="tag"><a href="{{ $tag.Permalink }}">{{ $tag.LinkTitle }}</a></li>{{ if lt $index (sub ($tags | len) 1) }},{{ end }}
-    {{ end }}
-    </ul>
-  </section>
-  {{ end }}{{ end }}
+<article>
+    <h1>{{ .Title }}</h1>
+    {{ partial "time" .Date }}
+    <main>
+        {{ .Content }}
+    </main>
+    {{ if .Params.tags }}{{ if ge (.Params.tags | len) 0 }}
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">{{ $tags := (.GetTerms "tags") }}{{ range $index, $tag := $tags }}
+        <li class="tag"><a href="{{ $tag.Permalink }}">{{ $tag.LinkTitle }}</a></li>{{ if lt $index (sub ($tags | len) 1) }},{{ end }}
+        {{ end }}
+        </ul>
+    </section>
+    {{ end }}{{ end }}
 </article>
 {{ end }}

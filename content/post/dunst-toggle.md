@@ -1,7 +1,6 @@
 ---
 title: "Toggling dunst notifications in i3"
 date: 2020-08-12T18:02:33+05:00
-draft: false
 tags: ["Linux", "dunst", "i3"]
 ---
 

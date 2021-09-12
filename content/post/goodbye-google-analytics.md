@@ -1,7 +1,6 @@
 ---
 title: "Goodbye Google Analytics"
 date: 2018-05-20T12:00:00+00:00
-draft: false
 tags: ["Google", "Google Analytics"]
 ---
 

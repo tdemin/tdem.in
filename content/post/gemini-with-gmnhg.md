@@ -1,7 +1,6 @@
 ---
 title: "Running a Gemini site with gmnhg and Hugo"
 date: 2020-11-26T03:45:04+05:00
-draft: false
 tags: ["gemini", "Go", "gmnhg"]
 ---
 

@@ -1,14 +1,14 @@
 ---
 description: "Computer Science student at Ufa State Petroleum Technological University"
 draft: false
-avatar: /avatar.jpg
+images: []
 ---
 
-## Timur Demin
+# Timur Demin
 
 Computer Science student at Ufa State Petroleum Technological University
 
-#### Contact info
+## Contact info
 
 * **Email**: [me@tdem.in](mailto:me@tdem.in)
 * **PGP key**: [9DCB 446E F5B0 24CF E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc)
@@ -17,7 +17,7 @@ Computer Science student at Ufa State Petroleum Technological University
 
 [prints]: /announcements
 
-#### Projects
+## Projects
 
 * [akm][akm], an [age(1)][age] key manager and wrapper
 * [syg_go][syg_go], an Yggdrasil address miner written in Go ([AUR package][sgaur])
@@ -58,7 +58,7 @@ Technological University.
 
 [gon]: /files/guidebook_networking.pdf
 
-#### Life changelog
+## Life changelog
 
 * _Sep 2021 &ndash; present time_: MCS student at Ufa State Petroleum
   Technological University
@@ -69,12 +69,11 @@ Technological University.
 * _Sep 2017 &ndash; Jul 2021:_ CS student at Ufa State Petroleum Technological
   University
 
-#### Links
+## Links
 
 * **GitHub**: [@tdemin](https://github.com/tdemin)
 * **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
 * **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in) (generated with gmnhg)
-
-+ **Music profile**: [music.tdem.in](https://music.tdem.in)
+* **Music profile**: [music.tdem.in](https://music.tdem.in)

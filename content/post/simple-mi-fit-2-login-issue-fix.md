@@ -1,7 +1,6 @@
 ---
 title: "Simple Mi Fit Login Issue Fix"
 date: 2018-06-01T12:00:00+00:00
-draft: false
 tags: ["hack", "Mi Band"]
 ---
 

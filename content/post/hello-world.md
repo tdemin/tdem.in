@@ -1,7 +1,6 @@
 ---
 title: "Hello World Yet Again"
 date: 2019-04-14T16:14:24+05:00
-draft: false
 tags: ["Hugo", "Tumblr", "hello world"]
 ---
 

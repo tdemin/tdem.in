@@ -1,7 +1,6 @@
 ---
 title: "Configuring Yggdrasil with systemd-networkd"
 date: 2020-07-23T13:15:08+05:00
-draft: false
 tags: ["Yggdrasil", "systemd", "systemd-networkd", "systemd-resolved", "Linux"]
 ---
 

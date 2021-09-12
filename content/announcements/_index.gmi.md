@@ -1,4 +1,4 @@
-## Announcements
+# Announcements
 
 Messages declaring stuff I consider important. Signed with either GnuPG or
 minisign.

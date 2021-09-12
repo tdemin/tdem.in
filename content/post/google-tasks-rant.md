@@ -1,7 +1,6 @@
 ---
 title: "Rant: Google Tasks"
 date: 2018-07-02T12:00:00+00:00
-draft: false
 tags: ["Google", "Google Tasks", "tasks management"]
 ---
 

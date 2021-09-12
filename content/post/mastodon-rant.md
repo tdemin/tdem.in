@@ -1,7 +1,6 @@
 ---
 title: "Rant: Mastodon"
 date: 2018-12-08T12:00:00+00:00
-draft: true
 tags: ["Mastodon", "fediverse"]
 ---
 

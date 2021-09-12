@@ -1,7 +1,6 @@
 ---
 title: "Rant: Overengineering"
 date: 2019-07-16T22:48:10+05:00
-draft: false
 tags: ["JavaScript", "React", "Redux", "overengineering", "programming", "development"]
 ---
 
