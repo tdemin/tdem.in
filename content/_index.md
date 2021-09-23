@@ -14,6 +14,8 @@ Computer Science student at Ufa State Petroleum Technological University
 * **XMPP**: [tdemin@404.city](xmpp:tdemin@404.city) ([OMEMO fingerprints][prints])
 * **Matrix**: @tdemin:ru-matrix.org
 
+I am available for hire in Russia. See [my CV](https://github.com/tdemin/cv/releases/tag/latest).
+
 [prints]: /announcements
 
 ## Projects
