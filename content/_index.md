@@ -10,8 +10,7 @@ Computer Science student at Ufa State Petroleum Technological University
 
 ## Contact info
 
-* **Email**: [me@tdem.in](mailto:me@tdem.in)
-* **PGP key**: [9DCB 446E F5B0 24CF E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc)
+* **Email**: [me@tdem.in](mailto:me@tdem.in) (PGP: [9DCB 446E F5B0 24CF E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc))
 * **XMPP**: [tdemin@404.city](xmpp:tdemin@404.city) ([OMEMO fingerprints][prints])
 * **Matrix**: @tdemin:ru-matrix.org
 
@@ -73,6 +72,7 @@ Technological University.
 
 * **GitHub**: [@tdemin](https://github.com/tdemin)
 * **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
+* **LinkedIn**: [@tdemin](https://linkedin.com/in/tdemin)
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/) (in Russian)
 * **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in) (generated with gmnhg)
