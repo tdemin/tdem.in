@@ -12,11 +12,35 @@
     </head>
     <body>
         <div class="container-horizontal">
-        {{ partial "nav" .}}
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
         {{ block "content" .}}
         This is the baseof template.
         {{ end }}
-        {{ partial "footer" .}}
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; {{ now.Format "2006" }} <a href="{{ .Site.Params.home }}">{{ .Site.Author.name }}</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                {{ with .Site.Params.sourceCode }}
+                <p>
+                    The source code of this website is available <a target="_blank" href="{{ . }}">here</a>.
+                </p>
+                {{ end }}
+            </small>
+        </footer>
+        
         </div>
     </body>
 </html>
