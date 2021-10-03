@@ -27,10 +27,12 @@ wrote. Feel free to try it yourself!
 ## Projects
 
 [gmnhg, a tool that converts your Hugo site to Gemini][gmnhg]
+[md2gmn, a tool that converts Markdown to Gemtext][gmnhg]
 [akm, an age(1) key manager and wrapper][akm]
 [syg_go, an Yggdrasil address miner written in Go][syg_go]
 [AUR package for syg_go][sgaur]
-[Amber, a web-based task list app (with clients in Go/TypeScript)][amber]
+[GitHub Action to find latest tag of any Git repository][flt]
+[Amber, a web-based task list app (with client in TypeScript)][amber]
 [i3-gaps-desktop, a fork of i3wm that supports desktop managers][i3-gd]
 [i3-gaps-desktop AUR package][i3-gdaur]
 [scarlet_export, a program to export notes from Scarlet Notes][scarlet_export]
@@ -41,6 +43,7 @@ wrote. Feel free to try it yourself!
 I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
 
 [akm]: https://github.com/tdemin/akm
+[flt]: https://github.com/marketplace/actions/find-latest-tag-of-git-repository
 [amber]: https://git.tdem.in/tdemin/amber
 [syg_go]: https://github.com/tdemin/syg_go
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
