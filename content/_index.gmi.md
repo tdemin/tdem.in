@@ -62,3 +62,7 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [Russian blog on Habr](https://habr.com/en/users/tdemin/posts)
 [This page on the Web](https://tdem.in)
 [Music profile](https://music.tdem.in)
+
+## Blog entries
+
+[RSS](/post/rss.xml)

@@ -1,7 +1,7 @@
 {{ printf "%s" .Content -}}
 
-{{- range $p := .Posts | sortPosts }}
-=> /{{ $p.Link }} {{ $p.Metadata.PostDate.Format "2006-01-02 15:04" }} - {{ $p.Metadata.PostTitle }}
+{{- range $p := .Posts | sortRev }}
+=> /{{ $p.Link }} {{ $p.Metadata.Date.Format "2006-01-02 15:04" }} - {{ $p.Metadata.Title }}
 
 {{ $p.Post | printf "%s" }}
 {{- end -}}

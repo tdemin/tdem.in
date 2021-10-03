@@ -1,7 +1,7 @@
 => /post/index.gmi Back to blog
 
-# {{ .Metadata.PostTitle }}
+# {{ .Metadata.Title }}
 
-{{ .Metadata.PostDate.Format "2006-01-02 15:04" }}
+{{ .Metadata.Date.Format "2006-01-02 15:04" }}
 
 {{ printf "%s" .Post }}

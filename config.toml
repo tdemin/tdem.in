@@ -28,3 +28,7 @@ description = "Random rants on technology, chess, and music"
 home = "https://tdem.in"
 sourceCode = "https://github.com/tdemin/tdem.in"
 tocEnabled = false
+
+[gmnhg]
+baseURL = "gemini://tdem.in"
+title = "Timur Demin's Geminispace"
