@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{{ $style.Permalink }}">
         <link rel="alternate" type="application/rss+xml" href="/index.xml">
         {{ template "_internal/opengraph.html" . }}
+        <link rel="me" href="{{ .Site.Params.githubProfile }}">
     </head>
     <body>
         <div class="container-horizontal">
