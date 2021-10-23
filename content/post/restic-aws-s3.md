@@ -28,10 +28,10 @@ work:
 
 `vars/main.yml`:
 
-```
+```yml
 aws_region: us-east-1
 aws_bucket: tdemin-backups
-restic_repo: {{ ansible_fqdn }}
+restic_repo: "{{ ansible_fqdn }}"
 restic_backup_path: "s3:s3.{{ aws_region }}.amazonaws.com/{{ aws_bucket }}/{{ restic_repo }}"
 restic_init_path: "s3:{{ aws_bucket }}.s3.{{ aws_region }}.amazonaws.com/{{ restic_repo }}"
 ```
@@ -41,7 +41,7 @@ then roughly use the last two variables in a playbook as follows:
 
 `tasks/main.yml`:
 
-```
+```yml
 - name: Install the configuration file
   template:
     mode: 0600
@@ -60,7 +60,7 @@ then roughly use the last two variables in a playbook as follows:
   environment:
     AWS_ACCESS_KEY_ID: ...
     AWS_SECRET_ACCESS_KEY: ...
-    RESTIC_REPOSITORY: {{ restic_init_path }}
+    RESTIC_REPOSITORY: "{{ restic_init_path }}"
     RESTIC_PASSWORD: ...
 - name: Create the repository initialization notice
   file:
