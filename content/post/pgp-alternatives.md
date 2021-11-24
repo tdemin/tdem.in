@@ -12,7 +12,7 @@ wrapper[^1] to GnuPG), it being the de-facto implementation of
 OpenPGP, and its other problems, as commonly illustrated by [this post by
 Latacora][latacora].
 
-[^1]: See section 3.1 of the [GPGME reference][gpgmereference] and others: a large number of functions, like `gpgme_get_dirinfo`, only make sense if GPGME was a command-line wrapper.
+[^1]: See `src/engine-gpg.c` in [GPGME source tree][gpgmereference].
 
 <!--more-->
 
@@ -132,5 +132,5 @@ minisign: RWRltlKLStovfiGdhWNzla+GyANAL9ok1Bg15qCAq8oRPCGN6G4fjLj1
 [latacora]: https://latacora.micro.blog/2019/07/16/the-pgp-problem.html "The PGP problem"
 [akm]: https://github.com/tdemin/akm "age key manager"
 [keys]: /announcements/#2021-05-27-age-%2f-minisign-public-keys
-[gpgmereference]: https://gnupg.org/documentation/manuals/gpgme.pdf
+[gpgmereference]: https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob_plain;f=src/engine-gpg.c;hb=4583ab77e5af3f0da5b307a169d07b58dddf652f
 [sequoia]: https://sequoia-pgp.org/
