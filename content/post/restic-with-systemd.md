@@ -40,7 +40,7 @@ a dedicated user:
 # sudo useradd -m -N -s /usr/sbin/nologin restic
 ```
 
-To backup files, we'll need this service along with its timer:
+To backup files, we'll need this service[^1] along with its timer:
 
 `/etc/systemd/system/restic@.service`:
 
@@ -201,3 +201,7 @@ a lot.
 [link1]: https://forum.restic.net/t/recipe-to-snapshot-postgres-container/1707
 [systemd.service]: https://www.freedesktop.org/software/systemd/man/systemd.service.html
 [systemd.timer]: https://www.freedesktop.org/software/systemd/man/systemd.timer.html
+
+[^1]: A good catch by Geoffrey Brown: if you use instance names with dashes or other special symbols as documented in [systemd.unit(5)][systemd.unit], you should be aware of escaping it performs on instance names; see "String Escaping for Inclusion in Unit Names" section for more details. You can also use the `%i` specifier which doesn't escape instance names.
+
+[systemd.unit]: https://www.freedesktop.org/software/systemd/man/systemd.unit.html
