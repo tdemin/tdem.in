@@ -2,10 +2,8 @@
 
 Quick facts:
 
-* computer science student at USPTU
+* DevOps Engineer
 * free software supporter
-* Arch Linux user
-* Go coder
 
 This site is generated alongside my Hugo site with [gmnhg][gmnhg], a Go tool I
 wrote. Feel free to try it yourself!

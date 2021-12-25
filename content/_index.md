@@ -1,20 +1,18 @@
 ---
-description: "Computer Science student at Ufa State Petroleum Technological University"
+description: "DevOps Engineer"
 draft: false
 images: []
 ---
 
 # Timur Demin
 
-Computer Science student at Ufa State Petroleum Technological University
+DevOps Engineer
 
 ## Contact info
 
 * **Email**: [me@tdem.in](mailto:me@tdem.in) (PGP: [9DCB 446E F5B0 24CF E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc))
 * **XMPP**: [tdemin@404.city](xmpp:tdemin@404.city) ([OMEMO fingerprints][prints])
 * **Matrix**: @tdemin:ru-matrix.org
-
-I am available for hire in Russia. See [my CV](https://github.com/tdemin/cv/releases/tag/latest).
 
 [prints]: /announcements
 
@@ -69,6 +67,7 @@ Technological University.
 
 ## Life changelog
 
+* _Dec 2021 &ndash; present time_: DevOps Engineer
 * _Sep 2021 &ndash; present time_: MCS student at Ufa State Petroleum
   Technological University
 * _Jul 2021_: successfully completed BSc (Comp) degree at Ufa State Petroleum
