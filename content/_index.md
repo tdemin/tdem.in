@@ -40,8 +40,6 @@ I maintain the following public Docker images:
 * `ghcr.io/tdemin/gmnhg` includes the latest versions of [gmnhg][gmnhg] and `md2gmn`;
 * `ghcr.io/tdemin/docker-satellite` includes the latest version of [Satellite][satellite] Gemini server, updated daily.
 
-I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
-
 I wrote a [guidebook on networking][gon] with Linux for Ufa State Petroleum
 Technological University.
 
@@ -56,7 +54,6 @@ Technological University.
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
-[ygg]: https://yggdrasil-network.github.io
 [gmnhg]: https://github.com/tdemin/gmnhg
 [hugo]: https://gohugo.io
 [gemini]: https://gemini.circumlunar.space/

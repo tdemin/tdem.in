@@ -38,8 +38,6 @@ wrote. Feel free to try it yourself!
 [airsonic-advanced AUR package][airsonic-advanced]
 [Networking guidebook for Ufa State Petroleum Technological University][gon]
 
-I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are welcome!
-
 [akm]: https://github.com/tdemin/akm
 [flt]: https://github.com/marketplace/actions/find-latest-tag-of-git-repository
 [amber]: https://git.tdem.in/tdemin/amber
@@ -48,7 +46,6 @@ I also host an [Yggdrasil][ygg] node at `tls://lan.tdem.in:50002`. Peerings are 
 [scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
 [backup]: https://git.tdem.in/tdemin/backup
 [emdl]: https://aur.archlinux.org/packages/emdl/
-[ygg]: https://yggdrasil-network.github.io
 [gmnhg]: https://github.com/tdemin/gmnhg
 [airsonic-advanced]: https://aur.archlinux.org/packages/airsonic-advanced-bin/
 [i3-gd]: https://git.tdem.in/tdemin/i3
