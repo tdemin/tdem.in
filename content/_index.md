@@ -26,7 +26,7 @@ DevOps Engineer
 * [i3-gaps-desktop][i3-gd], a fork of i3 window manager that supports desktop managers ([AUR package][i3-gdaur])
 * [scarlet_export][scarlet_export], a program to export notes from Scarlet Notes
 * [backup][backup], a simple backup script
-* Project Amber, a task list app with variable task nesting ([live demo](https://amber.h.tdem.in)):
+* Project Amber, a task list app with variable task nesting:
     + [Amber][amber], the API server in Python/Flask
     + [Amber Web][amber_web], the web client built with TypeScript and React
     + [Amber CLI][amber_cli], the CLI client written in Go, unfinished
