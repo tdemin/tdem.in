@@ -1,7 +1,7 @@
 ---
 title: "Rant: Google Tasks"
 date: 2018-07-02T12:00:00+00:00
-tags: ["Google", "Google Tasks", "tasks management"]
+tags: [Google, Google Tasks, tasks management]
 ---
 
 So far it looks like Tasks, Google's new app for task tracking, is missing a key

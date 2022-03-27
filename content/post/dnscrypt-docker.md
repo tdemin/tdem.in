@@ -1,7 +1,7 @@
 ---
-title: "Making dnscrypt-proxy and Docker play well together"
+title: Making dnscrypt-proxy and Docker play well together
 date: 2020-08-03T17:16:37+05:00
-tags: ["Docker", "dnscrypt-proxy", "DNS", "Linux", "systemd", "systemd-resolved"]
+tags: [Docker, dnscrypt-proxy, DNS, Linux, systemd, systemd-resolved]
 ---
 
 This post is available in Russian [here][orig].

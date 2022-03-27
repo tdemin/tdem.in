@@ -1,7 +1,7 @@
 ---
-title: "Hello World Yet Again"
+title: Hello World Yet Again
 date: 2019-04-14T16:14:24+05:00
-tags: ["Hugo", "Tumblr", "hello world"]
+tags: [Hugo, Tumblr, hello world]
 ---
 
 So this is it, I've finally moved my blog to a fully self-hosted solution.

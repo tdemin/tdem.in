@@ -1,7 +1,7 @@
 ---
 title: "Rant: Overengineering"
 date: 2019-07-16T22:48:10+05:00
-tags: ["JavaScript", "React", "Redux", "overengineering", "programming", "development"]
+tags: [JavaScript, React, Redux, overengineering, programming, development]
 ---
 
 Consider a typical web dev situation: React, Redux, Material-UI, a new

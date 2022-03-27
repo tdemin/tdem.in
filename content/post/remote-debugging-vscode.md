@@ -1,7 +1,7 @@
 ---
-title: "Remote debugging with VSCode without Remote Development"
+title: Remote debugging with VSCode without Remote Development
 date: 2020-08-26T03:13:59+05:00
-tags: ["VSCode", "programming", "development", "Linux", "Go"]
+tags: [VSCode, programming, development, Linux, Go]
 ---
 
 This post is available in Russian [here][orig].

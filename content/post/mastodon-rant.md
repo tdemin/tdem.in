@@ -1,7 +1,7 @@
 ---
 title: "Rant: Mastodon"
 date: 2018-12-08T12:00:00+00:00
-tags: ["Mastodon", "fediverse"]
+tags: [Mastodon, fediverse]
 ---
 
 Just scrolled through the timeline Instagram generates for me. 20 "blog posts"

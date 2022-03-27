@@ -1,8 +1,8 @@
 ---
-title: "Running restic with AWS S3"
+title: Running restic with AWS S3
 date: 2021-10-22T00:55:00+05:00
 draft: false
-tags: ["AWS", "S3", "restic", "backups", "Ansible"]
+tags: [AWS, S3, restic, backups, Ansible]
 ---
 
 It turns out [restic][restic] is a bit less trivial to set up with Amazon's S3

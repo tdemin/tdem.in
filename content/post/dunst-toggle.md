@@ -1,7 +1,7 @@
 ---
-title: "Toggling dunst notifications in i3"
+title: Toggling dunst notifications in i3
 date: 2020-08-12T18:02:33+05:00
-tags: ["Linux", "dunst", "i3"]
+tags: [Linux, dunst, i3]
 ---
 
 In case you always wanted to write a script that temporarily turns off dunst

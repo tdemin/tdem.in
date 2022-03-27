@@ -1,7 +1,7 @@
 ---
-title: "Using Restic with systemd on Linux"
+title: Using Restic with systemd on Linux
 date: 2021-01-29T20:30:00+05:00
-tags: ["restic", "systemd", "Linux"]
+tags: [restic, systemd, Linux]
 ---
 
 You can read the Russian version of this post [here][translation].

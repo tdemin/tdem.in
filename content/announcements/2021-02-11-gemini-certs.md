@@ -1,5 +1,5 @@
 ---
-title: "Gemini certificate change"
+title: Gemini certificate change
 date: 2021-02-11T00:10:00+05:00
 ---
 

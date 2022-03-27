@@ -1,7 +1,7 @@
 ---
-title: "Simple Mi Fit Login Issue Fix"
+title: Simple Mi Fit Login Issue Fix
 date: 2018-06-01T12:00:00+00:00
-tags: ["hack", "Mi Band"]
+tags: [hack, Mi Band]
 ---
 
 Some people experience issues with their Mi Bands: Mi Fit, the official Xiaomi's

@@ -1,5 +1,5 @@
 ---
-description: "DevOps Engineer"
+description: DevOps Engineer
 draft: false
 images: []
 ---
