@@ -12,7 +12,7 @@ DevOps Engineer
 
 * **Email**: [me@tdem.in](mailto:me@tdem.in) (PGP: [9DCB 446E F5B0 24CF E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc))
 * **XMPP**: [tdemin@404.city](xmpp:tdemin@404.city) ([OMEMO fingerprints][prints])
-* **Matrix**: @tdemin:ru-matrix.org
+* **Matrix**: @tdemin:unredacted.org
 
 [prints]: /announcements
 

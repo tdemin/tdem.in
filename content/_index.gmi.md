@@ -15,7 +15,7 @@ wrote. Feel free to try it yourself!
 * Email: me@tdem.in
 * PGP key: 9DCB446EF5B024CFE88583029EDF3F9D9286FA20
 * XMPP: tdemin@404.city
-* Matrix: @tdemin:ru-matrix.org
+* Matrix: @tdemin:unredacted.org
 
 [The PGP key](/pgp.asc)
 [me@tdem.in](mailto:me@tdem.in)
