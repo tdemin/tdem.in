@@ -1,5 +1,5 @@
 ---
-title: On using GORM: first experience
+title: "On using GORM: first experience"
 date: 2021-09-28T21:27:00+05:00
 draft: false
 tags: [Go, golang, programming, ORM, databases, GORM]
