@@ -15,8 +15,10 @@ Preferred:
 * **Email**: [me@tdem.in](mailto:me@tdem.in) (PGP: [9DCB 446E F5B0 24CF
   E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc))
 * **Matrix**: [`@tdemin:unredacted.org`][matrix]
+* **LinkedIn**: [@tdemin][linkedin]
 
 [matrix]: https://matrix.to/#/@tdemin:unredacted.org
+[linkedin]: https://www.linkedin.com/in/tdemin/
 
 Less preferred, or may take longer to reply:
 
@@ -45,7 +47,6 @@ See [relevant page](/projects) and my [GitHub profile][github].
 
 * **GitHub**: [@tdemin][github]
 * **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
-* **LinkedIn**: [@tdemin](https://linkedin.com/in/tdemin)
 * **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/)
   (in Russian)
