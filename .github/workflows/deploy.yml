@@ -1,0 +1,60 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  hugo_version: 0.115.3
+  # unused, because GitHub Actions won't allow you to use it in uses:
+  # context for now
+  gmnhg_version: v0.4.2
+
+jobs:
+  build-deploy:
+    name: Build & Deploy Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Hugo
+        run: |
+          wget \
+            -O hugo.tar.gz \
+            https://github.com/gohugoio/hugo/releases/download/v${hugo_version}/hugo_extended_${hugo_version}_linux-amd64.tar.gz
+          tar -xv \
+            -f hugo.tar.gz \
+            -C /usr/local/bin \
+            hugo
+      - name: Build website with Hugo
+        run: |
+          mkdir -p ./hugo
+          hugo -d ./hugo
+        env:
+          HUGO_ENV: production
+      - name: Build Gemini site with gmnhg
+        uses: docker://ghcr.io/tdemin/gmnhg:v0.4.2
+        with:
+          args: gmnhg -output ./gmnhg
+      - name: Deploy web site
+        # v6.0.0, strict commit pinning due to handling secrets
+        uses: Burnett01/rsync-deployments@45d84ad5f6c174f3e0ffc50e9060a9666d09c16e
+        with:
+          switches: -avzr --delete
+          path: hugo/
+          remote_path: ${{ secrets.DEPLOY_ROOT_PATH }}/blog.tdem.in
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
+      - name: Deploy Gemini site
+        # GitHub Actions doesn't allow anchors in workflow YAML, so
+        # duplicating this is required
+        uses: Burnett01/rsync-deployments@45d84ad5f6c174f3e0ffc50e9060a9666d09c16e
+        with:
+          switches: -avzr --delete
+          path: gmnhg/
+          remote_path: ${{ secrets.DEPLOY_ROOT_PATH }}/gemini
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
