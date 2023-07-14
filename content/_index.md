@@ -33,9 +33,7 @@ See [relevant page](/projects) and my [GitHub profile][github].
 
 ## Life changelog
 
-* _Dec 2021 &ndash; present time_: DevOps Engineer
-* _Sep 2021 &ndash; present time_: MCS student at Ufa State Petroleum
-  Technological University
+* _Dec 2021 &ndash; Jun 2023_: DevOps Engineer at RN-BashNIPIneft LLC
 * _Jul 2021_: successfully completed BSc (Comp) degree at Ufa State
   Petroleum Technological University
 * _Jun 2020 &ndash; Jul 2020:_ intern at JSC Nefteavtomatika, worked on
