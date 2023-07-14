@@ -6,7 +6,9 @@ description: DevOps Engineer and Go programmer
 
 # Timur Demin
 
-DevOps Engineer and Go programmer
+DevOps Engineer and Go programmer. Available for hire; see the [CV][cv].
+
+[cv]: https://github.com/tdemin/cv/releases/tag/latest
 
 ## Contact info
 
