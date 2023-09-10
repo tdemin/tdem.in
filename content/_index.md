@@ -6,9 +6,7 @@ description: DevOps Engineer and Go programmer
 
 # Timur Demin
 
-DevOps Engineer and Go programmer. Available for hire; see the [CV][cv].
-
-[cv]: https://github.com/tdemin/cv/releases/tag/latest
+DevOps Engineer and Go programmer
 
 ## Contact info
 
@@ -17,10 +15,11 @@ Preferred:
 * **Email**: [me@tdem.in](mailto:me@tdem.in) (PGP: [9DCB 446E F5B0 24CF
   E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc))
 * **Matrix**: [`@tdemin:unredacted.org`][matrix]
-* **LinkedIn**: [@tdemin][linkedin]
+* **LinkedIn**: [@tdemin][linkedin] (also see [CV][cv])
 
 [matrix]: https://matrix.to/#/@tdemin:unredacted.org
 [linkedin]: https://www.linkedin.com/in/tdemin/
+[cv]: https://github.com/tdemin/cv/releases/tag/latest
 
 Less preferred, or may take longer to reply:
 
