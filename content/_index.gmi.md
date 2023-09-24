@@ -33,7 +33,6 @@ See [projects list](/projects.gmi) on a separate page.
 
 [GitHub: @tdemin](https://github.com/tdemin)
 [Personal Git hosting](https://git.tdem.in/tdemin)
-[GitLab: @tdemin](https://gitlab.com/tdemin)
 [Russian blog on Habr](https://habr.com/en/users/tdemin/posts)
 [This page on the Web](https://tdem.in)
 [Music profile](https://music.tdem.in)

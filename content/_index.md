@@ -34,6 +34,7 @@ See [relevant page](/projects) and my [GitHub profile][github].
 
 ## Life changelog
 
+* _Sep 2023_: DevOps Engineer at _company name omitted_
 * _Dec 2021 &ndash; Jun 2023_: DevOps Engineer at RN-BashNIPIneft LLC
 * _Jul 2021_: successfully completed BSc (Comp) degree at Ufa State
   Petroleum Technological University
@@ -46,7 +47,6 @@ See [relevant page](/projects) and my [GitHub profile][github].
 
 * **GitHub**: [@tdemin][github]
 * **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
-* **GitLab**: [@tdemin](https://gitlab.com/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/)
   (in Russian)
 * **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in)
