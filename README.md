@@ -9,8 +9,11 @@ theme with portions of it originally made by [Arjun Krishna Babu][akb].
 
 ## Project Gemini
 
-This site is also accessible on Gemini as gemini://tdem.in, and is generated
-with [gmnhg](https://github.com/tdemin/gmnhg).
+This site was originally accessible on Gemini as `gemini://tdem.in`, and
+was generated with [gmnhg][gmnhg]. You might still find supporting code
+for it inside the repository, but it's not guaranteed to work.
+
+[gmnhg]: https://github.com/tdemin/gmnhg
 
 ## License
 
