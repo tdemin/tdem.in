@@ -31,8 +31,7 @@ number of packages on AUR, the Arch Linux user repository, as
 * ...and packages for self-maintained software mentioned above/below,
   see respective links
 
-Historical code (mostly resides on [my own code hosting][gitea-tdemin]
-rather than GitHub):
+Historical code (mostly migrated from the now-defunct `git.tdem.in`):
 
 * [librespot-builds][librespot-builds], fresh Librespot builds available
   as GitHub releases
@@ -49,7 +48,8 @@ rather than GitHub):
     + [Amber][amber], the API server in Python/Flask/SQLAlchemy
     + [Amber Web][amber_web], the web client built with TypeScript and
       React
-    + [Amber CLI][amber_cli], the CLI client written in Go, unfinished
+    + Amber CLI, the CLI client written in Go, unfinished
+    + [Amber Android][amber_android], the Android client in Java 7
 
 Miscellaneous projects:
 
@@ -65,21 +65,21 @@ Miscellaneous projects:
 [opmodbus]: https://github.com/tdemin/opmodbus
 [flt]: https://github.com/marketplace/actions/find-latest-tag-of-git-repository
 [akm]: https://github.com/tdemin/akm
-[amber]: https://git.tdem.in/tdemin/amber
-[amber_web]: https://git.tdem.in/tdemin/amber_web
-[amber_cli]: https://git.tdem.in/tdemin/amber_cli
+[amber]: https://github.com/tdemin/amber
+[amber_web]: https://github.com/tdemin/amber_web
+[amber_cli]: https://github.com/tdemin/amber_cli
+[amber_android]: https://github.com/tdemin/amber_android
 [syg_go]: https://github.com/tdemin/syg_go
 [syg_go-aur]: https://aur.archlinux.org/packages/syg_go
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
-[scarlet_export]: https://git.tdem.in/tdemin/scarlet_export
-[backup]: https://git.tdem.in/tdemin/backup
+[scarlet_export]: https://github.com/tdemin/scarlet_export
+[backup]: https://github.com/tdemin/backup
 [emdl]: https://aur.archlinux.org/packages/emdl/
 [ygg]: https://yggdrasil-network.github.io
 [gmnhg]: https://github.com/tdemin/gmnhg
 [hugo]: https://gohugo.io
 [gemini]: https://gemini.circumlunar.space/
 [airsonic-advanced]: https://aur.archlinux.org/packages/airsonic-advanced-bin/
-[i3-gd]: https://git.tdem.in/tdemin/i3
+[i3-gd]: https://github.com/tdemin/i3
 [i3-gdaur]: https://aur.archlinux.org/packages/i3-gaps-desktop/
 [gon]: /files/guidebook_networking.pdf
-[gitea-tdemin]: https://git.tdem.in/tdemin
