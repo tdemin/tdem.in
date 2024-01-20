@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>Running restic with AWS S3 - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="Running restic with AWS S3" />
+<meta property="og:description" content="It turns out restic is a bit less trivial to set up with Amazon&rsquo;s S3
+due to some incoherency in URI handling by Amazon S3 leading to subtle
+problems with repo initialization where restic init is only fine with
+a specific variant of the S3 bucket URI and all other restic commands would
+work with another one.  While the linked bug is about Scaleway&rsquo;s object storage,
+the problem encountered also applied to AWS S3.
+This post documents an Ansible sample variable setup to automatically
+generate proper restic repository paths." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/restic-aws-s3/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-10-22T00:55:00+05:00" />
+<meta property="article:modified_time" content="2021-10-22T00:55:00+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>Running restic with AWS S3</h1>
+    <time class="bold" datetime="2021-10-22T00:55:00">22 Oct 2021</time>
+
+    <main>
+        <p>It turns out <a href="https://restic.net">restic</a> is a bit less trivial to set up with Amazon&rsquo;s S3
+due to some incoherency in URI handling by Amazon S3 leading to subtle
+<a href="https://github.com/restic/restic/issues/2971">problems</a> with repo initialization where <code>restic init</code> is only fine with
+a specific variant of the S3 bucket URI and all other <code>restic</code> commands would
+work with another one.  While the linked bug is about Scaleway&rsquo;s object storage,
+the problem encountered also applied to AWS S3.</p>
+<p>This post documents an <a href="https://ansible.com">Ansible</a> sample variable setup to automatically
+generate proper restic repository paths.</p>
+<p>When setting up backups with, say, an Ansible role, one might want to set up two
+different URI variables pointing to the same bucket for init and rest of the
+work:</p>
+<p><code>vars/main.yml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">aws_region</span>: <span style="color:#ae81ff">us-east-1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">aws_bucket</span>: <span style="color:#ae81ff">tdemin-backups</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">restic_repo</span>: <span style="color:#e6db74">&#34;{{ ansible_fqdn }}&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">restic_backup_path</span>: <span style="color:#e6db74">&#34;s3:s3.{{ aws_region }}.amazonaws.com/{{ aws_bucket }}/{{ restic_repo }}&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">restic_init_path</span>: <span style="color:#e6db74">&#34;s3:{{ aws_bucket }}.s3.{{ aws_region }}.amazonaws.com/{{ restic_repo }}&#34;</span>
+</span></span></code></pre></div><p>If you&rsquo;ve followed my previous restic backup guide using systemd, then you could
+then roughly use the last two variables in a playbook as follows:</p>
+<p><code>tasks/main.yml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install the configuration file</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">template</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">mode</span>: <span style="color:#ae81ff">0600</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">owner</span>: <span style="color:#ae81ff">root</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">group</span>: <span style="color:#ae81ff">root</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">dest</span>: <span style="color:#ae81ff">/etc/restic/{{ restic_repo }}.env.conf</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">content</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      AWS_ACCESS_KEY_ID=...
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      AWS_SECRET_ACCESS_KEY=...
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      RESTIC_REPOSITORY={{ restic_backup_path }}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      RESTIC_PASSWORD=...</span>      
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Initialize the repository</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">command</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">creates</span>: <span style="color:#ae81ff">/etc/restic/{{ restic_repo }}.created</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">cmd</span>: <span style="color:#ae81ff">/usr/local/bin/restic init</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">AWS_ACCESS_KEY_ID</span>: <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">AWS_SECRET_ACCESS_KEY</span>: <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">RESTIC_REPOSITORY</span>: <span style="color:#e6db74">&#34;{{ restic_init_path }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">RESTIC_PASSWORD</span>: <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Create the repository initialization notice</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">file</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/etc/restic/{{ restic_repo }}.created</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">state</span>: <span style="color:#ae81ff">touch</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">mode</span>: <span style="color:#e6db74">&#34;0600&#34;</span>
+</span></span></code></pre></div><p>The playbook will non-interactively initialize a repository once, using the
+appropriate URIs to access AWS S3 where needed.</p>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/aws/">AWS</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/s3/">S3</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/restic/">restic</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/backups/">backups</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/ansible/">Ansible</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

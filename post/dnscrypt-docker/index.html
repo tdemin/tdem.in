@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>Making dnscrypt-proxy and Docker play well together - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="Making dnscrypt-proxy and Docker play well together" />
+<meta property="og:description" content="This post is available in Russian here.
+DNSCrypt is a fairly popular way of protecting DNS traffic that is usually left
+unencrypted from other people. dnscrypt-proxy, a client
+program that implements DNSCrypt, also supports the DNS-over-HTTPS protocol,
+allowing name resolution over DoH.
+Unfortunately, leaving dnscrypt-proxy with its default settings while setting it
+as the default resolver breaks name resolution in Docker containers. Fixing this
+while not exposing a DNS resolver on the LAN is what&rsquo;s described below." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/dnscrypt-docker/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-08-03T17:16:37+05:00" />
+<meta property="article:modified_time" content="2020-08-03T17:16:37+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>Making dnscrypt-proxy and Docker play well together</h1>
+    <time class="bold" datetime="2020-08-03T17:16:37">03 Aug 2020</time>
+
+    <main>
+        <p>This post is available in Russian <a href="https://habr.com/en/post/496142/">here</a>.</p>
+<p>DNSCrypt is a fairly popular way of protecting DNS traffic that is usually left
+unencrypted from other people. <a href="https://github.com/DNSCrypt/dnscrypt-proxy">dnscrypt-proxy</a>, a client
+program that implements DNSCrypt, also supports the DNS-over-HTTPS protocol,
+allowing name resolution over DoH.</p>
+<p>Unfortunately, leaving dnscrypt-proxy with its default settings while setting it
+as the default resolver breaks name resolution in Docker containers. Fixing this
+while not exposing a DNS resolver on the LAN is what&rsquo;s described below.</p>
+<p>This post in short:</p>
+<ol>
+<li>Create a dummy adapter, assign a private network IP to it.</li>
+<li>Make dnscrypt-proxy listen on this interface, change system DNS settings
+accordingly.</li>
+</ol>
+<h2 id="the-problem">The problem</h2>
+<p>Docker sets up DNS in containers by <a href="https://docs.docker.com/config/containers/container-networking/#dns-services">copying host DNS settings</a>,
+reusing <code>/etc/resolv.conf</code> from the host.</p>
+<p>dnscrypt-proxy and other custom resolvers usually bind to <code>127.0.0.1:53</code>; the
+corresponding <code>/etc/resolv.conf</code> entry is <code>nameserver 127.0.0.1</code>. This setting
+is propagated to the containers, but, as the containers belong to a different
+network namespace, host&rsquo;s <code>127.0.0.1</code> and container&rsquo;s mean two different things.</p>
+<h2 id="the-fix">The fix</h2>
+<p>The easiest solution is to run dnscrypt-proxy on host&rsquo;s public IP address and
+then add this address to <code>/etc/resolv.conf</code>. This means we expose a DNS
+resolver to the network, and we&rsquo;d rather not.</p>
+<p>Instead we&rsquo;ll create a <code>dummy</code> network adapter that is routable yet doesn&rsquo;t
+actually send any packets; it is routable from the container since Docker
+containers use the host machine as their default gateway.</p>
+<h3 id="creating-the-adapter">Creating the adapter</h3>
+<p>If <code>dummy</code> kernel module is not loaded yet (<code>% lsmod | grep dummy</code> displays
+nothing), load it and enable its autostart:</p>
+<pre tabindex="0"><code># modprobe dummy
+# echo &#34;dummy&#34; &gt;&gt; /etc/modules-load.d/net_dummy.conf
+</code></pre><p>Creating and setting up a dummy adapter is as simple as running these two
+commands on any modern Linux system with iproute2 installed:</p>
+<pre tabindex="0"><code># ip link add type dummy name dummy0
+# ip addr add dev dummy0 10.0.197.1/24
+</code></pre><p>Making this permanent will vary between network configuration software. With
+systemd-networkd you&rsquo;ll need two config files:</p>
+<p><code>/etc/systemd/network/50-dummy0.netdev</code>:</p>
+<pre tabindex="0"><code>[NetDev]
+Name=dummy0
+Kind=dummy
+Description=Dummy network for dnscrypt-proxy
+</code></pre><p><code>/etc/systemd/network/50-dummy0.network</code>:</p>
+<pre tabindex="0"><code>[Match]
+Name=dummy0
+
+[Network]
+DHCP=no
+Address=10.0.197.1/24
+DefaultRouteOnDevice=false
+</code></pre><h3 id="changing-dns-settings">Changing DNS settings</h3>
+<p>To bind dnscrypt-proxy to a new address, edit <code>listen_addresses</code> in
+<code>/etc/dnscrypt-proxy/dnscrypt-proxy.toml</code> and make it look like this:</p>
+<pre tabindex="0"><code>listen_addresses = [&#39;127.0.0.1:53&#39;, &#39;[::1]:53&#39;, &#39;10.0.197.1:53&#39;]
+</code></pre><p>Restart dnscrypt-proxy and then replace the text in <code>/etc/resolv.conf</code>
+(or wherever your network configurator stores DNS settings) with this:</p>
+<pre tabindex="0"><code>nameserver 10.0.197.1
+</code></pre><h3 id="checking">Checking</h3>
+<p>Run a new container:</p>
+<pre tabindex="0"><code>% docker run -it --rm alpine:3.12
+# cat /etc/resolv.conf
+nameserver 10.0.197.1
+# ping -c 1 ya.ru
+</code></pre><h2 id="additional-info">Additional info</h2>
+<p>If you use a firewall (and you should be), then allow incoming traffic to
+<code>10.0.197.1:53</code> from the subnets Docker uses for containers.</p>
+<p>If you use systemd-resolved as your caching resolver of choice with
+dnscrypt-proxy set as its upstream, then you&rsquo;re still fine even though
+systemd-resolved won&rsquo;t allow you to listen on anything besides <code>127.0.0.53</code>:
+<a href="https://github.com/moby/libnetwork/blob/master/resolvconf/resolvconf.go">Docker detects the use of systemd-resolved</a> and copies
+<code>/run/systemd/resolve/resolv.conf</code>, which is generated from resolved settings,
+instead of using <code>/etc/resolv.conf</code>.</p>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/docker/">Docker</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/dnscrypt-proxy/">dnscrypt-proxy</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/dns/">DNS</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/linux/">Linux</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/systemd/">systemd</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/systemd-resolved/">systemd-resolved</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

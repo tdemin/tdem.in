@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>Remote debugging with VSCode without Remote Development - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="Remote debugging with VSCode without Remote Development" />
+<meta property="og:description" content="This post is available in Russian here.
+There&rsquo;s a certain point in life in which you realize you need to debug a
+program that simply cannot be run on your working machine due to reasons. In
+my case I have to debug a program that communicates with iwd, the
+Intel wireless daemon for Linux. My workstation doesn&rsquo;t have a Wi-Fi adapter,
+so I needed some sort of a remote debugging hack." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/remote-debugging-vscode/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-08-26T03:13:59+05:00" />
+<meta property="article:modified_time" content="2020-08-26T03:13:59+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>Remote debugging with VSCode without Remote Development</h1>
+    <time class="bold" datetime="2020-08-26T03:13:59">26 Aug 2020</time>
+
+    <main>
+        <p>This post is available in Russian <a href="https://habr.com/en/post/516642/">here</a>.</p>
+<p>There&rsquo;s a certain point in life in which you realize you need to debug a
+program that simply cannot be run on your working machine due to reasons. In
+my case I have to debug a program that communicates with <a href="https://iwd.wiki.kernel.org">iwd</a>, the
+Intel wireless daemon for Linux. My workstation doesn&rsquo;t have a Wi-Fi adapter,
+so I needed some sort of a remote debugging hack.</p>
+<p>VSCode has a Remote Development addon specifically addressing such cases.
+However:</p>
+<ul>
+<li>Commit signing, if you have <code>GPG_TTY</code> and auto-signing enabled, doesn&rsquo;t seem
+to work, failing to sign commit data.</li>
+<li>SSH agent, if not using agent forwarding, won&rsquo;t allow you to add keys.</li>
+<li>Opening local folders, even though RD can do it, just doesn&rsquo;t work for me.</li>
+</ul>
+<p>I&rsquo;m doing Go development, so the hack I am describing applies to Go when using
+<a href="https://github.com/go-delve/delve">Delve</a> for debugging. Nonetheless, the approach doesn&rsquo;t change much if
+your programming language&rsquo;s of choice VSCode addon supports attaching to a
+remote debugger.</p>
+<p>What we&rsquo;re going to do basically sums up to this:</p>
+<ol>
+<li>Write a script that does the following:
+<ul>
+<li>builds the binary with debugging support</li>
+<li>copies it to the target machine via SCP</li>
+<li>starts Delve in headless mode</li>
+</ul>
+</li>
+<li>Add a VSCode debug profile that would attach to the target machine.</li>
+<li>Make VSCode autostart the script on starting a debugging session.</li>
+</ol>
+<h2 id="scripting-building-and-delve">Scripting building and Delve</h2>
+<p>Delve, the Go debugger, supports running as a headless server for the clients
+to attach to. We need to run a binary remotely.</p>
+<p>This can technically be achieved with a simple shell script, but I find using
+<a href="https://taskfile.dev" title="A convenient replacement for make">Task</a> a lot more convenient than writing a script or a Makefile.
+Here&rsquo;s what I came up with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">version</span>: <span style="color:#e6db74">&#39;2&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">killall</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">cmds</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># kills delve on a target machine, still succeeds if dlv&#39;s not running</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">ssh target_machine killall dlv || true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">push</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">deps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">killall</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">cmds</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># builds the program with optimizations disabled</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">go build -gcflags=&#34;all=-N -l&#34; -o ./build/debug_binary ./cmd/program</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># copies the binary to the target machine</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">scp ./build/debug_binary target_machine:/home/tdemin/Desktop/debug_binary</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">delve</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">deps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">push</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">cmds</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># starts dlv in headless mode listening on port 64001</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># the tmux hack is here, as dlv doesn&#39;t fork into background so ssh</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># won&#39;t stop and the debugging session won&#39;t start; nohup won&#39;t work here,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># nor will the &amp; operator</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># for this to work you&#39;ll ned tmux installed of course</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">ssh target_machine &#39;(cd ~ &amp;&amp; chmod +x Desktop/debug_binary &amp;&amp; tmux new -d dlv --headless -l \[::\]:64001 exec ./Desktop/debug_binary)&#39;</span>
+</span></span></code></pre></div><p>The entire sequence can now be started with <code>task delve</code>. The dependencies
+ensure Delve is killed beforehand (<code>scp</code> won&rsquo;t work if the program is still
+running), and the binary is built and pushed to the target machine.</p>
+<h2 id="configuring-the-debugging-profile">Configuring the debugging profile</h2>
+<p>Long story short, here&rsquo;s how you configure <code>.vscode/launch.json</code> (assuming
+the <a href="https://marketplace.visualstudio.com/items?itemName=golang.Go">Go addon</a> is installed):</p>
+<pre tabindex="0"><code class="language-jsonc" data-lang="jsonc">{
+    &#34;version&#34;: &#34;0.2.0&#34;,
+    &#34;configurations&#34;: [
+        {
+            &#34;name&#34;: &#34;Attach to target&#34;,
+            // dlv uses API v1 by default, this is switchable with command line
+            // flags at dlv startup
+            &#34;apiVersion&#34;: 1,
+            &#34;type&#34;: &#34;go&#34;,
+            &#34;request&#34;: &#34;attach&#34;,
+            &#34;mode&#34;: &#34;remote&#34;,
+            // appears to be mainly meaningless, dlv works just fine even if the
+            // target doesn&#39;t have the source code for the program being
+            // debugged
+            &#34;remotePath&#34;: &#34;${workspaceFolder}&#34;,
+            // dependency on our build task, the task will be described below
+            &#34;preLaunchTask&#34;: &#34;Run Delve on target&#34;,
+            &#34;port&#34;: 64001,
+            &#34;host&#34;: &#34;target_machine&#34;
+        }
+    ]
+}
+</code></pre><h2 id="adding-the-pre-debug-task">Adding the pre-debug task</h2>
+<p>This is a matter of a single file as well, the <code>.vscode/tasks.json</code>:</p>
+<pre tabindex="0"><code class="language-jsonc" data-lang="jsonc">{
+    &#34;version&#34;: &#34;2.0.0&#34;,
+    &#34;tasks&#34;: [
+        {
+            // has to match with the contents of preLaunchTask in launch.json
+            &#34;label&#34;: &#34;Run Delve on target&#34;,
+            &#34;type&#34;: &#34;shell&#34;,
+            // runs Taskfile with our script
+            &#34;command&#34;: &#34;task delve&#34;,
+            &#34;group&#34;: {
+                &#34;kind&#34;: &#34;test&#34;,
+                &#34;isDefault&#34;: true
+            },
+            &#34;presentation&#34;: {
+                // hides the terminal with repetitive build output
+                &#34;reveal&#34;: &#34;silent&#34;
+            }
+        }
+    ]
+}
+</code></pre><h2 id="debugging">Debugging</h2>
+<p>When done, you can now hit F5 and enter debug session.</p>
+<p>
+<p class="image">
+    <a href="/img/vscode-remote-debug-delve.png" target="_blank">
+        <img src="/img/vscode-remote-debug-delve.png" alt="VSCode remote debug session" />
+    </a>
+    <span class="image__subtitle">VSCode remote debug session</span>
+</p>
+</p>
+<p>This works, but has a limitation: the debug console/internal terminal aren&rsquo;t
+attached to program&rsquo;s output. You can theoretically attach to the remote tmux
+session to see the program&rsquo;s stdout, but it&rsquo;s rather bothersome to do that
+every time.</p>
+<p>Well, this works, so I hope this saves you time if VSCode&rsquo;s Remote Development
+just doesn&rsquo;t work for you.</p>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/vscode/">VSCode</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/programming/">programming</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/development/">development</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/linux/">Linux</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/go/">Go</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

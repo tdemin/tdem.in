@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>All posts - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="All posts" />
+<meta property="og:description" content="Random rants on technology, chess, and music" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://tdem.in/post/" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+<h1>All posts</h1>
+<section>
+
+<article>
+    <div class="container-inline container-vertical">
+        <a class="bold" href="https://tdem.in/post/friendica-rss-tag-filter/">Filtering Friendica posts in an RSS feed by tag</a>
+        <time class="bold" datetime="2020-02-14T02:00:38">14 Feb 2020</time>
+
+    </div>
+    <summary><p>The current version of Friendica <a href="https://libranet.de/display/0b6b25a8-185e-3d67-ae42-cb8788243360">doesn&rsquo;t appear to support filtering posts by
+tag</a> in an RSS
+feed. Appending <code>?tag=XXX</code> to an RSS feed URI seems to be silently ignored.</p>
+<p>As I wanted a custom feed that only has music posts in it, I wrote a quick and
+dirty feed crawler in Python/Flask that removes all posts that do not have a
+single mention of the specified tag in it. The whole program only took 50
+minutes to write.</p></summary>
+</article>
+
+
+<article>
+    <div class="container-inline container-vertical">
+        <a class="bold" href="https://tdem.in/post/dedupe-files-powershell/">Removing duplicate files with PowerShell</a>
+        <time class="bold" datetime="2019-12-02T22:02:37">02 Dec 2019</time>
+
+    </div>
+    <summary><p>Well, I finally decided to clean up the files from my storage drive.</p>
+<p>I found a lot of duplicate files unnecessarily taking up my storage space. As
+looking through every single file on your hard disk is a tedious job, I wrote a
+little PowerShell script to assist me with that.</p></summary>
+</article>
+
+
+<article>
+    <div class="container-inline container-vertical">
+        <a class="bold" href="https://tdem.in/post/overengineering-rant/">Rant: Overengineering</a>
+        <time class="bold" datetime="2019-07-16T22:48:10">16 Jul 2019</time>
+
+    </div>
+    <summary><p>Consider a typical web dev situation: React, Redux, Material-UI, a new
+JSS-decorated component that&rsquo;s going to be connected with Redux. We
+create a new file, write the component code in it, then export it like
+that:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#a6e22e">withStyles</span>(<span style="color:#a6e22e">styles</span>)(<span style="color:#a6e22e">connect</span>(<span style="color:#a6e22e">mapStateToProps</span>)(<span style="color:#a6e22e">MyComponent</span>));
+</span></span></code></pre></div></summary>
+</article>
+
+
+<article>
+    <div class="container-inline container-vertical">
+        <a class="bold" href="https://tdem.in/post/autohotkey-better-minimize/">AutoHotkey: Scratchpad</a>
+        <time class="bold" datetime="2019-06-10T01:28:30">10 Jun 2019</time>
+
+    </div>
+    <summary><p>Another day, another hack. This <a href="https://autohotkey.com" title="a brilliant program for system automation">AutoHotkey</a> snippet preserves the last
+window you minimized with <code>Win + Down</code> and allows you to quickly unminimize it
+with <code>Win + Shift + Up</code>:</p></summary>
+</article>
+
+
+<article>
+    <div class="container-inline container-vertical">
+        <a class="bold" href="https://tdem.in/post/autohotkey-ror/">AutoHotkey Run-or-Raise</a>
+        <time class="bold" datetime="2019-05-12T18:12:17">12 May 2019</time>
+
+    </div>
+    <summary><p>It is a common practice for some to use a Quake-style terminal. For those who
+have never played the game: it&rsquo;s a single terminal window which is hidden by
+default and is toggled with the grave accent key. Those who like the behaviour
+use a terminal emulator program like Tilda on Linux or ConEmu on Windows.</p>
+<p>Sometimes you might want the same behaviour for the utilities that do not
+support Quake-style windows by themselves. Luckily, you can still achieve this
+with a simple <a href="https://autohotkey.com" title="a brilliant program for system automation">AutoHotkey</a> script I&rsquo;ve come up with.</p></summary>
+</article>
+
+
+</section>
+<nav rel="pagination" class="pagination">
+    
+    <a class="pagination__left" href="/post/page/2/">Page 2</a>
+    
+    
+    <a class="pagination__right" href="/post/page/4/">Page 4</a>
+    
+</nav>
+
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

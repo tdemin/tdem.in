@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>AutoHotkey: Scratchpad - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="AutoHotkey: Scratchpad" />
+<meta property="og:description" content="Another day, another hack. This AutoHotkey snippet preserves the last
+window you minimized with Win &#43; Down and allows you to quickly unminimize it
+with Win &#43; Shift &#43; Up:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/autohotkey-better-minimize/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-06-10T01:28:30+05:00" />
+<meta property="article:modified_time" content="2019-06-10T01:28:30+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>AutoHotkey: Scratchpad</h1>
+    <time class="bold" datetime="2019-06-10T01:28:30">10 Jun 2019</time>
+
+    <main>
+        <p>Another day, another hack. This <a href="https://autohotkey.com" title="a brilliant program for system automation">AutoHotkey</a> snippet preserves the last
+window you minimized with <code>Win + Down</code> and allows you to quickly unminimize it
+with <code>Win + Shift + Up</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ahk" data-lang="ahk"><span style="display:flex;"><span>global lastWindow<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>ToScratchpad()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>{<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    WinGetTitle, lastWindow, A<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    WinMinimize, %lastWindow%<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>}<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>FromScratchpad()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>{<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    WinActivate, %lastWindow%<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>}<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>#Down::ToScratchpad()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>#+Up::FromScratchpad()<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>Now let&rsquo;s go even further and use a stack of windows for that purpose! The next
+snippet saves the list of windows you minimized that way in a stack, and
+restores them in order:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ahk" data-lang="ahk"><span style="display:flex;"><span>global lastWindows <span style="color:#f92672">:=</span> Array()<span style="color:#75715e"> ; this line needs to be at the top of the file</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>ToScratchpad(windows)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>{<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    WinGetTitle, lastWindow, A<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    WinMinimize, %lastWindow%<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    windows<span style="color:#f92672">.</span>Push(lastWindow)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>}<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>FromScratchpad(windows)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>{<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    lastWindow <span style="color:#f92672">:=</span> windows<span style="color:#f92672">.</span>Pop()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    WinActivate, %lastWindow%<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>}<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>#Down::ToScratchpad(lastWindows)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>#+Up::FromScratchpad(lastWindows)<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>The first line <a href="https://www.autohotkey.com/docs/Scripts.htm#auto" title="AHK docs on auto-execute">has to be placed before the first return/hotkey</a>, or it
+won&rsquo;t be executed (and the script will not work).</p>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/autohotkey/">AutoHotkey</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/hack/">hack</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/windows/">Windows</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

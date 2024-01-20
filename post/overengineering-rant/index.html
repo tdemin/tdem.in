@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>Rant: Overengineering - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="Rant: Overengineering" />
+<meta property="og:description" content="Consider a typical web dev situation: React, Redux, Material-UI, a new
+JSS-decorated component that&rsquo;s going to be connected with Redux. We
+create a new file, write the component code in it, then export it like
+that:
+export default withStyles(styles)(connect(mapStateToProps)(MyComponent));
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/overengineering-rant/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-07-16T22:48:10+05:00" />
+<meta property="article:modified_time" content="2019-07-16T22:48:10+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>Rant: Overengineering</h1>
+    <time class="bold" datetime="2019-07-16T22:48:10">16 Jul 2019</time>
+
+    <main>
+        <p>Consider a typical web dev situation: React, Redux, Material-UI, a new
+JSS-decorated component that&rsquo;s going to be connected with Redux. We
+create a new file, write the component code in it, then export it like
+that:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#a6e22e">withStyles</span>(<span style="color:#a6e22e">styles</span>)(<span style="color:#a6e22e">connect</span>(<span style="color:#a6e22e">mapStateToProps</span>)(<span style="color:#a6e22e">MyComponent</span>));
+</span></span></code></pre></div><p>This simple line contains at least 5 functions in it. Let&rsquo;s tear this
+down right-to-left:</p>
+<ul>
+<li><code>MyComponent</code> may possibly be a <a href="https://reactjs.org/docs/components-and-props.html">functional component</a>
+(a function that accepts a single <code>props</code> argument and returns a React
+element), so it might count as a function.</li>
+<li><code>mapStateToProps</code> is a <a href="https://react-redux.js.org/using-react-redux/connect-mapstate">function that returns the mapping</a> of
+the decorated component properties to Redux store state.</li>
+<li><code>connect(mapStateToProps)</code> will return&hellip;</li>
+<li>&hellip;a <a href="https://react-redux.js.org/api/connect">decorator function</a> that returns a wrapper component
+around <code>MyComponent</code>.</li>
+</ul>
+<p>And we&rsquo;re only done with the first part of this abomination! Now let&rsquo;s
+proceed to the outer block:</p>
+<ul>
+<li><code>styles</code> <a href="https://material-ui.com/styles/api/#withstyles-styles-options-higher-order-component">has to be a function</a> when you need access to theme
+properties.</li>
+<li><code>withStyles(styles)</code> is a function that will return&hellip;</li>
+<li>&hellip;another wrapper component function.</li>
+</ul>
+<p>Yep, that&rsquo;s how easy it is to overengineer in React/modern JS.
+The code above might not exactly be a good example of a well-designed
+component, but this gives you an idea of how things generally go.</p>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/javascript/">JavaScript</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/react/">React</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/redux/">Redux</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/overengineering/">overengineering</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/programming/">programming</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/development/">development</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

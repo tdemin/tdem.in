@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>Toggling dunst notifications in i3 - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="Toggling dunst notifications in i3" />
+<meta property="og:description" content="In case you always wanted to write a script that temporarily turns off dunst
+notifications in i3wm but have never taken the time to write one yourself,
+here, have a working implementation in bash." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/dunst-toggle/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-08-12T18:02:33+05:00" />
+<meta property="article:modified_time" content="2020-08-12T18:02:33+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>Toggling dunst notifications in i3</h1>
+    <time class="bold" datetime="2020-08-12T18:02:33">12 Aug 2020</time>
+
+    <main>
+        <p>In case you always wanted to write a script that temporarily turns off dunst
+notifications in i3wm but have never taken the time to write one yourself,
+here, have a working implementation in bash.</p>
+<p><code>${HOME}/.local/bin/dunst_toggle.sh</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>notify<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;notify-send -u low dunst&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#e6db74">`</span>dunstctl is-paused<span style="color:#e6db74">`</span> in
+</span></span><span style="display:flex;"><span>    true<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        dunstctl set-paused false
+</span></span><span style="display:flex;"><span>        $notify <span style="color:#e6db74">&#34;Notifications are enabled&#34;</span>
+</span></span><span style="display:flex;"><span>        ;;
+</span></span><span style="display:flex;"><span>    false<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        $notify <span style="color:#e6db74">&#34;Notifications are paused&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># the delay is here because pausing notifications immediately hides</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># the ones present on your desktop; we also run dunstctl close so</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># that the notification doesn&#39;t reappear on unpause</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">(</span>sleep <span style="color:#ae81ff">3</span> <span style="color:#f92672">&amp;&amp;</span> dunstctl close <span style="color:#f92672">&amp;&amp;</span> dunstctl set-paused true<span style="color:#f92672">)</span> &amp;
+</span></span><span style="display:flex;"><span>        ;;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">esac</span>
+</span></span></code></pre></div><p>Now let&rsquo;s add a hotkey that toggles notifications in i3 config:</p>
+<p><code>${HOME}/.config/i3/config</code>:</p>
+<pre tabindex="0"><code>bindsym $mod+F5 exec --no-startup-id ~/.local/bin/dunst_toggle.sh
+</code></pre><p>That&rsquo;s it, pressing Win + F5 will now toggle notifications on/off. Any
+notifications received during downtime will be shown as soon as dunst
+is unpaused.</p>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/linux/">Linux</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/dunst/">dunst</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/i3/">i3</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

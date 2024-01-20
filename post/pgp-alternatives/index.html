@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>GnuPG and its alternatives: the state in 2021 - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="GnuPG and its alternatives: the state in 2021" />
+<meta property="og:description" content="The market of the software to replace GnuPG and the OpenPGP infrastructure
+appears to be quite a topic on itself, the precondition to replace GnuPG being
+its complexity (which has gone to levels so high the official library to
+interface with GnuPG, gpgme, is literally a command-line
+wrapper1 to GnuPG), it being the de-facto implementation of
+OpenPGP, and its other problems, as commonly illustrated by this post by
+Latacora." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/pgp-alternatives/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-07-26T02:00:00+05:00" />
+<meta property="article:modified_time" content="2021-07-26T02:00:00+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>GnuPG and its alternatives: the state in 2021</h1>
+    <time class="bold" datetime="2021-07-26T02:00:00">26 Jul 2021</time>
+
+    <main>
+        <p>The market of the software to replace GnuPG and the OpenPGP infrastructure
+appears to be quite a topic on itself, the precondition to replace GnuPG being
+its complexity (which has gone to levels so high the official library to
+interface with GnuPG, <a href="https://gnupg.org/software/gpgme/index.html">gpgme</a>, is literally a command-line
+wrapper<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> to GnuPG), it being the de-facto implementation of
+OpenPGP, and its other problems, as commonly illustrated by <a href="https://latacora.micro.blog/2019/07/16/the-pgp-problem.html" title="The PGP problem">this post by
+Latacora</a>.</p>
+<p>Theoretically, the program (or programs, thinking the Unix way) to replace GnuPG
+as a cryptography software suite should do these two things at the very minimum
+(GnuPG is capable of a lot more, including keyservers, Web of Trust, etc, but
+for simplicity let&rsquo;s talk about the bare minimum):</p>
+<ul>
+<li>encrypt / decrypt data using (a)symmetric cryptography;</li>
+<li>generate digital signatures for data and be able to verify the generated
+signatures with public keys.</li>
+</ul>
+<h2 id="encryption">Encryption</h2>
+<p>One of the most well-known tools to do encryption is <a href="https://age-encryption.org" title="Actually Good Encryption">age</a>, which, as of
+July 2021, isn&rsquo;t out of release candidates just yet. age doesn&rsquo;t even raise many
+concerns on its own, but it lacks even the simplest public/private key
+management capabilities (like key aliases or &ldquo;use this private key as the
+default&rdquo;).</p>
+<p>It goes along well with the Unix way (one program per job to do it well), but
+can you seriously imagine an encryption tool where you provide your full
+recipient public key every time with a command-line key? Me neither. <code>age</code>
+seriously assumes you&rsquo;re fine with entering something like this every time<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>:</p>
+<pre tabindex="0"><code>% age -r age1h0ea8x07z33fc5lzkqj3kghup4g6jkzsaj6v86pgngwn7gs8q9es56lpwv \
+    -o file.enc file.txt 
+</code></pre><p><code>age</code> also raises concerns by letting trivially discoverable bugs such as <a href="https://github.com/FiloSottile/age/issues/263">this
+one</a> slip in the release candidates. This one is for sure easily
+discoverable, as I ran into it while writing <a href="https://github.com/tdemin/akm" title="age key manager">akm</a> in my first hours of
+trying <code>age</code>, and its presence seriously raised my eyebrows, as it&rsquo;s been one of
+the tools <a href="https://latacora.micro.blog/2019/07/16/the-pgp-problem.html" title="The PGP problem">recommended</a> by supposedly competent cryptographers at
+Latacora long before the bug has been fixed.</p>
+<p><a href="https://flak.tedunangst.com/post/reop" title="Reasonable Expectation of Privacy">reop</a> can also do encryption for you, it will be discussed later.</p>
+<h2 id="digital-signatures">Digital signatures</h2>
+<p>With digital signatures and the tools to verify them we have quite a number of
+options, with different problems / concerns surrounding them (remember, we want
+our tool to be at least somewhat reputable):</p>
+<ul>
+<li>The already mentioned <a href="https://flak.tedunangst.com/post/reop" title="Reasonable Expectation of Privacy">reop</a> is quite good on itself, as to be expected
+from the people around the OpenBSD project, but appears to be abandoned by its
+author, and so does <a href="https://github.com/tedu/reop/">its portable version</a> for other operating
+systems.</li>
+<li><a href="https://man.openbsd.org/signify.1">signify</a>&rsquo;s been made by the same person as reop, Ted Unangst, but is
+only available under OpenBSD, and Linux folks are supposed to enjoy one of the
+many available source ports (<a href="https://github.com/aperezdc/signify">1</a>, <a href="https://github.com/leahneukirchen/outils/tree/master/src/usr.bin/signify">2</a>, etc). Which of those
+&ldquo;sucks less&rdquo; and will actively be maintained? Hard to tell. The quality of ports
+of doas, neither of which remember passwords under Linux, doesn&rsquo;t enthuse much.</li>
+<li>There&rsquo;s a portable alternative to signify called <a href="https://github.com/jedisct1/minisign">minisign</a> by the
+author of libsodium, which is written in C. There&rsquo;s little concerns about
+it, aside from the only random commit I noticed which got <a href="https://github.com/jedisct1/minisign/commit/0137cd75af4b1188cb01385724fd3c3c1fc2b4ba">unrelated changes
+slipped into it</a> (well, Git has revision history management
+tools for a reason?).</li>
+<li>There&rsquo;s also <a href="https://github.com/opencoff/sigtool">sigtool</a>, which for whatever reason has gone with YAML
+for its signature format and isn&rsquo;t really easy to stumble upon, thanks in part
+to its name colliding with a <a href="https://www.systutorials.com/docs/linux/man/1-sigtool/">ClamAV tool of the same name</a>. The
+number of its users also leaves to be desired (remember, reputability).</li>
+</ul>
+<h2 id="other-problems">Other problems</h2>
+<p>While out of these described above I have already gone with a <a href="/announcements/#2021-05-27-age-%2f-minisign-public-keys">pair of
+age/minisign keys</a> for testing, there&rsquo;s an inherent problem of having them
+integrated in my workflow. For instance, while you can sign commit/tag data with
+Git with GnuPG, there&rsquo;s no way to sign those with the <a href="https://git-scm.com/docs/githooks">current set of Git hooks
+available</a> (although there are <a href="https://seankhliao.com/blog/12020-10-31-git-signing-signify/">hacks to do so</a> using
+current Git GnuPG support).</p>
+<p>Other tools, like NeoMutt, also appear to lack support for arbitrary digital
+signature / encryption tools unless you&rsquo;re fine with hacking / gluing them
+together in ugly ways.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Unless Git and other software projects start abandoning GnuPG, GnuPG and OpenPGP
+are unlikely to go anywhere, as being tied too deep into software codebases and
+seeing no perfect simple alternatives just yet.</p>
+<p>There&rsquo;s also a new OpenPGP library in Rust, <a href="https://sequoia-pgp.org/">Sequoia</a>, which solves a
+number of issues associated with GnuPG (namely the monolith problem), but it
+doesn&rsquo;t look like any of the applications using GnuPG integrate with it just
+yet.</p>
+<p>Anyways, you can now encrypt me messages with age (or <a href="https://github.com/tdemin/akm" title="age key manager">akm</a>), and verify my
+signatures with minisign with those <a href="/announcements/#2021-05-27-age-%2f-minisign-public-keys">keys</a>:</p>
+<pre tabindex="0"><code>age: age1h0ea8x07z33fc5lzkqj3kghup4g6jkzsaj6v86pgngwn7gs8q9es56lpwv
+minisign: RWRltlKLStovfiGdhWNzla+GyANAL9ok1Bg15qCAq8oRPCGN6G4fjLj1
+</code></pre><div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>See <code>src/engine-gpg.c</code> in <a href="https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob_plain;f=src/engine-gpg.c;hb=4583ab77e5af3f0da5b307a169d07b58dddf652f">GPGME source tree</a>.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>To be completely fair, you can more or less solve it with a wrapper. For this job I made <a href="https://github.com/tdemin/akm" title="age key manager">akm</a>, a shell script wrapper that will read recipient keys for you from <code>~/.akm</code> and pass them to <code>age</code>. It can also set your default encryption key for you unless you specify one on the command line.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/pgp/">PGP</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/gnupg/">GnuPG</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/age/">age</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/minisign/">minisign</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/signify/">signify</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/sigtool/">sigtool</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/encryption/">encryption</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/cryptography/">cryptography</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/privacy/">privacy</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

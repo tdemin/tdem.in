@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>Using Restic with systemd on Linux - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="Using Restic with systemd on Linux" />
+<meta property="og:description" content="You can read the Russian version of this post here.
+Restic, the simple backup program, is a fairly well-known piece of
+software. Designed to be simple to both use and script on any system, it doesn&rsquo;t
+include any OS-specific setup examples, which is precisely what this post
+describes.
+So what we&rsquo;re trying to achieve here:
+
+Automated backup runs daily at 12:00 AM (or any configurable time).
+The backup includes only important configuration files and data stores.
+The backup also includes all PostgreSQL databases, restorable with psql -f.
+The backup expands to an unlimited number of repos on need.
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/restic-with-systemd/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-01-29T20:30:00+05:00" />
+<meta property="article:modified_time" content="2021-01-29T20:30:00+05:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>Using Restic with systemd on Linux</h1>
+    <time class="bold" datetime="2021-01-29T20:30:00">29 Jan 2021</time>
+
+    <main>
+        <p>You can read the Russian version of this post <a href="https://habr.com/ru/post/540096/">here</a>.</p>
+<p><a href="https://restic.net">Restic</a>, the simple backup program, is a fairly well-known piece of
+software. Designed to be simple to both use and script on any system, it doesn&rsquo;t
+include any OS-specific setup examples, which is precisely what this post
+describes.</p>
+<p>So what we&rsquo;re trying to achieve here:</p>
+<ol>
+<li>Automated backup runs daily at 12:00 AM (or any configurable time).</li>
+<li>The backup includes only important configuration files and data stores.</li>
+<li>The backup also includes all PostgreSQL databases, restorable with <code>psql -f</code>.</li>
+<li>The backup expands to an unlimited number of repos on need.</li>
+</ol>
+<p>This guide assumes we&rsquo;re backing up to a <a href="https://github.com/restic/rest-server">rest-server</a> instance
+running at <code>192.168.1.200</code>. The configuration should still be trivial to adapt
+to pretty much any storage provider. This guide also assumes you have already
+initialized a rest-server repo with
+<code>restic init -r rest:http://192.168.1.200/your-repo/</code>.</p>
+<p>For this we will need two systemd services, two correspondent timers, and a
+single helper script.</p>
+<h2 id="backing-up-filesdirectories">Backing up files/directories</h2>
+<p>We&rsquo;d rather not want to run restic as root for obvious reasons, so let&rsquo;s create
+a dedicated user:</p>
+<pre tabindex="0"><code># sudo useradd -m -N -s /usr/sbin/nologin restic
+</code></pre><p>To backup files, we&rsquo;ll need this service<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> along with its timer:</p>
+<p><code>/etc/systemd/system/restic@.service</code>:</p>
+<pre tabindex="0"><code>[Unit]
+# this unit can be activated with a parameter, e.g. in
+#   systemctl start restic@your-repo.service
+# %I is &#34;your-repo&#34;
+Description=Restic backup on %I
+After=syslog.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=restic
+# runs restic backup on the files listed in /etc/restic/your-repo.files
+ExecStart=/usr/local/bin/restic backup --files-from /etc/restic/%I.files
+# source repo and password from /etc/restic/your-repo.env
+EnvironmentFile=/etc/restic/%I.env
+AmbientCapabilities=CAP_DAC_READ_SEARCH
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p><code>/etc/systemd/system/restic@.timer</code>:</p>
+<pre tabindex="0"><code>[Unit]
+# the timer, enabled as restic@your-repo.timer, will trigger
+# restic@your-repo.service
+Description=Run Restic at 12:00 AM
+
+[Timer]
+OnCalendar=*-*-* 0:00:00
+
+[Install]
+WantedBy=timers.target
+</code></pre><p>The repo name is passed through an environment file in <code>/etc/restic</code>, read by
+systemd (systemd does this as root, and <code>/etc/restic</code> should really be only
+readable as root, so set permissions accordingly):</p>
+<p><code>/etc/restic/your-repo.env</code></p>
+<pre tabindex="0"><code>RESTIC_PASSWORD=your_repo_password
+RESTIC_REPOSITORY=rest:http://192.168.1.200/your-repo/
+</code></pre><p>We also have to supply restic with a file/directory list to back up:</p>
+<p><code>/etc/restic/your-repo.files</code></p>
+<pre tabindex="0"><code>/var/lib/docker
+/etc/postgresql
+/etc/restic
+...
+</code></pre><h2 id="backing-up-databases">Backing up databases</h2>
+<p>This one is just a little less trivial.</p>
+<p>Restic supports backing up data provided through stdin, so we can feed it with
+the output of <code>pg_dumpall</code>. The only limitation is that systemd runs whatever
+you specify in <code>ExecStart</code> with <code>execve(3)</code>, and, to use output redirection,
+we&rsquo;ll need a separate bash script:</p>
+<p><code>/usr/local/bin/pgdump.sh</code>:</p>
+<pre tabindex="0"><code>#!/usr/bin/env bash
+
+set -euo pipefail
+
+/usr/bin/sudo -u postgres /usr/bin/pg_dumpall --clean \
+    | gzip --rsyncable \
+    | /usr/local/bin/restic backup --host $1 --stdin \
+        --stdin-filename postgres-$1.sql.gz
+</code></pre><p>To run <code>pg_dumpall</code> as <code>postgres</code>, we&rsquo;ll need the following sudo rule in
+<code>/etc/sudoers</code>:</p>
+<pre tabindex="0"><code>restic ALL=(postgres) NOPASSWD:/usr/bin/pg_dumpall --clean
+</code></pre><p>The unit file is as trivial as this:</p>
+<p><code>/etc/systemd/system/restic-pg@.service</code>:</p>
+<pre tabindex="0"><code>[Unit]
+Description=Restic PostgreSQL backup on %I
+After=syslog.target
+After=network-online.target
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+User=restic
+ExecStart=/usr/local/bin/pgdump.sh %I
+EnvironmentFile=/etc/restic/%I.env
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p>The timer isn&rsquo;t really any different from the one we&rsquo;ve already seen above:</p>
+<p><code>/etc/systemd/system/restic-pg@.timer</code></p>
+<pre tabindex="0"><code>[Unit]
+Description=Run Restic on PostgreSQL at 12:00 AM
+
+[Timer]
+OnCalendar=*-*-* 0:00:00
+
+[Install]
+WantedBy=timers.target
+</code></pre><h2 id="finishing-up">Finishing up</h2>
+<p>Start the timers and enable their autostart at boot. Remember that <code>your-repo</code>
+is used to expand file paths in <code>/etc/restic</code>:</p>
+<pre tabindex="0"><code># systemctl enable --now restic@your-repo.timer
+# systemctl enable --now restic-pg@your-repo.timer
+</code></pre><p>Test whether the whole backup system is working:</p>
+<pre tabindex="0"><code># systemctl start restic@your-repo.service
+# systemctl start restic-pg@your-repo.service
+</code></pre><p>These unit files allow backing up to an unlimited number of repos as long as the
+relevant configuration is provided through <code>/etc/restic/repo-name.{env,files}</code>.</p>
+<h2 id="links--sources">Links / sources</h2>
+<p><a href="https://forum.restic.net/t/recipe-to-snapshot-postgres-container/1707">Recipe to backing up PostgreSQL in a Docker container</a> used for the
+backup script was originally found on restic forum.  The excellent systemd docs
+(<a href="https://www.freedesktop.org/software/systemd/man/systemd.service.html">systemd.service</a>, <a href="https://www.freedesktop.org/software/systemd/man/systemd.timer.html">systemd.timer</a>) also helped
+a lot.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>A good catch by Geoffrey Brown: if you use instance names with dashes or other special symbols as documented in <a href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html">systemd.unit(5)</a>, you should be aware of escaping it performs on instance names; see &ldquo;String Escaping for Inclusion in Unit Names&rdquo; section for more details. You can also use the <code>%i</code> specifier which doesn&rsquo;t escape instance names.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/restic/">restic</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/systemd/">systemd</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/linux/">Linux</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>
