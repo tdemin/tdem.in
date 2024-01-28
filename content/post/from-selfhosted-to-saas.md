@@ -1,6 +1,6 @@
 ---
 title: "From Self-Hosted FOSS to Proprietary PaaS: A Migration Story"
-date: 2024-01-27T17:01:00+06:00
+date: 2024-01-28T17:35:00+06:00
 tags: [SaaS, iCloud, Nextcloud, Tiny Tiny RSS, TTRSS, GitHub, Gitea, Git, Gemini, gmnhg, Satellite, NetNewsWire, CalDAV, CardDAV, Cloudflare]
 ---
 
