@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet"> 
+        <title>From Self-Hosted FOSS to Proprietary PaaS: A Migration Story - Timur Demin&#39;s Blog</title>
+        <link rel="stylesheet" href="https://tdem.in/main.min.e362aa227211af09a948971525eec203b612c527d03a62e7ddaa6c3ac14d5ed4.css">
+        <link rel="alternate" type="application/rss+xml" href="/index.xml">
+        <meta property="og:title" content="From Self-Hosted FOSS to Proprietary PaaS: A Migration Story" />
+<meta property="og:description" content="First time to blog in three years!
+As a person too busy with ${DAYJOB} the last few years, I wanted my remaining servers hosting groupware, file sharing, and news reading software to ideally manage themselves. 12 EUR/mo doesn&rsquo;t mean you get a system administrator to do chores for you, instead you get to do the routines yourself. That could only continue for as much before we would get fed up and attempt the move back to being truly serverless™, which is what the post you&rsquo;re reading is all about." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tdem.in/post/from-selfhosted-to-saas/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-01-27T17:01:00+06:00" />
+<meta property="article:modified_time" content="2024-01-27T17:01:00+06:00" />
+
+        <link rel="me" href="https://github.com/tdemin">
+        <link rel="webmention" href="https://webmention.io/tdem.in/webmention">
+        <link rel="pingback" href="https://webmention.io/tdem.in/xmlrpc">
+    </head>
+    <body>
+        <div class="container-horizontal">
+        <nav class="navbar-top">
+            <a class="navbar-top__item" href="/">Home</a>
+            <a class="navbar-top__item" href="/projects">Projects</a>
+            <a class="navbar-top__item" href="/post">Blog</a>
+            <a class="navbar-top__item" href="/index.xml">RSS</a>
+            <a class="navbar-top__item" href="/blog_index">Index</a>
+        </nav>
+        
+
+
+<article>
+    <h1>From Self-Hosted FOSS to Proprietary PaaS: A Migration Story</h1>
+    <time class="bold" datetime="2024-01-27T17:01:00">27 Jan 2024</time>
+
+    <main>
+        <p>First time to blog in three years!</p>
+<p>As a person too busy with <code>${DAYJOB}</code> the last few years, I wanted my
+remaining servers hosting groupware, file sharing, and news reading
+software to ideally manage themselves. 12 EUR/mo doesn&rsquo;t mean you get a
+system administrator to do chores for you, instead you get to do the
+routines yourself. That could only continue for as much before we would
+get fed up and attempt the move back to being truly serverless™, which
+is what the post you&rsquo;re reading is all about.</p>
+<p>No servers for us would mean:</p>
+<ul>
+<li>getting a smaller monthly bill thankfully to most personal cloud
+options costing less than a six EUR/mo VPS</li>
+<li>doing nothing whenever another Debian / Red Hat / <code>$DISTRONAME</code>
+Security Advisory reports of a critical vulnerability</li>
+<li>having nothing to maintain or update (which is a serious win,
+considering <code>${DAYJOB}</code> involves enough system maintenance by itself)</li>
+</ul>
+<!-- more -->
+<h2 id="planning-the-move">Planning the move</h2>
+<p>Our self-hosted service inventory to migrate contains the following:</p>
+<ul>
+<li><a href="https://gitea.io">Gitea</a>, a Git repository hosting in Go</li>
+<li><a href="https://nextcloud.com">Nextcloud</a>, a groupware suite backend server that works as
+a private cloud, in PHP</li>
+<li><a href="https://tt-rss.org/">Tiny Tiny RSS</a>, an RSS feed reader and aggregator in PHP</li>
+<li><a href="https://git.sr.ht/~gsthnz/satellite">Satellite</a>, a Gemini server that only serves static content, in Go</li>
+<li>(if you count this one as a service, that is) nginx, a web server
+hosting <a href="https://tdem.in">https://tdem.in</a>, aka the website you&rsquo;re reading
+this at, that also needs to serve a few occasional redirects, like
+<code>music.tdem.in</code> to the <a href="https://www.last.fm/user/l0548942">Last.fm page</a></li>
+</ul>
+<p>The hardest challenge to solve with migrating off these three would be
+keeping exactly zero servers at hand. This would mean finding some other
+way to handle HTTP redirects from domains previously served at
+<code>git.tdem.in</code>, <code>storage.tdem.in</code>, and others, which a simple CNAME
+record doesn&rsquo;t handle. Gladly for us, Cloudflare provides redirects as a
+feature of its web edge for free (if you&rsquo;re fine with only having up to
+10 of those), and the sole requirements to use them is to have
+Cloudflare handle DNS for your domain (which was already the case for
+<code>tdem.in</code>, and proved useful).</p>
+<p>Finding a replacement to <code>git.tdem.in</code> was easy: GitHub was long the
+home to most of our public code. TTRSS would have to go in favor of
+something that runs locally, like <a href="https://netnewswire.blog/">NetNewsWire</a>. Nextcloud
+has a pretty obvious alternative for Apple users.</p>
+<p>As long as we were fine with stopping hosting the Gemini capsule (which
+was bound to happen at some point due to reducing interest and lack of
+energy to maintain <a href="https://github.com/tdemin/gmnhg">gmnhg</a>) and agreeing to the status quo of
+this website being our only home page, Satellite needed no replacement.</p>
+<p>Therefore, our final listing of free or cheaper services to use for
+syncing consists of the following:</p>
+<ul>
+<li>iCloud to handle files / calendar / contacts / tasks syncing / other
+groupware (only really works for Mac/iPhone users, but we&rsquo;re rocking
+both anyway, so why not)</li>
+<li>GitHub to host our ever-shrinking set of public projects</li>
+<li>GitHub Pages to host this website</li>
+<li>NetNewsWire to read RSS feeds locally and sync subscriptions with the
+built-in iCloud support</li>
+<li>none for Gemini hosting, which was bound to be gone at some point
+anyway due to lack of energy to maintain <a href="https://github.com/tdemin/gmnhg">gmnhg</a></li>
+<li>Cloudflare to handle redirects</li>
+</ul>
+<h2 id="cloudflare-as-the-ultimate-redirector">Cloudflare as the ultimate redirector</h2>
+<p>Performing redirects from a hostname to elsewhere is doable with
+Cloudflare in two simple steps:</p>
+<ol>
+<li>Creating a CNAME record pointing anywhere (we use <code>@</code> as the target
+to prevent any unwanted side effects). The important bit is that the
+&ldquo;Proxied by Cloudflare&rdquo; toggle needs to be ON, so the traffic reaches
+the Cloudflare edge.</li>
+</ol>
+<p>
+<p class="image">
+    <a href="/img/cloudflare_cnames.png" target="_blank">
+        <img src="/img/cloudflare_cnames.png" alt="CNAME records at Cloudflare" />
+    </a>
+    <span class="image__subtitle">CNAME records at Cloudflare</span>
+</p>
+</p>
+<p>What actually ends up on public DNS looks like this:</p>
+<p>
+<p class="image">
+    <a href="/img/cloudflare_cnames_transformed.png" target="_blank">
+        <img src="/img/cloudflare_cnames_transformed.png" alt="CNAME records, transformed by Cloudflare into A records onto its edge" />
+    </a>
+    <span class="image__subtitle">CNAME records, transformed by Cloudflare into A records onto its edge</span>
+</p>
+</p>
+<ol start="2">
+<li>Creating a dynamic redirection rule that responds with 302 whenever
+traffic matching your hostname reaches Cloudflare:</li>
+</ol>
+<p>
+<p class="image">
+    <a href="/img/cloudflare_dynamic_redirect_matcher.png" target="_blank">
+        <img src="/img/cloudflare_dynamic_redirect_matcher.png" alt="Cloudflare dynamic redirection rule matcher" />
+    </a>
+    <span class="image__subtitle">Cloudflare dynamic redirection rule matcher</span>
+</p>
+
+
+<p class="image">
+    <a href="/img/cloudflare_dynamic_redirect_target.png" target="_blank">
+        <img src="/img/cloudflare_dynamic_redirect_target.png" alt="Cloudflare rule target, responding with a 302" />
+    </a>
+    <span class="image__subtitle">Cloudflare rule target, responding with a 302</span>
+</p>
+</p>
+<p>The end result is that our traffic ends up where destined:</p>
+<p>
+<p class="image">
+    <a href="/img/cloudflare_redirect_git.tdem.in.png" target="_blank">
+        <img src="/img/cloudflare_redirect_git.tdem.in.png" alt="Cloudflare redirects git.tdem.in to GitHub, as advertised" />
+    </a>
+    <span class="image__subtitle">Cloudflare redirects git.tdem.in to GitHub, as advertised</span>
+</p>
+</p>
+<h2 id="gitea">Gitea</h2>
+<p>Relatively easy to migrate, as long as most of the repos are private,
+feature no CI/CD, no content to migrate besides code, etc. The list of
+repos is trivially obtainable through <code>&lt;profile&gt; -&gt; Admin Panel -&gt; Content -&gt; Repositories</code>.</p>
+<p>This small snippet automates most of the routine, except creating the
+repository at GitHub:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git_mirror <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    git clone --mirror <span style="color:#e6db74">&#34;https://git.tdem.in/</span><span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span><span style="color:#e6db74">.git&#34;</span> $1
+</span></span><span style="display:flex;"><span>    cd $1
+</span></span><span style="display:flex;"><span>    git remote add github <span style="color:#e6db74">&#34;https://github.com/</span><span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span><span style="color:#e6db74">.git&#34;</span>
+</span></span><span style="display:flex;"><span>    git push -u github --all
+</span></span><span style="display:flex;"><span>    git push github --tags
+</span></span><span style="display:flex;"><span>    cd -
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>Invoking it, as repositories at GitHub get created and reconfigured to
+be private and contain no wiki / Actions / etc, is as easy as:</p>
+<pre tabindex="0"><code>git_mirror tdemin/repository1
+git_mirror tdemin/repository2
+</code></pre><blockquote>
+<p>Memo: Gitea uses the same wiki Markdown hosting scheme as GitHub, with
+<code>${REPOSITORY_NAME}.wiki.git</code> <a href="https://docs.github.com/en/communities/documenting-your-project-with-wikis/adding-or-editing-wiki-pages#adding-or-editing-wiki-pages-locally">being the URL</a> for the Git
+repository containing all of your pages. Migrating that would simply
+mean an extra <code>git_mirror</code>.</p>
+</blockquote>
+<p>The last bit remaining would redirecting everyone<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> hitting
+<code>git.tdem.in</code> from history or links on the public web, which is
+configurable with Cloudflare as shown above.</p>
+<h2 id="nextcloud">Nextcloud</h2>
+<p>The amount of time spent on migrating from a groupware software piece to
+another directly depends on the volumes of information stored inside the
+former. The scenario for <code>storage.tdem.in</code> included the following, for
+one user:</p>
+<ul>
+<li>calendar events</li>
+<li>reminders (technically fancy calendar events)</li>
+<li>contacts</li>
+<li>files</li>
+</ul>
+<p>Files are taken care of by copying them to the iCloud drive folder. To
+make syncing <code>~/Desktop</code> and <code>~/Documents</code> seamless like Nextcloud
+offers OOB<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> you might want to enable the <code>Desktop &amp; Documents folders</code> in <a href="https://support.apple.com/en-us/HT206985">iCloud sync settings</a>. As an added bonus,
+you get file URL sharing directly from Finder.</p>
+<p>
+<p class="image">
+    <a href="/img/icloud_web_crash.png" target="_blank">
+        <img src="/img/icloud_web_crash.png" alt="That is, until it works" />
+    </a>
+    <span class="image__subtitle">That is, until it works</span>
+</p>
+</p>
+<p>Calendar events are trivially moved to the relevant calendar in two
+clicks per event. While sounding like a tedious job, that&rsquo;s doable in a
+few minutes even for the largest agendas thanks to the built-in snappy
+macOS app. Reminders get moved into iCloud-hosted lists with the help of
+mass drag-and-drop (unless you care about lots of historically completed
+entries. I do not).</p>
+<p>
+<p class="image">
+    <a href="/img/icloud_calendar.png" target="_blank">
+        <img src="/img/icloud_calendar.png" alt="As easy as it gets with the right app for the job" />
+    </a>
+    <span class="image__subtitle">As easy as it gets with the right app for the job</span>
+</p>
+</p>
+<blockquote>
+<p>There&rsquo;s an option to extract your calendar entries through CalDAV and
+then import it using <a href="https://caldav.icloud.com">https://caldav.icloud.com</a>, but I didn&rsquo;t care
+enough to do that. The events in my calendar were trivial enough to
+click through to move to iCloud-provided calendars. The Apple&rsquo;s
+calendar app is friction-free enough.</p>
+</blockquote>
+<p>Contacts proved to be a simple task for a mass vCard export/import. A
+few records needed fixing after the import, but that&rsquo;s a five to ten
+minute-job even for a contact book of hundreds of entries.</p>
+<h2 id="tiny-tiny-rss">Tiny Tiny RSS</h2>
+<p>There&rsquo;s no real data export option other than using OPML, but that one
+just gets imported into your client of choice, and you&rsquo;re done. I
+recommend <a href="https://netnewswire.blog/">NetNewsWire</a> as a brilliant macOS / iOS
+implementation that can also sync feeds across devices with iCloud, but
+the choice is ultimately up to you.</p>
+<p>You might still want to keep the dump of your TTRSS database for
+archival purposes.</p>
+<p>
+<p class="image">
+    <a href="/img/ttrss_entries_count.png" target="_blank">
+        <img src="/img/ttrss_entries_count.png" alt="That&amp;rsquo;s&amp;hellip; quite a number of entries to get rid of. :(" />
+    </a>
+    <span class="image__subtitle">That&rsquo;s&hellip; quite a number of entries to get rid of. :(</span>
+</p>
+</p>
+<h2 id="github-pages">GitHub Pages</h2>
+<p>Migrating an existing Hugo blog with a well-defined CI setup mostly
+concludes to following the instructions for <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">setting up GitHub
+Pages</a> and then <a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site">doing the routine</a>
+to get it work with a custom domain. My sole nitpick was that GitHub
+Pages can be served from any domain, not just <code>&lt;username&gt;.github.io</code>,
+which helped with keeping the <a href="https://github.com/tdemin/tdem.in">repository</a> in its canonical
+place.</p>
+<p>In the end, the whole chore concluded to the following GitHub Actions
+workflow <a href="https://github.com/tdemin/tdem.in/commit/0453579bfd53b47d77d333688e7fbfd62f552dfc">diff</a>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span><span style="color:#f92672">-      - name: Build Gemini site with gmnhg
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        uses: docker://ghcr.io/tdemin/gmnhg:v0.4.2
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+      - name: Deploy to GitHub Pages branch
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>         with:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-          args: gmnhg -output ./gmnhg
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-      - name: Deploy web site
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        # v6.0.0, strict commit pinning due to handling secrets
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        uses: Burnett01/rsync-deployments@45d84ad5f6c174f3e0ffc50e9060a9666d09c16e
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        with:
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          switches: -avzr --delete
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          path: hugo/
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_path: ${{ secrets.DEPLOY_ROOT_PATH }}/blog.tdem.in
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_host: ${{ secrets.DEPLOY_HOST }}
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_user: ${{ secrets.DEPLOY_USER }}
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_key: ${{ secrets.DEPLOY_KEY }}
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-      - name: Deploy Gemini site
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        # GitHub Actions doesn&#39;t allow anchors in workflow YAML, so
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        # duplicating this is required
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        uses: Burnett01/rsync-deployments@45d84ad5f6c174f3e0ffc50e9060a9666d09c16e
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-        with:
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          switches: -avzr --delete
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          path: gmnhg/
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_path: ${{ secrets.DEPLOY_ROOT_PATH }}/gemini
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_host: ${{ secrets.DEPLOY_HOST }}
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_user: ${{ secrets.DEPLOY_USER }}
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-          remote_key: ${{ secrets.DEPLOY_KEY }}
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+          github_token: ${{ secrets.GITHUB_TOKEN }}
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+          publish_dir: ./hugo
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+          cname: tdem.in
+</span></span></span></code></pre></div><p>Setting up redirects for both <code>www.tdem.in</code> and <code>blog.tdem.in</code> as
+outlined in the Cloudflare chapter above helps for the remainders of
+<code>blog.tdem.in</code> on search engine databases.</p>
+<blockquote>
+<p>As <code>tdemin.github.io</code> is now served from <a href="https://github.com/tdemin/tdem.in">this repository</a>,
+this required importing content we might have had in there. Gladly,
+this only meant <a href="https://github.com/tdemin/tdem.in/commit/d83927d3f1e37ff709f9d0e92d4bd5b27abf8989">copying a single blog post</a> for the
+archive.</p>
+</blockquote>
+<h2 id="conclusions">Conclusions</h2>
+<p>Whether or not we won or lost more by migrating depends on the
+priorities. Pros are as follows:</p>
+<ul>
+<li>less costly monthly bill (60% of the original costs after one adds the
+VPN server costs, that of two 6 EUR/mo VPS instances)</li>
+<li>virtually no maintenance required</li>
+<li>better groupware OS integration for Apple devices, where syncing
+reminders whenever they change/get added just works™ and
+doesn&rsquo;t get stuck from time to time which is what occasionally
+happened on both latest iOS 17 and macOS 14 with Nextcloud CalDAV
+entries installed with a configuration profile</li>
+</ul>
+<p>What we lost:</p>
+<ul>
+<li>the ability to have a background always-on RSS updater that would
+ensure we lose no entries in-between connections (which is important
+for high-volume collective blogs and news outlets)</li>
+<li>freedom in picking groupware client software, which never really
+existed on Apple hardware anyway</li>
+</ul>
+<p>I stand by the option that was a net positive.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>This means pages like links to commits, issues, etc, are likely to
+break, since GitHub might not necessarily do the URI scheme Gitea&rsquo;s
+web UI does. This also includes Google Search, as Gitea&rsquo;s
+workarounds to get non-canonical pages (random commit pages in
+random languages, etc) out of search engine indexes are imperfect to
+this day. YMMV.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Out-of-the-box&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+    </main>
+    
+    <section>
+        <span class="bold">Tags:</span>
+        <ul class="tags">
+        <li class="tag"><a href="https://tdem.in/tags/saas/">SaaS</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/icloud/">iCloud</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/nextcloud/">Nextcloud</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/tiny-tiny-rss/">Tiny Tiny RSS</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/ttrss/">TTRSS</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/github/">GitHub</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/gitea/">Gitea</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/git/">Git</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/gemini/">Gemini</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/gmnhg/">gmnhg</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/satellite/">Satellite</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/netnewswire/">NetNewsWire</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/caldav/">CalDAV</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/carddav/">CardDAV</a></li>,
+        
+        <li class="tag"><a href="https://tdem.in/tags/cloudflare/">CloudFlare</a></li>
+        
+        </ul>
+    </section>
+    
+</article>
+
+        <footer>
+            <hr>
+            <small>
+                <p>
+                    &copy; 2024 <a href="https://tdem.in">Timur Demin</a>.
+                    Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> using a theme based on
+                    <a href="https://github.com/arjunkrishnababu96/basics" target="_blank">Basics</a>.
+                </p>
+                <p>
+                    All content on this page is licensed under a <a rel="license" href="/LICENSE">Creative Commons Attribution
+                        4.0 International License</a>, unless noticed otherwise.
+                </p>
+                
+                <p>
+                    The source code of this website is available <a target="_blank" href="https://github.com/tdemin/tdem.in">here</a>.
+                </p>
+                
+            </small>
+        </footer>
+        
+        </div>
+    </body>
+</html>

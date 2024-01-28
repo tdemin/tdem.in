@@ -1,0 +1,1661 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Tiny Tiny RSS on Timur Demin&#39;s Blog</title>
+        <link>https://tdem.in/tags/tiny-tiny-rss/</link>
+        <description>Recent content in Tiny Tiny RSS on Timur Demin&#39;s Blog</description>
+        <language>en-us</language>
+        <managingEditor>me@tdem.in (Timur Demin)</managingEditor>
+        <webMaster>me@tdem.in (Timur Demin)</webMaster>
+        <lastBuildDate>Sat, 27 Jan 2024 17:01:00 +0600</lastBuildDate>
+        
+        <atom:link href="https://tdem.in/tags/tiny-tiny-rss/index.xml" rel="self" type="application/rss+xml" />
+        
+        
+        <item>
+        <title>From Self-Hosted FOSS to Proprietary PaaS: A Migration Story</title>
+        <link>https://tdem.in/post/from-selfhosted-to-saas/</link>
+        <pubDate>Sat, 27 Jan 2024 17:01:00 +0600</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/from-selfhosted-to-saas/</guid>
+        <description>&lt;p&gt;First time to blog in three years!&lt;/p&gt;
+&lt;p&gt;As a person too busy with &lt;code&gt;${DAYJOB}&lt;/code&gt; the last few years, I wanted my
+remaining servers hosting groupware, file sharing, and news reading
+software to ideally manage themselves. 12 EUR/mo doesn&amp;rsquo;t mean you get a
+system administrator to do chores for you, instead you get to do the
+routines yourself. That could only continue for as much before we would
+get fed up and attempt the move back to being truly serverless™, which
+is what the post you&amp;rsquo;re reading is all about.&lt;/p&gt;
+&lt;p&gt;No servers for us would mean:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;getting a smaller monthly bill thankfully to most personal cloud
+options costing less than a six EUR/mo VPS&lt;/li&gt;
+&lt;li&gt;doing nothing whenever another Debian / Red Hat / &lt;code&gt;$DISTRONAME&lt;/code&gt;
+Security Advisory reports of a critical vulnerability&lt;/li&gt;
+&lt;li&gt;having nothing to maintain or update (which is a serious win,
+considering &lt;code&gt;${DAYJOB}&lt;/code&gt; involves enough system maintenance by itself)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- more --&gt;
+&lt;h2 id=&#34;planning-the-move&#34;&gt;Planning the move&lt;/h2&gt;
+&lt;p&gt;Our self-hosted service inventory to migrate contains the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://gitea.io&#34;&gt;Gitea&lt;/a&gt;, a Git repository hosting in Go&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nextcloud.com&#34;&gt;Nextcloud&lt;/a&gt;, a groupware suite backend server that works as
+a private cloud, in PHP&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tt-rss.org/&#34;&gt;Tiny Tiny RSS&lt;/a&gt;, an RSS feed reader and aggregator in PHP&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://git.sr.ht/~gsthnz/satellite&#34;&gt;Satellite&lt;/a&gt;, a Gemini server that only serves static content, in Go&lt;/li&gt;
+&lt;li&gt;(if you count this one as a service, that is) nginx, a web server
+hosting &lt;a href=&#34;https://tdem.in&#34;&gt;https://tdem.in&lt;/a&gt;, aka the website you&amp;rsquo;re reading
+this at, that also needs to serve a few occasional redirects, like
+&lt;code&gt;music.tdem.in&lt;/code&gt; to the &lt;a href=&#34;https://www.last.fm/user/l0548942&#34;&gt;Last.fm page&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The hardest challenge to solve with migrating off these three would be
+keeping exactly zero servers at hand. This would mean finding some other
+way to handle HTTP redirects from domains previously served at
+&lt;code&gt;git.tdem.in&lt;/code&gt;, &lt;code&gt;storage.tdem.in&lt;/code&gt;, and others, which a simple CNAME
+record doesn&amp;rsquo;t handle. Gladly for us, Cloudflare provides redirects as a
+feature of its web edge for free (if you&amp;rsquo;re fine with only having up to
+10 of those), and the sole requirements to use them is to have
+Cloudflare handle DNS for your domain (which was already the case for
+&lt;code&gt;tdem.in&lt;/code&gt;, and proved useful).&lt;/p&gt;
+&lt;p&gt;Finding a replacement to &lt;code&gt;git.tdem.in&lt;/code&gt; was easy: GitHub was long the
+home to most of our public code. TTRSS would have to go in favor of
+something that runs locally, like &lt;a href=&#34;https://netnewswire.blog/&#34;&gt;NetNewsWire&lt;/a&gt;. Nextcloud
+has a pretty obvious alternative for Apple users.&lt;/p&gt;
+&lt;p&gt;As long as we were fine with stopping hosting the Gemini capsule (which
+was bound to happen at some point due to reducing interest and lack of
+energy to maintain &lt;a href=&#34;https://github.com/tdemin/gmnhg&#34;&gt;gmnhg&lt;/a&gt;) and agreeing to the status quo of
+this website being our only home page, Satellite needed no replacement.&lt;/p&gt;
+&lt;p&gt;Therefore, our final listing of free or cheaper services to use for
+syncing consists of the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;iCloud to handle files / calendar / contacts / tasks syncing / other
+groupware (only really works for Mac/iPhone users, but we&amp;rsquo;re rocking
+both anyway, so why not)&lt;/li&gt;
+&lt;li&gt;GitHub to host our ever-shrinking set of public projects&lt;/li&gt;
+&lt;li&gt;GitHub Pages to host this website&lt;/li&gt;
+&lt;li&gt;NetNewsWire to read RSS feeds locally and sync subscriptions with the
+built-in iCloud support&lt;/li&gt;
+&lt;li&gt;none for Gemini hosting, which was bound to be gone at some point
+anyway due to lack of energy to maintain &lt;a href=&#34;https://github.com/tdemin/gmnhg&#34;&gt;gmnhg&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Cloudflare to handle redirects&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;cloudflare-as-the-ultimate-redirector&#34;&gt;Cloudflare as the ultimate redirector&lt;/h2&gt;
+&lt;p&gt;Performing redirects from a hostname to elsewhere is doable with
+Cloudflare in two simple steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Creating a CNAME record pointing anywhere (we use &lt;code&gt;@&lt;/code&gt; as the target
+to prevent any unwanted side effects). The important bit is that the
+&amp;ldquo;Proxied by Cloudflare&amp;rdquo; toggle needs to be ON, so the traffic reaches
+the Cloudflare edge.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/cloudflare_cnames.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/cloudflare_cnames.png&#34; alt=&#34;CNAME records at Cloudflare&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;CNAME records at Cloudflare&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;What actually ends up on public DNS looks like this:&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/cloudflare_cnames_transformed.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/cloudflare_cnames_transformed.png&#34; alt=&#34;CNAME records, transformed by Cloudflare into A records onto its edge&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;CNAME records, transformed by Cloudflare into A records onto its edge&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Creating a dynamic redirection rule that responds with 302 whenever
+traffic matching your hostname reaches Cloudflare:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/cloudflare_dynamic_redirect_matcher.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/cloudflare_dynamic_redirect_matcher.png&#34; alt=&#34;Cloudflare dynamic redirection rule matcher&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;Cloudflare dynamic redirection rule matcher&lt;/span&gt;
+&lt;/p&gt;
+
+
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/cloudflare_dynamic_redirect_target.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/cloudflare_dynamic_redirect_target.png&#34; alt=&#34;Cloudflare rule target, responding with a 302&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;Cloudflare rule target, responding with a 302&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;The end result is that our traffic ends up where destined:&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/cloudflare_redirect_git.tdem.in.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/cloudflare_redirect_git.tdem.in.png&#34; alt=&#34;Cloudflare redirects git.tdem.in to GitHub, as advertised&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;Cloudflare redirects git.tdem.in to GitHub, as advertised&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;gitea&#34;&gt;Gitea&lt;/h2&gt;
+&lt;p&gt;Relatively easy to migrate, as long as most of the repos are private,
+feature no CI/CD, no content to migrate besides code, etc. The list of
+repos is trivially obtainable through &lt;code&gt;&amp;lt;profile&amp;gt; -&amp;gt; Admin Panel -&amp;gt; Content -&amp;gt; Repositories&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This small snippet automates most of the routine, except creating the
+repository at GitHub:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git_mirror &lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    git clone --mirror &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://git.tdem.in/&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;1&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;.git&amp;#34;&lt;/span&gt; $1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    cd $1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    git remote add github &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://github.com/&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;1&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;.git&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    git push -u github --all
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    git push github --tags
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    cd -
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Invoking it, as repositories at GitHub get created and reconfigured to
+be private and contain no wiki / Actions / etc, is as easy as:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;git_mirror tdemin/repository1
+git_mirror tdemin/repository2
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Memo: Gitea uses the same wiki Markdown hosting scheme as GitHub, with
+&lt;code&gt;${REPOSITORY_NAME}.wiki.git&lt;/code&gt; &lt;a href=&#34;https://docs.github.com/en/communities/documenting-your-project-with-wikis/adding-or-editing-wiki-pages#adding-or-editing-wiki-pages-locally&#34;&gt;being the URL&lt;/a&gt; for the Git
+repository containing all of your pages. Migrating that would simply
+mean an extra &lt;code&gt;git_mirror&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The last bit remaining would redirecting everyone&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; hitting
+&lt;code&gt;git.tdem.in&lt;/code&gt; from history or links on the public web, which is
+configurable with Cloudflare as shown above.&lt;/p&gt;
+&lt;h2 id=&#34;nextcloud&#34;&gt;Nextcloud&lt;/h2&gt;
+&lt;p&gt;The amount of time spent on migrating from a groupware software piece to
+another directly depends on the volumes of information stored inside the
+former. The scenario for &lt;code&gt;storage.tdem.in&lt;/code&gt; included the following, for
+one user:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;calendar events&lt;/li&gt;
+&lt;li&gt;reminders (technically fancy calendar events)&lt;/li&gt;
+&lt;li&gt;contacts&lt;/li&gt;
+&lt;li&gt;files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Files are taken care of by copying them to the iCloud drive folder. To
+make syncing &lt;code&gt;~/Desktop&lt;/code&gt; and &lt;code&gt;~/Documents&lt;/code&gt; seamless like Nextcloud
+offers OOB&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; you might want to enable the &lt;code&gt;Desktop &amp;amp; Documents folders&lt;/code&gt; in &lt;a href=&#34;https://support.apple.com/en-us/HT206985&#34;&gt;iCloud sync settings&lt;/a&gt;. As an added bonus,
+you get file URL sharing directly from Finder.&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/icloud_web_crash.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/icloud_web_crash.png&#34; alt=&#34;That is, until it works&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;That is, until it works&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;Calendar events are trivially moved to the relevant calendar in two
+clicks per event. While sounding like a tedious job, that&amp;rsquo;s doable in a
+few minutes even for the largest agendas thanks to the built-in snappy
+macOS app. Reminders get moved into iCloud-hosted lists with the help of
+mass drag-and-drop (unless you care about lots of historically completed
+entries. I do not).&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/icloud_calendar.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/icloud_calendar.png&#34; alt=&#34;As easy as it gets with the right app for the job&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;As easy as it gets with the right app for the job&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;There&amp;rsquo;s an option to extract your calendar entries through CalDAV and
+then import it using &lt;a href=&#34;https://caldav.icloud.com&#34;&gt;https://caldav.icloud.com&lt;/a&gt;, but I didn&amp;rsquo;t care
+enough to do that. The events in my calendar were trivial enough to
+click through to move to iCloud-provided calendars. The Apple&amp;rsquo;s
+calendar app is friction-free enough.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Contacts proved to be a simple task for a mass vCard export/import. A
+few records needed fixing after the import, but that&amp;rsquo;s a five to ten
+minute-job even for a contact book of hundreds of entries.&lt;/p&gt;
+&lt;h2 id=&#34;tiny-tiny-rss&#34;&gt;Tiny Tiny RSS&lt;/h2&gt;
+&lt;p&gt;There&amp;rsquo;s no real data export option other than using OPML, but that one
+just gets imported into your client of choice, and you&amp;rsquo;re done. I
+recommend &lt;a href=&#34;https://netnewswire.blog/&#34;&gt;NetNewsWire&lt;/a&gt; as a brilliant macOS / iOS
+implementation that can also sync feeds across devices with iCloud, but
+the choice is ultimately up to you.&lt;/p&gt;
+&lt;p&gt;You might still want to keep the dump of your TTRSS database for
+archival purposes.&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/ttrss_entries_count.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/ttrss_entries_count.png&#34; alt=&#34;That&amp;amp;rsquo;s&amp;amp;hellip; quite a number of entries to get rid of. :(&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;That&amp;rsquo;s&amp;hellip; quite a number of entries to get rid of. :(&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;github-pages&#34;&gt;GitHub Pages&lt;/h2&gt;
+&lt;p&gt;Migrating an existing Hugo blog with a well-defined CI setup mostly
+concludes to following the instructions for &lt;a href=&#34;https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site&#34;&gt;setting up GitHub
+Pages&lt;/a&gt; and then &lt;a href=&#34;https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site&#34;&gt;doing the routine&lt;/a&gt;
+to get it work with a custom domain. My sole nitpick was that GitHub
+Pages can be served from any domain, not just &lt;code&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt;,
+which helped with keeping the &lt;a href=&#34;https://github.com/tdemin/tdem.in&#34;&gt;repository&lt;/a&gt; in its canonical
+place.&lt;/p&gt;
+&lt;p&gt;In the end, the whole chore concluded to the following GitHub Actions
+workflow &lt;a href=&#34;https://github.com/tdemin/tdem.in/commit/0453579bfd53b47d77d333688e7fbfd62f552dfc&#34;&gt;diff&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-      - name: Build Gemini site with gmnhg
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        uses: docker://ghcr.io/tdemin/gmnhg:v0.4.2
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+      - name: Deploy to GitHub Pages branch
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;&lt;/span&gt;         with:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          args: gmnhg -output ./gmnhg
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-      - name: Deploy web site
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        # v6.0.0, strict commit pinning due to handling secrets
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        uses: Burnett01/rsync-deployments@45d84ad5f6c174f3e0ffc50e9060a9666d09c16e
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        with:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          switches: -avzr --delete
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          path: hugo/
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_path: ${{ secrets.DEPLOY_ROOT_PATH }}/blog.tdem.in
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_host: ${{ secrets.DEPLOY_HOST }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_user: ${{ secrets.DEPLOY_USER }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_key: ${{ secrets.DEPLOY_KEY }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-      - name: Deploy Gemini site
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        # GitHub Actions doesn&amp;#39;t allow anchors in workflow YAML, so
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        # duplicating this is required
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        uses: Burnett01/rsync-deployments@45d84ad5f6c174f3e0ffc50e9060a9666d09c16e
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-        with:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          switches: -avzr --delete
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          path: gmnhg/
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_path: ${{ secrets.DEPLOY_ROOT_PATH }}/gemini
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_host: ${{ secrets.DEPLOY_HOST }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_user: ${{ secrets.DEPLOY_USER }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-          remote_key: ${{ secrets.DEPLOY_KEY }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+          github_token: ${{ secrets.GITHUB_TOKEN }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+          publish_dir: ./hugo
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;+          cname: tdem.in
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Setting up redirects for both &lt;code&gt;www.tdem.in&lt;/code&gt; and &lt;code&gt;blog.tdem.in&lt;/code&gt; as
+outlined in the Cloudflare chapter above helps for the remainders of
+&lt;code&gt;blog.tdem.in&lt;/code&gt; on search engine databases.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As &lt;code&gt;tdemin.github.io&lt;/code&gt; is now served from &lt;a href=&#34;https://github.com/tdemin/tdem.in&#34;&gt;this repository&lt;/a&gt;,
+this required importing content we might have had in there. Gladly,
+this only meant &lt;a href=&#34;https://github.com/tdemin/tdem.in/commit/d83927d3f1e37ff709f9d0e92d4bd5b27abf8989&#34;&gt;copying a single blog post&lt;/a&gt; for the
+archive.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;conclusions&#34;&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;Whether or not we won or lost more by migrating depends on the
+priorities. Pros are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;less costly monthly bill (60% of the original costs after one adds the
+VPN server costs, that of two 6 EUR/mo VPS instances)&lt;/li&gt;
+&lt;li&gt;virtually no maintenance required&lt;/li&gt;
+&lt;li&gt;better groupware OS integration for Apple devices, where syncing
+reminders whenever they change/get added just works™ and
+doesn&amp;rsquo;t get stuck from time to time which is what occasionally
+happened on both latest iOS 17 and macOS 14 with Nextcloud CalDAV
+entries installed with a configuration profile&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;What we lost:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the ability to have a background always-on RSS updater that would
+ensure we lose no entries in-between connections (which is important
+for high-volume collective blogs and news outlets)&lt;/li&gt;
+&lt;li&gt;freedom in picking groupware client software, which never really
+existed on Apple hardware anyway&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I stand by the option that was a net positive.&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;This means pages like links to commits, issues, etc, are likely to
+break, since GitHub might not necessarily do the URI scheme Gitea&amp;rsquo;s
+web UI does. This also includes Google Search, as Gitea&amp;rsquo;s
+workarounds to get non-canonical pages (random commit pages in
+random languages, etc) out of search engine indexes are imperfect to
+this day. YMMV.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
+&lt;p&gt;Out-of-the-box&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+        </item>
+        
+        <item>
+        <title>Running restic with AWS S3</title>
+        <link>https://tdem.in/post/restic-aws-s3/</link>
+        <pubDate>Fri, 22 Oct 2021 00:55:00 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/restic-aws-s3/</guid>
+        <description>&lt;p&gt;It turns out &lt;a href=&#34;https://restic.net&#34;&gt;restic&lt;/a&gt; is a bit less trivial to set up with Amazon&amp;rsquo;s S3
+due to some incoherency in URI handling by Amazon S3 leading to subtle
+&lt;a href=&#34;https://github.com/restic/restic/issues/2971&#34;&gt;problems&lt;/a&gt; with repo initialization where &lt;code&gt;restic init&lt;/code&gt; is only fine with
+a specific variant of the S3 bucket URI and all other &lt;code&gt;restic&lt;/code&gt; commands would
+work with another one.  While the linked bug is about Scaleway&amp;rsquo;s object storage,
+the problem encountered also applied to AWS S3.&lt;/p&gt;
+&lt;p&gt;This post documents an &lt;a href=&#34;https://ansible.com&#34;&gt;Ansible&lt;/a&gt; sample variable setup to automatically
+generate proper restic repository paths.&lt;/p&gt;
+&lt;p&gt;When setting up backups with, say, an Ansible role, one might want to set up two
+different URI variables pointing to the same bucket for init and rest of the
+work:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;vars/main.yml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;aws_region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;us-east-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;aws_bucket&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;tdemin-backups&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;restic_repo&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ ansible_fqdn }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;restic_backup_path&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;s3:s3.{{ aws_region }}.amazonaws.com/{{ aws_bucket }}/{{ restic_repo }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;restic_init_path&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;s3:{{ aws_bucket }}.s3.{{ aws_region }}.amazonaws.com/{{ restic_repo }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;ve followed my previous restic backup guide using systemd, then you could
+then roughly use the last two variables in a playbook as follows:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;tasks/main.yml&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Install the configuration file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;mode&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0600&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;owner&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;root&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;group&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;root&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;dest&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/etc/restic/{{ restic_repo }}.env.conf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;content&lt;/span&gt;: |&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      AWS_ACCESS_KEY_ID=...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      AWS_SECRET_ACCESS_KEY=...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      RESTIC_REPOSITORY={{ restic_backup_path }}
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      RESTIC_PASSWORD=...&lt;/span&gt;      
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Initialize the repository&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;command&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;creates&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/etc/restic/{{ restic_repo }}.created&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;cmd&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/usr/local/bin/restic init&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;environment&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;AWS_ACCESS_KEY_ID&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;AWS_SECRET_ACCESS_KEY&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;RESTIC_REPOSITORY&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ restic_init_path }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;RESTIC_PASSWORD&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Create the repository initialization notice&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;file&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;path&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/etc/restic/{{ restic_repo }}.created&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;touch&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;mode&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0600&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The playbook will non-interactively initialize a repository once, using the
+appropriate URIs to access AWS S3 where needed.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>On using GORM: first experience</title>
+        <link>https://tdem.in/post/gorm/</link>
+        <pubDate>Tue, 28 Sep 2021 21:27:00 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/gorm/</guid>
+        <description>&lt;p&gt;I rarely complain on others&amp;rsquo; software, but this time I felt compelled to share
+my first impression on GORM, since it&amp;rsquo;s quite an example of how you pick
+software you need.&lt;/p&gt;
+&lt;p&gt;Since you usually don&amp;rsquo;t care much about the upsides but rather have blockers
+preventing you from using something at all, let&amp;rsquo;s get right to the negative
+side.&lt;/p&gt;
+&lt;p&gt;A first glimpse at the &lt;a href=&#34;https://gorm.io/docs/&#34;&gt;docs&lt;/a&gt; reveals you don&amp;rsquo;t &lt;code&gt;(*DB).Close()&lt;/code&gt; after
+&lt;code&gt;gorm.Open()&lt;/code&gt;. A more thorough examination results in finding out this is an
+&lt;a href=&#34;https://stackoverflow.com/a/63817476&#34;&gt;expected change&lt;/a&gt; the author introduced in v1.20. Maybe the point to
+have the connection pool closed automatically on application exit even is valid,
+but expecting a Go dev to have to find that out and with a good chance still
+write something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;func&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;sqlDB&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;_&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;db&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;DB&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;sqlDB&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Close&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;still looks weird.&lt;/p&gt;
+&lt;p&gt;While this on itself doesn&amp;rsquo;t look like much of an issue, this is actually a sign
+of GORM not following &lt;a href=&#34;https://semver.org&#34;&gt;semantic versioning&lt;/a&gt;, which is baked into the Go
+toolchain and is illustrated by its &lt;a href=&#34;https://golang.org/doc/modules/version-numbers&#34;&gt;docs on version numbers&lt;/a&gt;. This
+means users of &lt;code&gt;go get -u&lt;/code&gt; might have a difficult time having to patch their
+code after supposedly minor dependency updates.&lt;/p&gt;
+&lt;p&gt;I am still going to use this library, after all, it does what I wanted quite
+well; but hey, I have a right to complain! Right?..&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>GnuPG and its alternatives: the state in 2021</title>
+        <link>https://tdem.in/post/pgp-alternatives/</link>
+        <pubDate>Mon, 26 Jul 2021 02:00:00 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/pgp-alternatives/</guid>
+        <description>&lt;p&gt;The market of the software to replace GnuPG and the OpenPGP infrastructure
+appears to be quite a topic on itself, the precondition to replace GnuPG being
+its complexity (which has gone to levels so high the official library to
+interface with GnuPG, &lt;a href=&#34;https://gnupg.org/software/gpgme/index.html&#34;&gt;gpgme&lt;/a&gt;, is literally a command-line
+wrapper&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; to GnuPG), it being the de-facto implementation of
+OpenPGP, and its other problems, as commonly illustrated by &lt;a href=&#34;https://latacora.micro.blog/2019/07/16/the-pgp-problem.html&#34; title=&#34;The PGP problem&#34;&gt;this post by
+Latacora&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Theoretically, the program (or programs, thinking the Unix way) to replace GnuPG
+as a cryptography software suite should do these two things at the very minimum
+(GnuPG is capable of a lot more, including keyservers, Web of Trust, etc, but
+for simplicity let&amp;rsquo;s talk about the bare minimum):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;encrypt / decrypt data using (a)symmetric cryptography;&lt;/li&gt;
+&lt;li&gt;generate digital signatures for data and be able to verify the generated
+signatures with public keys.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;encryption&#34;&gt;Encryption&lt;/h2&gt;
+&lt;p&gt;One of the most well-known tools to do encryption is &lt;a href=&#34;https://age-encryption.org&#34; title=&#34;Actually Good Encryption&#34;&gt;age&lt;/a&gt;, which, as of
+July 2021, isn&amp;rsquo;t out of release candidates just yet. age doesn&amp;rsquo;t even raise many
+concerns on its own, but it lacks even the simplest public/private key
+management capabilities (like key aliases or &amp;ldquo;use this private key as the
+default&amp;rdquo;).&lt;/p&gt;
+&lt;p&gt;It goes along well with the Unix way (one program per job to do it well), but
+can you seriously imagine an encryption tool where you provide your full
+recipient public key every time with a command-line key? Me neither. &lt;code&gt;age&lt;/code&gt;
+seriously assumes you&amp;rsquo;re fine with entering something like this every time&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;% age -r age1h0ea8x07z33fc5lzkqj3kghup4g6jkzsaj6v86pgngwn7gs8q9es56lpwv \
+    -o file.enc file.txt 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;age&lt;/code&gt; also raises concerns by letting trivially discoverable bugs such as &lt;a href=&#34;https://github.com/FiloSottile/age/issues/263&#34;&gt;this
+one&lt;/a&gt; slip in the release candidates. This one is for sure easily
+discoverable, as I ran into it while writing &lt;a href=&#34;https://github.com/tdemin/akm&#34; title=&#34;age key manager&#34;&gt;akm&lt;/a&gt; in my first hours of
+trying &lt;code&gt;age&lt;/code&gt;, and its presence seriously raised my eyebrows, as it&amp;rsquo;s been one of
+the tools &lt;a href=&#34;https://latacora.micro.blog/2019/07/16/the-pgp-problem.html&#34; title=&#34;The PGP problem&#34;&gt;recommended&lt;/a&gt; by supposedly competent cryptographers at
+Latacora long before the bug has been fixed.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://flak.tedunangst.com/post/reop&#34; title=&#34;Reasonable Expectation of Privacy&#34;&gt;reop&lt;/a&gt; can also do encryption for you, it will be discussed later.&lt;/p&gt;
+&lt;h2 id=&#34;digital-signatures&#34;&gt;Digital signatures&lt;/h2&gt;
+&lt;p&gt;With digital signatures and the tools to verify them we have quite a number of
+options, with different problems / concerns surrounding them (remember, we want
+our tool to be at least somewhat reputable):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The already mentioned &lt;a href=&#34;https://flak.tedunangst.com/post/reop&#34; title=&#34;Reasonable Expectation of Privacy&#34;&gt;reop&lt;/a&gt; is quite good on itself, as to be expected
+from the people around the OpenBSD project, but appears to be abandoned by its
+author, and so does &lt;a href=&#34;https://github.com/tedu/reop/&#34;&gt;its portable version&lt;/a&gt; for other operating
+systems.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://man.openbsd.org/signify.1&#34;&gt;signify&lt;/a&gt;&amp;rsquo;s been made by the same person as reop, Ted Unangst, but is
+only available under OpenBSD, and Linux folks are supposed to enjoy one of the
+many available source ports (&lt;a href=&#34;https://github.com/aperezdc/signify&#34;&gt;1&lt;/a&gt;, &lt;a href=&#34;https://github.com/leahneukirchen/outils/tree/master/src/usr.bin/signify&#34;&gt;2&lt;/a&gt;, etc). Which of those
+&amp;ldquo;sucks less&amp;rdquo; and will actively be maintained? Hard to tell. The quality of ports
+of doas, neither of which remember passwords under Linux, doesn&amp;rsquo;t enthuse much.&lt;/li&gt;
+&lt;li&gt;There&amp;rsquo;s a portable alternative to signify called &lt;a href=&#34;https://github.com/jedisct1/minisign&#34;&gt;minisign&lt;/a&gt; by the
+author of libsodium, which is written in C. There&amp;rsquo;s little concerns about
+it, aside from the only random commit I noticed which got &lt;a href=&#34;https://github.com/jedisct1/minisign/commit/0137cd75af4b1188cb01385724fd3c3c1fc2b4ba&#34;&gt;unrelated changes
+slipped into it&lt;/a&gt; (well, Git has revision history management
+tools for a reason?).&lt;/li&gt;
+&lt;li&gt;There&amp;rsquo;s also &lt;a href=&#34;https://github.com/opencoff/sigtool&#34;&gt;sigtool&lt;/a&gt;, which for whatever reason has gone with YAML
+for its signature format and isn&amp;rsquo;t really easy to stumble upon, thanks in part
+to its name colliding with a &lt;a href=&#34;https://www.systutorials.com/docs/linux/man/1-sigtool/&#34;&gt;ClamAV tool of the same name&lt;/a&gt;. The
+number of its users also leaves to be desired (remember, reputability).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;other-problems&#34;&gt;Other problems&lt;/h2&gt;
+&lt;p&gt;While out of these described above I have already gone with a &lt;a href=&#34;https://tdem.in/announcements/#2021-05-27-age-%2f-minisign-public-keys&#34;&gt;pair of
+age/minisign keys&lt;/a&gt; for testing, there&amp;rsquo;s an inherent problem of having them
+integrated in my workflow. For instance, while you can sign commit/tag data with
+Git with GnuPG, there&amp;rsquo;s no way to sign those with the &lt;a href=&#34;https://git-scm.com/docs/githooks&#34;&gt;current set of Git hooks
+available&lt;/a&gt; (although there are &lt;a href=&#34;https://seankhliao.com/blog/12020-10-31-git-signing-signify/&#34;&gt;hacks to do so&lt;/a&gt; using
+current Git GnuPG support).&lt;/p&gt;
+&lt;p&gt;Other tools, like NeoMutt, also appear to lack support for arbitrary digital
+signature / encryption tools unless you&amp;rsquo;re fine with hacking / gluing them
+together in ugly ways.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Unless Git and other software projects start abandoning GnuPG, GnuPG and OpenPGP
+are unlikely to go anywhere, as being tied too deep into software codebases and
+seeing no perfect simple alternatives just yet.&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s also a new OpenPGP library in Rust, &lt;a href=&#34;https://sequoia-pgp.org/&#34;&gt;Sequoia&lt;/a&gt;, which solves a
+number of issues associated with GnuPG (namely the monolith problem), but it
+doesn&amp;rsquo;t look like any of the applications using GnuPG integrate with it just
+yet.&lt;/p&gt;
+&lt;p&gt;Anyways, you can now encrypt me messages with age (or &lt;a href=&#34;https://github.com/tdemin/akm&#34; title=&#34;age key manager&#34;&gt;akm&lt;/a&gt;), and verify my
+signatures with minisign with those &lt;a href=&#34;https://tdem.in/announcements/#2021-05-27-age-%2f-minisign-public-keys&#34;&gt;keys&lt;/a&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;age: age1h0ea8x07z33fc5lzkqj3kghup4g6jkzsaj6v86pgngwn7gs8q9es56lpwv
+minisign: RWRltlKLStovfiGdhWNzla+GyANAL9ok1Bg15qCAq8oRPCGN6G4fjLj1
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;See &lt;code&gt;src/engine-gpg.c&lt;/code&gt; in &lt;a href=&#34;https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gpgme.git;a=blob_plain;f=src/engine-gpg.c;hb=4583ab77e5af3f0da5b307a169d07b58dddf652f&#34;&gt;GPGME source tree&lt;/a&gt;.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
+&lt;p&gt;To be completely fair, you can more or less solve it with a wrapper. For this job I made &lt;a href=&#34;https://github.com/tdemin/akm&#34; title=&#34;age key manager&#34;&gt;akm&lt;/a&gt;, a shell script wrapper that will read recipient keys for you from &lt;code&gt;~/.akm&lt;/code&gt; and pass them to &lt;code&gt;age&lt;/code&gt;. It can also set your default encryption key for you unless you specify one on the command line.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
+        </item>
+        
+        <item>
+        <title>Using Restic with systemd on Linux</title>
+        <link>https://tdem.in/post/restic-with-systemd/</link>
+        <pubDate>Fri, 29 Jan 2021 20:30:00 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/restic-with-systemd/</guid>
+        <description>&lt;p&gt;You can read the Russian version of this post &lt;a href=&#34;https://habr.com/ru/post/540096/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://restic.net&#34;&gt;Restic&lt;/a&gt;, the simple backup program, is a fairly well-known piece of
+software. Designed to be simple to both use and script on any system, it doesn&amp;rsquo;t
+include any OS-specific setup examples, which is precisely what this post
+describes.&lt;/p&gt;
+&lt;p&gt;So what we&amp;rsquo;re trying to achieve here:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Automated backup runs daily at 12:00 AM (or any configurable time).&lt;/li&gt;
+&lt;li&gt;The backup includes only important configuration files and data stores.&lt;/li&gt;
+&lt;li&gt;The backup also includes all PostgreSQL databases, restorable with &lt;code&gt;psql -f&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The backup expands to an unlimited number of repos on need.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This guide assumes we&amp;rsquo;re backing up to a &lt;a href=&#34;https://github.com/restic/rest-server&#34;&gt;rest-server&lt;/a&gt; instance
+running at &lt;code&gt;192.168.1.200&lt;/code&gt;. The configuration should still be trivial to adapt
+to pretty much any storage provider. This guide also assumes you have already
+initialized a rest-server repo with
+&lt;code&gt;restic init -r rest:http://192.168.1.200/your-repo/&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For this we will need two systemd services, two correspondent timers, and a
+single helper script.&lt;/p&gt;
+&lt;h2 id=&#34;backing-up-filesdirectories&#34;&gt;Backing up files/directories&lt;/h2&gt;
+&lt;p&gt;We&amp;rsquo;d rather not want to run restic as root for obvious reasons, so let&amp;rsquo;s create
+a dedicated user:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# sudo useradd -m -N -s /usr/sbin/nologin restic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To backup files, we&amp;rsquo;ll need this service&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; along with its timer:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/systemd/system/restic@.service&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Unit]
+# this unit can be activated with a parameter, e.g. in
+#   systemctl start restic@your-repo.service
+# %I is &amp;#34;your-repo&amp;#34;
+Description=Restic backup on %I
+After=syslog.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=restic
+# runs restic backup on the files listed in /etc/restic/your-repo.files
+ExecStart=/usr/local/bin/restic backup --files-from /etc/restic/%I.files
+# source repo and password from /etc/restic/your-repo.env
+EnvironmentFile=/etc/restic/%I.env
+AmbientCapabilities=CAP_DAC_READ_SEARCH
+
+[Install]
+WantedBy=multi-user.target
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;/etc/systemd/system/restic@.timer&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Unit]
+# the timer, enabled as restic@your-repo.timer, will trigger
+# restic@your-repo.service
+Description=Run Restic at 12:00 AM
+
+[Timer]
+OnCalendar=*-*-* 0:00:00
+
+[Install]
+WantedBy=timers.target
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The repo name is passed through an environment file in &lt;code&gt;/etc/restic&lt;/code&gt;, read by
+systemd (systemd does this as root, and &lt;code&gt;/etc/restic&lt;/code&gt; should really be only
+readable as root, so set permissions accordingly):&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/restic/your-repo.env&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;RESTIC_PASSWORD=your_repo_password
+RESTIC_REPOSITORY=rest:http://192.168.1.200/your-repo/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We also have to supply restic with a file/directory list to back up:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/restic/your-repo.files&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/var/lib/docker
+/etc/postgresql
+/etc/restic
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;backing-up-databases&#34;&gt;Backing up databases&lt;/h2&gt;
+&lt;p&gt;This one is just a little less trivial.&lt;/p&gt;
+&lt;p&gt;Restic supports backing up data provided through stdin, so we can feed it with
+the output of &lt;code&gt;pg_dumpall&lt;/code&gt;. The only limitation is that systemd runs whatever
+you specify in &lt;code&gt;ExecStart&lt;/code&gt; with &lt;code&gt;execve(3)&lt;/code&gt;, and, to use output redirection,
+we&amp;rsquo;ll need a separate bash script:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/usr/local/bin/pgdump.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#!/usr/bin/env bash
+
+set -euo pipefail
+
+/usr/bin/sudo -u postgres /usr/bin/pg_dumpall --clean \
+    | gzip --rsyncable \
+    | /usr/local/bin/restic backup --host $1 --stdin \
+        --stdin-filename postgres-$1.sql.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To run &lt;code&gt;pg_dumpall&lt;/code&gt; as &lt;code&gt;postgres&lt;/code&gt;, we&amp;rsquo;ll need the following sudo rule in
+&lt;code&gt;/etc/sudoers&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;restic ALL=(postgres) NOPASSWD:/usr/bin/pg_dumpall --clean
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The unit file is as trivial as this:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/systemd/system/restic-pg@.service&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Unit]
+Description=Restic PostgreSQL backup on %I
+After=syslog.target
+After=network-online.target
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+User=restic
+ExecStart=/usr/local/bin/pgdump.sh %I
+EnvironmentFile=/etc/restic/%I.env
+
+[Install]
+WantedBy=multi-user.target
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The timer isn&amp;rsquo;t really any different from the one we&amp;rsquo;ve already seen above:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/systemd/system/restic-pg@.timer&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Unit]
+Description=Run Restic on PostgreSQL at 12:00 AM
+
+[Timer]
+OnCalendar=*-*-* 0:00:00
+
+[Install]
+WantedBy=timers.target
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;finishing-up&#34;&gt;Finishing up&lt;/h2&gt;
+&lt;p&gt;Start the timers and enable their autostart at boot. Remember that &lt;code&gt;your-repo&lt;/code&gt;
+is used to expand file paths in &lt;code&gt;/etc/restic&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# systemctl enable --now restic@your-repo.timer
+# systemctl enable --now restic-pg@your-repo.timer
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Test whether the whole backup system is working:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# systemctl start restic@your-repo.service
+# systemctl start restic-pg@your-repo.service
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These unit files allow backing up to an unlimited number of repos as long as the
+relevant configuration is provided through &lt;code&gt;/etc/restic/repo-name.{env,files}&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;links--sources&#34;&gt;Links / sources&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://forum.restic.net/t/recipe-to-snapshot-postgres-container/1707&#34;&gt;Recipe to backing up PostgreSQL in a Docker container&lt;/a&gt; used for the
+backup script was originally found on restic forum.  The excellent systemd docs
+(&lt;a href=&#34;https://www.freedesktop.org/software/systemd/man/systemd.service.html&#34;&gt;systemd.service&lt;/a&gt;, &lt;a href=&#34;https://www.freedesktop.org/software/systemd/man/systemd.timer.html&#34;&gt;systemd.timer&lt;/a&gt;) also helped
+a lot.&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;A good catch by Geoffrey Brown: if you use instance names with dashes or other special symbols as documented in &lt;a href=&#34;https://www.freedesktop.org/software/systemd/man/systemd.unit.html&#34;&gt;systemd.unit(5)&lt;/a&gt;, you should be aware of escaping it performs on instance names; see &amp;ldquo;String Escaping for Inclusion in Unit Names&amp;rdquo; section for more details. You can also use the &lt;code&gt;%i&lt;/code&gt; specifier which doesn&amp;rsquo;t escape instance names.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
+        </item>
+        
+        <item>
+        <title>Running a Gemini site with gmnhg and Hugo</title>
+        <link>https://tdem.in/post/gemini-with-gmnhg/</link>
+        <pubDate>Thu, 26 Nov 2020 03:45:04 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/gemini-with-gmnhg/</guid>
+        <description>&lt;p&gt;This site has recently got its &lt;a href=&#34;https://gemini.circumlunar.space&#34;&gt;Gemini&lt;/a&gt; version thanks to the
+tool I wrote, &lt;a href=&#34;https://git.tdem.in/tdemin/gmnhg&#34;&gt;gmnhg&lt;/a&gt;, available at &lt;code&gt;gemini://tdem.in&lt;/code&gt;. The tool
+has already met its first milestone, &lt;a href=&#34;https://git.tdem.in/tdemin/gmnhg/releases/tag/v0.1.0&#34;&gt;v0.1.0&lt;/a&gt;, so this is
+likely a good moment to recap on the whole idea of working in a Hugo
+site into the Geminispace.&lt;/p&gt;
+&lt;p&gt;Markdown, even though being quite complex as the &lt;a href=&#34;https://commonmark.org&#34;&gt;CommonMark&lt;/a&gt;
+specification shows (the CommonMark spec was originally designed to
+clean up the ambiguities of the original 2004 spec that resulted in
+quirky behaviour across various renderers), is simple enough to be
+converted to reasonable Gemini text (named Gemtext here) if you only use
+a subset of it. This means source Markdown can be converted to native
+Gemtext content just fine as long as some editor discretion is used when
+running a Gemini-friendly blog.&lt;/p&gt;
+&lt;p&gt;As most simple Markdown formatting can be converted to Gemtext using
+either the &lt;a href=&#34;https://gemini.circumlunar.space/docs/specification.html&#34;&gt;tools Gemtext provides&lt;/a&gt; or just left unmodified
+as plain text, it can be used as a Gemtext source, with following
+exceptions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;links or any formatting that requires a whole new line for it are not
+used in lists;&lt;/li&gt;
+&lt;li&gt;text formatting cannot be used inside link descriptions;&lt;/li&gt;
+&lt;li&gt;absolutely no inline HTML can be included in the document.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Testing your Markdown is made simple with &lt;code&gt;md2gmn&lt;/code&gt;, another tool I wrote
+that is distributed alongside &lt;code&gt;gmnhg&lt;/code&gt; that only renders Markdown text to
+Gemtext, to see if any of your Markdown fails to properly render to the
+medium Gemini provides.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;gmnhg&lt;/code&gt;, on the other hand, does the uplifting of processing your Hugo
+content files into an output dir suitable for being served by a Gemini
+server such as &lt;a href=&#34;https://sr.ht/~gsthnz/satellite/&#34;&gt;satellite&lt;/a&gt; while also taking care of
+generating index pages and such. The resulting Gemtext is then passed to
+Go&amp;rsquo;s &lt;code&gt;text/template&lt;/code&gt;, and you can customize the templates by adding the
+ones relevant to you to the &lt;code&gt;gmnhg/&lt;/code&gt; dir. The algorithm is already
+summarized quite well in its &lt;a href=&#34;https://pkg.go.dev/git.tdem.in/tdemin/gmnhg/cmd/gmnhg&#34;&gt;godoc page&lt;/a&gt;, so there&amp;rsquo;s no
+real point in going over it again.&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/gmnhg_2020-11-20.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/gmnhg_2020-11-20.png&#34; alt=&#34;Markdown site converted to Gemini, index page opened in Amfora&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;Markdown site converted to Gemini, index page opened in Amfora&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;gmnhg&lt;/code&gt; respects stuff you&amp;rsquo;d probably expect a Hugo companion to obey:
+it takes care about copying static files to the output dir, it won&amp;rsquo;t
+render draft posts, etc; yet, &lt;code&gt;gmnhg&lt;/code&gt; at this time doesn&amp;rsquo;t support much
+of the rich functionality Hugo provides to your blog (taxonomies, etc),
+but, to be fair, a lot of it is complex enough to not fit well in a
+simple Gemini blog. Yet, I am completely open to patches that implement
+certain Hugo stuff that works fine with Gemini.&lt;/p&gt;
+&lt;p&gt;This site&amp;rsquo;s sources can &lt;a href=&#34;https://git.tdem.in/tdemin/blog.tdem.in&#34;&gt;serve as a reference&lt;/a&gt; for those who need
+an example on how to use gmnhg to serve their site to Gemini.&lt;/p&gt;
+&lt;p&gt;Gemini is too escapist / privacy-focused in the tools it provides (and I
+still think mandatory TLS in a braindead-simple protocol is a dumb
+idea), but no one has come up with a decent enough of a Web replacement,
+so I guess this blog will stay available on Gemini (and having coded a
+few tools for its support counts for enough effort to make leaving
+Gemini retrospectively costly).  This new medium is simple and
+hacker-friendly, so I advise you to explore it as well!&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Remote debugging with VSCode without Remote Development</title>
+        <link>https://tdem.in/post/remote-debugging-vscode/</link>
+        <pubDate>Wed, 26 Aug 2020 03:13:59 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/remote-debugging-vscode/</guid>
+        <description>&lt;p&gt;This post is available in Russian &lt;a href=&#34;https://habr.com/en/post/516642/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s a certain point in life in which you realize you need to debug a
+program that simply cannot be run on your working machine due to reasons. In
+my case I have to debug a program that communicates with &lt;a href=&#34;https://iwd.wiki.kernel.org&#34;&gt;iwd&lt;/a&gt;, the
+Intel wireless daemon for Linux. My workstation doesn&amp;rsquo;t have a Wi-Fi adapter,
+so I needed some sort of a remote debugging hack.&lt;/p&gt;
+&lt;p&gt;VSCode has a Remote Development addon specifically addressing such cases.
+However:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Commit signing, if you have &lt;code&gt;GPG_TTY&lt;/code&gt; and auto-signing enabled, doesn&amp;rsquo;t seem
+to work, failing to sign commit data.&lt;/li&gt;
+&lt;li&gt;SSH agent, if not using agent forwarding, won&amp;rsquo;t allow you to add keys.&lt;/li&gt;
+&lt;li&gt;Opening local folders, even though RD can do it, just doesn&amp;rsquo;t work for me.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I&amp;rsquo;m doing Go development, so the hack I am describing applies to Go when using
+&lt;a href=&#34;https://github.com/go-delve/delve&#34;&gt;Delve&lt;/a&gt; for debugging. Nonetheless, the approach doesn&amp;rsquo;t change much if
+your programming language&amp;rsquo;s of choice VSCode addon supports attaching to a
+remote debugger.&lt;/p&gt;
+&lt;p&gt;What we&amp;rsquo;re going to do basically sums up to this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Write a script that does the following:
+&lt;ul&gt;
+&lt;li&gt;builds the binary with debugging support&lt;/li&gt;
+&lt;li&gt;copies it to the target machine via SCP&lt;/li&gt;
+&lt;li&gt;starts Delve in headless mode&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Add a VSCode debug profile that would attach to the target machine.&lt;/li&gt;
+&lt;li&gt;Make VSCode autostart the script on starting a debugging session.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;scripting-building-and-delve&#34;&gt;Scripting building and Delve&lt;/h2&gt;
+&lt;p&gt;Delve, the Go debugger, supports running as a headless server for the clients
+to attach to. We need to run a binary remotely.&lt;/p&gt;
+&lt;p&gt;This can technically be achieved with a simple shell script, but I find using
+&lt;a href=&#34;https://taskfile.dev&#34; title=&#34;A convenient replacement for make&#34;&gt;Task&lt;/a&gt; a lot more convenient than writing a script or a Makefile.
+Here&amp;rsquo;s what I came up with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;version&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;killall&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;cmds&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# kills delve on a target machine, still succeeds if dlv&amp;#39;s not running&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#ae81ff&#34;&gt;ssh target_machine killall dlv || true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;deps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#ae81ff&#34;&gt;killall&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;cmds&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# builds the program with optimizations disabled&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#ae81ff&#34;&gt;go build -gcflags=&amp;#34;all=-N -l&amp;#34; -o ./build/debug_binary ./cmd/program&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# copies the binary to the target machine&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#ae81ff&#34;&gt;scp ./build/debug_binary target_machine:/home/tdemin/Desktop/debug_binary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;delve&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;deps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#ae81ff&#34;&gt;push&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;cmds&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# starts dlv in headless mode listening on port 64001&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# the tmux hack is here, as dlv doesn&amp;#39;t fork into background so ssh&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# won&amp;#39;t stop and the debugging session won&amp;#39;t start; nohup won&amp;#39;t work here,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# nor will the &amp;amp; operator&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# for this to work you&amp;#39;ll ned tmux installed of course&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      - &lt;span style=&#34;color:#ae81ff&#34;&gt;ssh target_machine &amp;#39;(cd ~ &amp;amp;&amp;amp; chmod +x Desktop/debug_binary &amp;amp;&amp;amp; tmux new -d dlv --headless -l \[::\]:64001 exec ./Desktop/debug_binary)&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The entire sequence can now be started with &lt;code&gt;task delve&lt;/code&gt;. The dependencies
+ensure Delve is killed beforehand (&lt;code&gt;scp&lt;/code&gt; won&amp;rsquo;t work if the program is still
+running), and the binary is built and pushed to the target machine.&lt;/p&gt;
+&lt;h2 id=&#34;configuring-the-debugging-profile&#34;&gt;Configuring the debugging profile&lt;/h2&gt;
+&lt;p&gt;Long story short, here&amp;rsquo;s how you configure &lt;code&gt;.vscode/launch.json&lt;/code&gt; (assuming
+the &lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=golang.Go&#34;&gt;Go addon&lt;/a&gt; is installed):&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-jsonc&#34; data-lang=&#34;jsonc&#34;&gt;{
+    &amp;#34;version&amp;#34;: &amp;#34;0.2.0&amp;#34;,
+    &amp;#34;configurations&amp;#34;: [
+        {
+            &amp;#34;name&amp;#34;: &amp;#34;Attach to target&amp;#34;,
+            // dlv uses API v1 by default, this is switchable with command line
+            // flags at dlv startup
+            &amp;#34;apiVersion&amp;#34;: 1,
+            &amp;#34;type&amp;#34;: &amp;#34;go&amp;#34;,
+            &amp;#34;request&amp;#34;: &amp;#34;attach&amp;#34;,
+            &amp;#34;mode&amp;#34;: &amp;#34;remote&amp;#34;,
+            // appears to be mainly meaningless, dlv works just fine even if the
+            // target doesn&amp;#39;t have the source code for the program being
+            // debugged
+            &amp;#34;remotePath&amp;#34;: &amp;#34;${workspaceFolder}&amp;#34;,
+            // dependency on our build task, the task will be described below
+            &amp;#34;preLaunchTask&amp;#34;: &amp;#34;Run Delve on target&amp;#34;,
+            &amp;#34;port&amp;#34;: 64001,
+            &amp;#34;host&amp;#34;: &amp;#34;target_machine&amp;#34;
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;adding-the-pre-debug-task&#34;&gt;Adding the pre-debug task&lt;/h2&gt;
+&lt;p&gt;This is a matter of a single file as well, the &lt;code&gt;.vscode/tasks.json&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-jsonc&#34; data-lang=&#34;jsonc&#34;&gt;{
+    &amp;#34;version&amp;#34;: &amp;#34;2.0.0&amp;#34;,
+    &amp;#34;tasks&amp;#34;: [
+        {
+            // has to match with the contents of preLaunchTask in launch.json
+            &amp;#34;label&amp;#34;: &amp;#34;Run Delve on target&amp;#34;,
+            &amp;#34;type&amp;#34;: &amp;#34;shell&amp;#34;,
+            // runs Taskfile with our script
+            &amp;#34;command&amp;#34;: &amp;#34;task delve&amp;#34;,
+            &amp;#34;group&amp;#34;: {
+                &amp;#34;kind&amp;#34;: &amp;#34;test&amp;#34;,
+                &amp;#34;isDefault&amp;#34;: true
+            },
+            &amp;#34;presentation&amp;#34;: {
+                // hides the terminal with repetitive build output
+                &amp;#34;reveal&amp;#34;: &amp;#34;silent&amp;#34;
+            }
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;debugging&#34;&gt;Debugging&lt;/h2&gt;
+&lt;p&gt;When done, you can now hit F5 and enter debug session.&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/vscode-remote-debug-delve.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/vscode-remote-debug-delve.png&#34; alt=&#34;VSCode remote debug session&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;VSCode remote debug session&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;This works, but has a limitation: the debug console/internal terminal aren&amp;rsquo;t
+attached to program&amp;rsquo;s output. You can theoretically attach to the remote tmux
+session to see the program&amp;rsquo;s stdout, but it&amp;rsquo;s rather bothersome to do that
+every time.&lt;/p&gt;
+&lt;p&gt;Well, this works, so I hope this saves you time if VSCode&amp;rsquo;s Remote Development
+just doesn&amp;rsquo;t work for you.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Toggling dunst notifications in i3</title>
+        <link>https://tdem.in/post/dunst-toggle/</link>
+        <pubDate>Wed, 12 Aug 2020 18:02:33 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/dunst-toggle/</guid>
+        <description>&lt;p&gt;In case you always wanted to write a script that temporarily turns off dunst
+notifications in i3wm but have never taken the time to write one yourself,
+here, have a working implementation in bash.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;${HOME}/.local/bin/dunst_toggle.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/usr/bin/env bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;notify&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;notify-send -u low dunst&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;dunstctl is-paused&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt; in
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    true&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        dunstctl set-paused false
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        $notify &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Notifications are enabled&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    false&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        $notify &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Notifications are paused&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;# the delay is here because pausing notifications immediately hides&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;# the ones present on your desktop; we also run dunstctl close so&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;# that the notification doesn&amp;#39;t reappear on unpause&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;sleep &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; dunstctl close &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; dunstctl set-paused true&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;esac&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now let&amp;rsquo;s add a hotkey that toggles notifications in i3 config:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;${HOME}/.config/i3/config&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;bindsym $mod+F5 exec --no-startup-id ~/.local/bin/dunst_toggle.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That&amp;rsquo;s it, pressing Win + F5 will now toggle notifications on/off. Any
+notifications received during downtime will be shown as soon as dunst
+is unpaused.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Making dnscrypt-proxy and Docker play well together</title>
+        <link>https://tdem.in/post/dnscrypt-docker/</link>
+        <pubDate>Mon, 03 Aug 2020 17:16:37 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/dnscrypt-docker/</guid>
+        <description>&lt;p&gt;This post is available in Russian &lt;a href=&#34;https://habr.com/en/post/496142/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;DNSCrypt is a fairly popular way of protecting DNS traffic that is usually left
+unencrypted from other people. &lt;a href=&#34;https://github.com/DNSCrypt/dnscrypt-proxy&#34;&gt;dnscrypt-proxy&lt;/a&gt;, a client
+program that implements DNSCrypt, also supports the DNS-over-HTTPS protocol,
+allowing name resolution over DoH.&lt;/p&gt;
+&lt;p&gt;Unfortunately, leaving dnscrypt-proxy with its default settings while setting it
+as the default resolver breaks name resolution in Docker containers. Fixing this
+while not exposing a DNS resolver on the LAN is what&amp;rsquo;s described below.&lt;/p&gt;
+&lt;p&gt;This post in short:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a dummy adapter, assign a private network IP to it.&lt;/li&gt;
+&lt;li&gt;Make dnscrypt-proxy listen on this interface, change system DNS settings
+accordingly.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
+&lt;p&gt;Docker sets up DNS in containers by &lt;a href=&#34;https://docs.docker.com/config/containers/container-networking/#dns-services&#34;&gt;copying host DNS settings&lt;/a&gt;,
+reusing &lt;code&gt;/etc/resolv.conf&lt;/code&gt; from the host.&lt;/p&gt;
+&lt;p&gt;dnscrypt-proxy and other custom resolvers usually bind to &lt;code&gt;127.0.0.1:53&lt;/code&gt;; the
+corresponding &lt;code&gt;/etc/resolv.conf&lt;/code&gt; entry is &lt;code&gt;nameserver 127.0.0.1&lt;/code&gt;. This setting
+is propagated to the containers, but, as the containers belong to a different
+network namespace, host&amp;rsquo;s &lt;code&gt;127.0.0.1&lt;/code&gt; and container&amp;rsquo;s mean two different things.&lt;/p&gt;
+&lt;h2 id=&#34;the-fix&#34;&gt;The fix&lt;/h2&gt;
+&lt;p&gt;The easiest solution is to run dnscrypt-proxy on host&amp;rsquo;s public IP address and
+then add this address to &lt;code&gt;/etc/resolv.conf&lt;/code&gt;. This means we expose a DNS
+resolver to the network, and we&amp;rsquo;d rather not.&lt;/p&gt;
+&lt;p&gt;Instead we&amp;rsquo;ll create a &lt;code&gt;dummy&lt;/code&gt; network adapter that is routable yet doesn&amp;rsquo;t
+actually send any packets; it is routable from the container since Docker
+containers use the host machine as their default gateway.&lt;/p&gt;
+&lt;h3 id=&#34;creating-the-adapter&#34;&gt;Creating the adapter&lt;/h3&gt;
+&lt;p&gt;If &lt;code&gt;dummy&lt;/code&gt; kernel module is not loaded yet (&lt;code&gt;% lsmod | grep dummy&lt;/code&gt; displays
+nothing), load it and enable its autostart:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# modprobe dummy
+# echo &amp;#34;dummy&amp;#34; &amp;gt;&amp;gt; /etc/modules-load.d/net_dummy.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Creating and setting up a dummy adapter is as simple as running these two
+commands on any modern Linux system with iproute2 installed:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# ip link add type dummy name dummy0
+# ip addr add dev dummy0 10.0.197.1/24
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Making this permanent will vary between network configuration software. With
+systemd-networkd you&amp;rsquo;ll need two config files:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/etc/systemd/network/50-dummy0.netdev&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[NetDev]
+Name=dummy0
+Kind=dummy
+Description=Dummy network for dnscrypt-proxy
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;/etc/systemd/network/50-dummy0.network&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Match]
+Name=dummy0
+
+[Network]
+DHCP=no
+Address=10.0.197.1/24
+DefaultRouteOnDevice=false
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;changing-dns-settings&#34;&gt;Changing DNS settings&lt;/h3&gt;
+&lt;p&gt;To bind dnscrypt-proxy to a new address, edit &lt;code&gt;listen_addresses&lt;/code&gt; in
+&lt;code&gt;/etc/dnscrypt-proxy/dnscrypt-proxy.toml&lt;/code&gt; and make it look like this:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;listen_addresses = [&amp;#39;127.0.0.1:53&amp;#39;, &amp;#39;[::1]:53&amp;#39;, &amp;#39;10.0.197.1:53&amp;#39;]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Restart dnscrypt-proxy and then replace the text in &lt;code&gt;/etc/resolv.conf&lt;/code&gt;
+(or wherever your network configurator stores DNS settings) with this:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nameserver 10.0.197.1
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;checking&#34;&gt;Checking&lt;/h3&gt;
+&lt;p&gt;Run a new container:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;% docker run -it --rm alpine:3.12
+# cat /etc/resolv.conf
+nameserver 10.0.197.1
+# ping -c 1 ya.ru
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;additional-info&#34;&gt;Additional info&lt;/h2&gt;
+&lt;p&gt;If you use a firewall (and you should be), then allow incoming traffic to
+&lt;code&gt;10.0.197.1:53&lt;/code&gt; from the subnets Docker uses for containers.&lt;/p&gt;
+&lt;p&gt;If you use systemd-resolved as your caching resolver of choice with
+dnscrypt-proxy set as its upstream, then you&amp;rsquo;re still fine even though
+systemd-resolved won&amp;rsquo;t allow you to listen on anything besides &lt;code&gt;127.0.0.53&lt;/code&gt;:
+&lt;a href=&#34;https://github.com/moby/libnetwork/blob/master/resolvconf/resolvconf.go&#34;&gt;Docker detects the use of systemd-resolved&lt;/a&gt; and copies
+&lt;code&gt;/run/systemd/resolve/resolv.conf&lt;/code&gt;, which is generated from resolved settings,
+instead of using &lt;code&gt;/etc/resolv.conf&lt;/code&gt;.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Status Update: July 2020</title>
+        <link>https://tdem.in/post/status-update/</link>
+        <pubDate>Sun, 02 Aug 2020 00:52:05 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/status-update/</guid>
+        <description>&lt;p&gt;This has been a busy time.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m finally finished with my internship at Nefteavtomatika, getting my
+hands on an internal web service managing MAC address allocation
+designed to provide an API for flashing software. Thanks to that I&amp;rsquo;m now
+a lot more familiar with building web in Go, and am eager to build more
+things with it. &amp;lt;3&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve started looking at lot more into &lt;a href=&#34;https://yggdrasil-network.github.io&#34;&gt;Yggdrasil&lt;/a&gt;, a mesh
+networking software. As of right now I&amp;rsquo;m mainly using it as a VPN, as it
+provides every node with a static /64 subnet, so IPv6 exploration is a
+lot easier (as most of Russian ISPs don&amp;rsquo;t even bother with providing
+static prefixes to end users). The positive side effects of this are the
+new &lt;a href=&#34;https://tdem.in/post/yggdrasil-systemd&#34;&gt;guide&lt;/a&gt; on configuring it with systemd-networkd and routing,
+and a &lt;a href=&#34;https://git.tdem.in/tdemin/syg_go&#34;&gt;simple address miner&lt;/a&gt; I wrote in Go. If you want a
+neatly-looking Yggdrasil address, you now know what to do. :)&lt;/p&gt;
+&lt;p&gt;The work on Amber continues, this time mainly with
+&lt;a href=&#34;https://git.tdem.in/tdemin/amber_cli&#34;&gt;amber_cli&lt;/a&gt;, who has never gotten the love it deserved since
+the very beginning of its development and now gets a complete
+refactoring as at the time of starting the project I wasn&amp;rsquo;t really
+familiar with Go at all. There are also few corrections I&amp;rsquo;d like to make
+to API v0 and related algos before considering it done. &lt;a href=&#34;https://git.tdem.in/tdemin/amber&#34;&gt;Amber&lt;/a&gt;
+itself needs a huge overhaul, so does &lt;a href=&#34;https://git.tdem.in/tdemin/amber_web&#34;&gt;Amber Web&lt;/a&gt;, who&amp;rsquo;s
+never seen a single update the last few months.&lt;/p&gt;
+&lt;p&gt;This blog itself has got an update—it is now hosted on my main domain,
+&lt;a href=&#34;https://tdem.in/&#34;&gt;tdem.in&lt;/a&gt;, and orphaned links at &lt;a href=&#34;https://blog.tdem.in&#34;&gt;blog.tdem.in&lt;/a&gt;
+now lead here. The home page is now managed by Hugo as well, making the
+effort in keeping it updated less of a time waste.&lt;/p&gt;
+&lt;p&gt;Looking good so far, looking forward to the last month of summer!&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/coding-xps.jpg&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/coding-xps.jpg&#34; alt=&#34;Photo by Safar Safarov on Unsplash&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;Photo by Safar Safarov on Unsplash&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Configuring Yggdrasil with systemd-networkd</title>
+        <link>https://tdem.in/post/yggdrasil-systemd/</link>
+        <pubDate>Thu, 23 Jul 2020 13:15:08 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/yggdrasil-systemd/</guid>
+        <description>&lt;p&gt;&lt;a href=&#34;https://yggdrasil-network.github.io&#34;&gt;Yggdrasil&lt;/a&gt;, while being a great mesh networking software, doesn&amp;rsquo;t have
+that many learning resources on it. The docs on its website and a few
+enthusiast-established wikis are probably everything you&amp;rsquo;ll ever find on how to
+set it up.&lt;/p&gt;
+&lt;p&gt;This is a simple recipe on how to configure Yggdrasil with systemd-networkd and
+systemd-resolved while providing other devices on your local network with Ygg
+addresses and allowing them to use Ygg.&lt;/p&gt;
+&lt;p&gt;Consider the following setup:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;an always-on PC&lt;/li&gt;
+&lt;li&gt;a router to which the PC is connected&lt;/li&gt;
+&lt;li&gt;all other devices in LAN&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We want to deploy Yggdrasil on the PC and delegate the &lt;code&gt;300:XXXX:XXXX:XXXX::/64&lt;/code&gt;
+subnet provided by Ygg to other devices. This guide assumes you have already
+&lt;a href=&#34;https://yggdrasil-network.github.io/configuration.html&#34;&gt;set up Yggdrasil&lt;/a&gt; on your Linux box.&lt;/p&gt;
+&lt;p&gt;We configure our usual connection with &lt;code&gt;/etc/systemd/network/10-eth0.network&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Match]
+# wired connection device name
+Name=eth0
+
+[Network]
+# Address/Gateway, or DHCP=yes, or whatever else you might have configured
+# your wired connection with
+...
+# the address inside the 300::/8 subnet; the host will use this address inside
+# the wired network
+Address=300:XXXX:XXXX:XXXX::1/64
+# enable IPv6 router
+IPv6PrefixDelegation=static
+IPForward=ipv6
+# the DNS we want to use for clearnet connections
+DNS=...
+
+[IPv6Prefix]
+# the prefix advertised to other devices by the machine
+Prefix=300:XXXX:XXXX:XXXX::/64
+
+[IPv6PrefixDelegation]
+EmitDNS=yes
+# should be an Ygg DNS address, you might prefer to unset this or use your own
+# DNS server inside Yggdrasil
+DNS=301:2522::53
+RouterLifetimeSec=3600 # should always be set
+
+[IPv6RoutePrefix]
+# the route to Ygg to propagate to devices
+Route=200::/7
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let&amp;rsquo;s configure Yggdrasil TUN device with
+&lt;code&gt;/etc/systemd/network/40-tun0.network&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[Match]
+# Yggdrasil TUN device name, same as IfName in /etc/yggdrasil.conf if set
+Name=tun0
+
+[Network]
+# useless with Yggdrasil
+LinkLocalAddressing=no
+# some DNS inside Yggdrasil to resolve .ygg addresses and alike; you might want
+# to specify your own address here
+DNS=301:2522::53
+DefaultRouteOnDevice=no
+
+[Address]
+# the /128 address Ygg provides us with
+Address=200:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX/128
+
+[Route]
+# route packets to Yggdrasil
+Destination=200::/7
+Scope=global
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this schema systemd-resolved will only use Ygg DNS for sites we browse from
+Ygg, and whatever else we configure in &lt;code&gt;/etc/systemd/resolved.conf&lt;/code&gt; by default.
+This allows the machine to properly resolve &lt;code&gt;.ygg&lt;/code&gt; domains while falling back
+to system default DNS for everything outside Yggdrasil.&lt;/p&gt;
+&lt;p&gt;Every other IPv6-enabled device on your LAN will now receive Ygg addresses and
+will be able to connect to Yggdrasil while your machine is on. However, be aware
+that end-to-end encryption Yggdrasil provides is terminated at your Yggdrasil
+router. You should also consider setting up a firewall to protect your other
+devices.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Filtering Friendica posts in an RSS feed by tag</title>
+        <link>https://tdem.in/post/friendica-rss-tag-filter/</link>
+        <pubDate>Fri, 14 Feb 2020 02:00:38 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/friendica-rss-tag-filter/</guid>
+        <description>&lt;p&gt;The current version of Friendica &lt;a href=&#34;https://libranet.de/display/0b6b25a8-185e-3d67-ae42-cb8788243360&#34;&gt;doesn&amp;rsquo;t appear to support filtering posts by
+tag&lt;/a&gt; in an RSS
+feed. Appending &lt;code&gt;?tag=XXX&lt;/code&gt; to an RSS feed URI seems to be silently ignored.&lt;/p&gt;
+&lt;p&gt;As I wanted a custom feed that only has music posts in it, I wrote a quick and
+dirty feed crawler in Python/Flask that removes all posts that do not have a
+single mention of the specified tag in it. The whole program only took 50
+minutes to write.&lt;/p&gt;
+&lt;p&gt;After deployment the feed is available at
+&lt;code&gt;/tag?token=some_token&lt;/code&gt; where &lt;code&gt;tag&lt;/code&gt; is the text we&amp;rsquo;re searching for in the feed
+content and &lt;code&gt;some_token&lt;/code&gt; is whatever you set with &lt;code&gt;FRIENDICA_TOKEN&lt;/code&gt; (only needed
+so that Googlebot doesn&amp;rsquo;t accidentally flood Friendica with requests).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-py&#34; data-lang=&#34;py&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; os &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; getenv
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; requests
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; flask &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; Flask, request, Response
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; bs4 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; BeautifulSoup
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;app &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Flask(__name__)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;TOKEN &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; getenv(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;FRIENDICA_TOKEN&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;some_token&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;URI &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; getenv(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;FRIENDICA_URI&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://some.friendica.server.tld/dfrn_poll/username&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@app.route&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;lt;text&amp;gt;&amp;#34;&lt;/span&gt;, methods&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;home_route&lt;/span&gt;(text: str):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;args&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;token&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; TOKEN:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;unauthorized&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;401&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    res &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; requests&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(URI)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; res&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ok:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        res&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;failed to retrieve data&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    data &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; BeautifulSoup(res&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;utf8&amp;#34;&lt;/span&gt;), features&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;lxml&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    res&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;close()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; entry_tag &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; data&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;find_all(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;entry&amp;#34;&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        content &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; entry_tag&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;find(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;content&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; content &lt;span style=&#34;color:#f92672&#34;&gt;is&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; text &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; str(content):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                entry_tag&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;extract()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Response(data&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;encode()&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode()&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;encode(), mimetype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/rss+xml&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        
+        <item>
+        <title>Removing duplicate files with PowerShell</title>
+        <link>https://tdem.in/post/dedupe-files-powershell/</link>
+        <pubDate>Mon, 02 Dec 2019 22:02:37 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/dedupe-files-powershell/</guid>
+        <description>&lt;p&gt;Well, I finally decided to clean up the files from my storage drive.&lt;/p&gt;
+&lt;p&gt;I found a lot of duplicate files unnecessarily taking up my storage space. As
+looking through every single file on your hard disk is a tedious job, I wrote a
+little PowerShell script to assist me with that.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-ps1&#34; data-lang=&#34;ps1&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[CmdletBinding()]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    [Parameter()]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    [&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $dir
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (!$dir) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $dir = Get-Location
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; File {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    [&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;]$Hash
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    [&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;]$FileName
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; Duplicate {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    [&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;]$Orig
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    [&lt;span style=&#34;color:#66d9ef&#34;&gt;string&lt;/span&gt;]$Dupe
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$files = @()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt; ($file &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; Get-ChildItem -Path $dir -Recurse &lt;span style=&#34;color:#f92672&#34;&gt;-File&lt;/span&gt; | Select-Object -ExpandProperty FullName) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $f = [&lt;span style=&#34;color:#66d9ef&#34;&gt;File&lt;/span&gt;]::new()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $f.FileName = $file
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $f.Hash = Get-FileHash -Path $file -Algorithm &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SHA1&amp;#34;&lt;/span&gt; | Select-Object -ExpandProperty Hash
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    $files += $f
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$dupes = @()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; ($i = &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; $i &lt;span style=&#34;color:#f92672&#34;&gt;-lt&lt;/span&gt; $files.Count; $i++) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; ($j = $i; $j &lt;span style=&#34;color:#f92672&#34;&gt;-lt&lt;/span&gt; $files.Count; $j++) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ($files[$i].Hash &lt;span style=&#34;color:#f92672&#34;&gt;-eq&lt;/span&gt; $files[$j].Hash &lt;span style=&#34;color:#f92672&#34;&gt;-And&lt;/span&gt; $files[$i].FileName &lt;span style=&#34;color:#f92672&#34;&gt;-ne&lt;/span&gt; $files[$j].FileName) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $f = [&lt;span style=&#34;color:#66d9ef&#34;&gt;Duplicate&lt;/span&gt;]::new()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $f.Orig = $files[$i].FileName
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $f.Dupe = $files[$j].FileName
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            $dupes += $f
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# print the file names&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$dupes
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This script calculates a checksum for every file in the directory, recursively
+passing through every folder inside the dir it was launched at (it accepts the
+target through the first command line parameter as well).&lt;/p&gt;
+&lt;p&gt;As you might want to inspect the files before deleting them, this script simply
+prints their names to the standard output. For a quick oneliner that would purge
+every duplicate file found automatically, issue:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;PS &amp;gt; Remove-Duplicates.ps1 C:\Some\Path | Select-Object -ExpandProperty Dupe | Remove-Item
+&lt;/code&gt;&lt;/pre&gt;</description>
+        </item>
+        
+        <item>
+        <title>Rant: Overengineering</title>
+        <link>https://tdem.in/post/overengineering-rant/</link>
+        <pubDate>Tue, 16 Jul 2019 22:48:10 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/overengineering-rant/</guid>
+        <description>&lt;p&gt;Consider a typical web dev situation: React, Redux, Material-UI, a new
+JSS-decorated component that&amp;rsquo;s going to be connected with Redux. We
+create a new file, write the component code in it, then export it like
+that:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;withStyles&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;styles&lt;/span&gt;)(&lt;span style=&#34;color:#a6e22e&#34;&gt;connect&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;mapStateToProps&lt;/span&gt;)(&lt;span style=&#34;color:#a6e22e&#34;&gt;MyComponent&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This simple line contains at least 5 functions in it. Let&amp;rsquo;s tear this
+down right-to-left:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;MyComponent&lt;/code&gt; may possibly be a &lt;a href=&#34;https://reactjs.org/docs/components-and-props.html&#34;&gt;functional component&lt;/a&gt;
+(a function that accepts a single &lt;code&gt;props&lt;/code&gt; argument and returns a React
+element), so it might count as a function.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mapStateToProps&lt;/code&gt; is a &lt;a href=&#34;https://react-redux.js.org/using-react-redux/connect-mapstate&#34;&gt;function that returns the mapping&lt;/a&gt; of
+the decorated component properties to Redux store state.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;connect(mapStateToProps)&lt;/code&gt; will return&amp;hellip;&lt;/li&gt;
+&lt;li&gt;&amp;hellip;a &lt;a href=&#34;https://react-redux.js.org/api/connect&#34;&gt;decorator function&lt;/a&gt; that returns a wrapper component
+around &lt;code&gt;MyComponent&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And we&amp;rsquo;re only done with the first part of this abomination! Now let&amp;rsquo;s
+proceed to the outer block:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;styles&lt;/code&gt; &lt;a href=&#34;https://material-ui.com/styles/api/#withstyles-styles-options-higher-order-component&#34;&gt;has to be a function&lt;/a&gt; when you need access to theme
+properties.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;withStyles(styles)&lt;/code&gt; is a function that will return&amp;hellip;&lt;/li&gt;
+&lt;li&gt;&amp;hellip;another wrapper component function.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Yep, that&amp;rsquo;s how easy it is to overengineer in React/modern JS.
+The code above might not exactly be a good example of a well-designed
+component, but this gives you an idea of how things generally go.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>AutoHotkey: Scratchpad</title>
+        <link>https://tdem.in/post/autohotkey-better-minimize/</link>
+        <pubDate>Mon, 10 Jun 2019 01:28:30 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/autohotkey-better-minimize/</guid>
+        <description>&lt;p&gt;Another day, another hack. This &lt;a href=&#34;https://autohotkey.com&#34; title=&#34;a brilliant program for system automation&#34;&gt;AutoHotkey&lt;/a&gt; snippet preserves the last
+window you minimized with &lt;code&gt;Win + Down&lt;/code&gt; and allows you to quickly unminimize it
+with &lt;code&gt;Win + Shift + Up&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-ahk&#34; data-lang=&#34;ahk&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;global lastWindow&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;ToScratchpad()&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;{&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    WinGetTitle, lastWindow, A&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    WinMinimize, %lastWindow%&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;FromScratchpad()&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;{&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    WinActivate, %lastWindow%&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;#Down::ToScratchpad()&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;#+Up::FromScratchpad()&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now let&amp;rsquo;s go even further and use a stack of windows for that purpose! The next
+snippet saves the list of windows you minimized that way in a stack, and
+restores them in order:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-ahk&#34; data-lang=&#34;ahk&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;global lastWindows &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; Array()&lt;span style=&#34;color:#75715e&#34;&gt; ; this line needs to be at the top of the file&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;ToScratchpad(windows)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;{&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    WinGetTitle, lastWindow, A&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    WinMinimize, %lastWindow%&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    windows&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Push(lastWindow)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;FromScratchpad(windows)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;{&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    lastWindow &lt;span style=&#34;color:#f92672&#34;&gt;:=&lt;/span&gt; windows&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Pop()&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    WinActivate, %lastWindow%&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;#Down::ToScratchpad(lastWindows)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;#+Up::FromScratchpad(lastWindows)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first line &lt;a href=&#34;https://www.autohotkey.com/docs/Scripts.htm#auto&#34; title=&#34;AHK docs on auto-execute&#34;&gt;has to be placed before the first return/hotkey&lt;/a&gt;, or it
+won&amp;rsquo;t be executed (and the script will not work).&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>AutoHotkey Run-or-Raise</title>
+        <link>https://tdem.in/post/autohotkey-ror/</link>
+        <pubDate>Sun, 12 May 2019 18:12:17 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/autohotkey-ror/</guid>
+        <description>&lt;p&gt;It is a common practice for some to use a Quake-style terminal. For those who
+have never played the game: it&amp;rsquo;s a single terminal window which is hidden by
+default and is toggled with the grave accent key. Those who like the behaviour
+use a terminal emulator program like Tilda on Linux or ConEmu on Windows.&lt;/p&gt;
+&lt;p&gt;Sometimes you might want the same behaviour for the utilities that do not
+support Quake-style windows by themselves. Luckily, you can still achieve this
+with a simple &lt;a href=&#34;https://autohotkey.com&#34; title=&#34;a brilliant program for system automation&#34;&gt;AutoHotkey&lt;/a&gt; script I&amp;rsquo;ve come up with.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-ahk&#34; data-lang=&#34;ahk&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;RunOrRaise(class, run)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;{&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    if &lt;span style=&#34;color:#a6e22e&#34;&gt;WinActive&lt;/span&gt;(class) {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;        WinMinimize, %class%&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    }&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    else if &lt;span style=&#34;color:#a6e22e&#34;&gt;WinExist&lt;/span&gt;(class) {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;        WinActivate, %class%&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    }&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    else {&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;        Run, %run%&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;    }&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;}&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;; run PowerShell on Win + Z&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;#z::RunOrRaise(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ahk_exe powershell.exe&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;powershell -NoLogo&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first parameter is the &lt;a href=&#34;https://autohotkey.com/docs/misc/WinTitle.htm&#34; title=&#34;AutoHotkey WinTitle docs&#34;&gt;AHK window class&lt;/a&gt;, and the second one
+is the command to be run if the window doesn&amp;rsquo;t exist yet (usually the path to
+the program).&lt;/p&gt;
+&lt;p&gt;If you aren&amp;rsquo;t familiar with AutoHotkey yet, I strongly recommend you to check it
+out, it&amp;rsquo;s a lifesaver for those who are still running Windows for whatever
+reason: this program allows scripting system actions as complex as
+&lt;a href=&#34;https://github.com/fuhsjr00/bug.n&#34; title=&#34;bug.n, a tiling WM for Windows&#34;&gt;tiling window management&lt;/a&gt;, for instance.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Hello World Yet Again</title>
+        <link>https://tdem.in/post/hello-world/</link>
+        <pubDate>Sun, 14 Apr 2019 16:14:24 +0500</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/hello-world/</guid>
+        <description>&lt;p&gt;So this is it, I&amp;rsquo;ve finally moved my blog to a fully self-hosted solution.&lt;/p&gt;
+&lt;p&gt;This site is now generated with Hugo, is rebuilt on every commit to a private
+repo on my own code hosting, and seems to work better than the hackish
+host-with-Tumblr approach.&lt;/p&gt;
+&lt;p&gt;Oh, and one last thing: exporting posts from Tumblr is a PITA. Good thing I
+didn&amp;rsquo;t have lots of those.&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+        <title>Rant: Mastodon</title>
+        <link>https://tdem.in/post/mastodon-rant/</link>
+        <pubDate>Sat, 08 Dec 2018 12:00:00 +0000</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/mastodon-rant/</guid>
+        <description>&lt;p&gt;Just scrolled through the timeline Instagram generates for me. 20 &amp;ldquo;blog posts&amp;rdquo;
+with boring &amp;ldquo;inspiring&amp;rdquo; descriptions trying to teach me life, 15 or about that
+from the official accounts, no posts I&amp;rsquo;d consider personal (i.e. random fun
+pics). Not even trying to open stories anymore, I don&amp;rsquo;t really like being fed
+with video ads every 3 or 4 posts. That&amp;rsquo;s the cancer that ate Instagram.&lt;/p&gt;
+&lt;p&gt;The worst thing about this is that I can see the plague being spread to
+Mastodon. Barely seen a mastodon.social account posting anything that would make
+sense (not speaking of shitposting, at least it has some kind of personal
+touch). It&amp;rsquo;s not like I&amp;rsquo;ve seen many, yet I&amp;rsquo;m pretty sure I&amp;rsquo;d not lose anything
+interesting, had the admins of my instance suddenly blocked federation with it.&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;truly&lt;/em&gt; worst thing about this is that I sometimes &lt;em&gt;do&lt;/em&gt; post things this
+cancer-ish way (announces, news, etc). That&amp;rsquo;s how the disease spreads. The slow
+death of fun on the Internet, eh?&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Advice: CloudFlare, GitLab Pages, 429</title>
+        <link>https://tdem.in/post/cloudflare-429-gitlab/</link>
+        <pubDate>Thu, 25 Oct 2018 12:00:00 +0000</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/cloudflare-429-gitlab/</guid>
+        <description>&lt;p&gt;To all those people having their Cloudflare requests to GitLab Pages being
+429-ed: setting the security policy to “Full” instead of “Flexible” seems to do
+the trick. Still have no clue to the cause of this issue though.&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+        <title>Rant: Google Tasks</title>
+        <link>https://tdem.in/post/google-tasks-rant/</link>
+        <pubDate>Mon, 02 Jul 2018 12:00:00 +0000</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/google-tasks-rant/</guid>
+        <description>&lt;p&gt;So far it looks like Tasks, Google&amp;rsquo;s new app for task tracking, is missing a key
+feature supposed to push you to do stuff—the on-time reminders.&lt;/p&gt;
+&lt;p&gt;When a reminder from Google Calendar rings, it reminds you that you were going
+to do things at this exact time, so if you&amp;rsquo;re not finished with that yet, at
+least you&amp;rsquo;re pushed to deal with it a little faster. You&amp;rsquo;re never going to
+receive such a notification from Google Tasks; in fact, taking a glance at the
+task list with no time schedules is almost guaranteed to result in &amp;ldquo;fine, I&amp;rsquo;ll
+do that at the next opportunity&amp;rdquo; and do absolutely nothing afterwards.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s how a simple feature might become the killer one, now I have to duplicate
+most of the tasks in my calendar just to keep myself reminded. Without the time
+tracking features, Tasks becomes somewhat pointless for those who are reliant on
+their smartphones to remember things for them.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;PS: yeah, simply synchronizing tasks with Google Calendar would also do&lt;/em&gt;&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Simple Mi Fit Login Issue Fix</title>
+        <link>https://tdem.in/post/simple-mi-fit-2-login-issue-fix/</link>
+        <pubDate>Fri, 01 Jun 2018 12:00:00 +0000</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/simple-mi-fit-2-login-issue-fix/</guid>
+        <description>&lt;p&gt;Some people experience issues with their Mi Bands: Mi Fit, the official Xiaomi&amp;rsquo;s
+app for wearable electronics like their wristbands, simply doesn&amp;rsquo;t login into
+the Mi Account, rendering you unable to set up your Mi Band.&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/mi-fit-play-store-comment.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/mi-fit-play-store-comment.png&#34;  /&gt;
+    &lt;/a&gt;
+    
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;This happened to me as well, though I&amp;rsquo;ve managed to work it through.&lt;/p&gt;
+&lt;p&gt;Apparently the app doesn&amp;rsquo;t work because of the mismatch between your system&amp;rsquo;s
+display language and the country you&amp;rsquo;re trying to logging in from. Routing the
+app&amp;rsquo;s traffic through an US-located server fixed the issue for me, and I could
+finally login.&lt;/p&gt;
+&lt;p&gt;Hope this helps to someone else wondering what to do about it.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Goodbye Google Analytics</title>
+        <link>https://tdem.in/post/goodbye-google-analytics/</link>
+        <pubDate>Sun, 20 May 2018 12:00:00 +0000</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/goodbye-google-analytics/</guid>
+        <description>&lt;p&gt;Let’s say goodbye to Google Analytics on my blog.&lt;/p&gt;
+&lt;p&gt;There was no good reason to use it anyway, yet, like most of the users of
+analytics and tracking tools (say hello to Instagram where virtually everyone
+familiar enough with the social network uses a business profile with tracking
+enabled), I used it for my personal interest. So, to ease the GDPR compliance,
+I’m removing it altogether from the blog and my homepage.&lt;/p&gt;
+&lt;p&gt;No tracking anymore. ;)&lt;/p&gt;
+</description>
+        </item>
+        
+        <item>
+        <title>Recoverable 2FA Token HOWTO</title>
+        <link>https://tdem.in/post/recoverable-2fa-token-howto/</link>
+        <pubDate>Fri, 27 Oct 2017 12:00:00 +0000</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/recoverable-2fa-token-howto/</guid>
+        <description>&lt;p&gt;So you want to enable two-factor authentication for your online accounts? That’s
+fairly easy, made relatively painless by Google with its &lt;a href=&#34;https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&amp;amp;amp;hl=en&#34;&gt;Authenticator&lt;/a&gt;.
+Well, enabling 2FA isn’t the problem. There are other caveats to watch out for.&lt;/p&gt;
+&lt;p&gt;First of all, &lt;em&gt;you can’t back up your token&lt;/em&gt;. There isn’t an option for moving
+your keys to another device, your only option is to use so-called recovery codes
+that are meant to be entered if the token is lost. Google suggests to write
+those codes somewhere in a safe place, and most of the other services who offer
+2FA do. But well, this means storing those codes in an insecure way.&lt;/p&gt;
+&lt;p&gt;Another problem is directly pointed out from the first one: &lt;em&gt;you can’t generate
+codes with multiple devices&lt;/em&gt;. Changing device in most 2FA systems means your
+previous phone will no longer generate codes that work.&lt;/p&gt;
+&lt;p&gt;And last, but not the least: &lt;em&gt;you can’t get your private keys back&lt;/em&gt; after
+they’re saved on your device. Neither you can edit them. Yes, this is a security
+measure, but what a headache this actually is!&lt;/p&gt;
+&lt;p&gt;Some 2FA apps realizing these constraints make 2FA much harder to enforce tried
+to address those issues. At least &lt;a href=&#34;https://authy.com&#34;&gt;Authy&lt;/a&gt; allows for multiple code
+generators, and it also makes backups of the keys in the cloud, so you can
+easily restore those on your new device. The thing is, storing keys in cloud
+negates security, as not only someone has your codes, but this also introduces
+another attack vector. What if that cloud is hacked?&lt;/p&gt;
+&lt;p&gt;This is exactly what I’ve tried to overcome.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;So, let’s proceed to the practical part. We want all of those:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;multiple devices that generate codes;&lt;/li&gt;
+&lt;li&gt;private key backups;&lt;/li&gt;
+&lt;li&gt;easy restoration of the codes on new devices;&lt;/li&gt;
+&lt;li&gt;adding the keys to the device with scanning the code.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And we also don’t want to harm our accounts’ security.&lt;/p&gt;
+&lt;p&gt;The only sustainable way of doing this is storing the private keys in a secure
+place. With your PC, this means creating an encrypted container that would hold
+our private key material. I shall not explain the whole process of creating the
+container, I’ll just point you to &lt;a href=&#34;https://www.veracrypt.fr/en/Home.html&#34;&gt;VeraCrypt&lt;/a&gt;, an excellent program
+for doing exactly that. Probably the only recommendation to consider: your
+container doesn’t need to be that big, 2MB should be enough so far as we’ll just
+store a plain text file with keys in it.&lt;/p&gt;
+&lt;p&gt;Next, we’ll enable two-factor authentication, just in a little bit different
+way. Don’t scan the QR code, select &amp;ldquo;I can’t scan the code&amp;rdquo; or whatever and then
+copy the code to the text file placed in your container.&lt;/p&gt;
+&lt;p&gt;Now we’ll do some magic on the code. The QR codes made to scan with your 2FA app
+are not generated with the super cow powers, they are just modified a little so
+your device instantly recognizes the name of your 2FA provider and the options
+to use. We’ll just form the codes we can scan using the same
+&lt;a href=&#34;https://github.com/google/google-authenticator/wiki/Key-Uri-Format&#34;&gt;algorithm&lt;/a&gt;. Just make the strings containing your keys look like
+this:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;otpauth://totp/SiteName:AccountName?secret=PRIVATEKEY&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;And ensure that the string contains no spaces. The &lt;code&gt;:AccountName&lt;/code&gt; part is
+optional and can be omitted. Do this with all your codes.&lt;/p&gt;
+&lt;p&gt;Now we have the codes, time to generate the QR codes that can be scanned! Get
+any free app that generates QR codes (I used &lt;a href=&#34;https://code.google.com/archive/p/qrencode-win32/&#34;&gt;this one&lt;/a&gt;) and generate
+the codes from the strings you’ve resulted with in the previous step. Scan them
+one-by-one with Google Authenticator.&lt;/p&gt;
+&lt;p&gt;You’re done! You now have your private keys that are backed up in a secure
+manner. You can also add those to another app or device if you want. And, of
+course, you can add them without hassling with entering the keys by hand. All of
+these without having your accounts compromised.&lt;/p&gt;</description>
+        </item>
+        
+        <item>
+        <title>Telegram and Secure Messaging</title>
+        <link>https://tdem.in/post/telegram-and-secure-messaging/</link>
+        <pubDate>Wed, 05 Jul 2017 12:00:00 +0000</pubDate>
+        <author>me@tdem.in (Timur Demin)</author>
+        <guid>https://tdem.in/post/telegram-and-secure-messaging/</guid>
+        <description>&lt;p&gt;Telegram, as it states on its home page, is a secure messenger. Over the years
+it became a simple, powerful multi-device messenger which is selected as the
+main messaging platform by many people (the official Android app has more than
+&lt;a href=&#34;https://play.google.com/store/apps/details?id=org.telegram.messenger&#34;&gt;100 million installs&lt;/a&gt;, for example).&lt;/p&gt;
+&lt;p&gt;Many people say Telegram really is a secure messenger. They trust Pavel Durov,
+its creator, they get overwhelmed with its promotion, they get obsessed. I will
+try to dissolve Telegram as a secure messenger suitable for private messaging
+from the end user&amp;rsquo;s point of view.&lt;/p&gt;
+&lt;p&gt;So, let&amp;rsquo;s start with the main promotional Telegram&amp;rsquo;s feature which was heavily
+advertised—the secret chats.&lt;/p&gt;
+&lt;h2 id=&#34;secret-chats&#34;&gt;Secret chats&lt;/h2&gt;
+&lt;p&gt;Secret chats is the way Telegram does end-to-end encryption on your messages.
+They are said to leave no trace on Telegram&amp;rsquo;s servers and to be not available to
+them. This is the recommended way to message securely on Telegram.&lt;/p&gt;
+&lt;p&gt;However, they are pretty unconvenient, as you have to start them by hand. They
+also have a few problems that make their usage painful.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Secret chats don&amp;rsquo;t work on multiple devices&lt;/em&gt;. According to &lt;a href=&#34;https://telegram.org/faq#q-how-are-secret-chats-different&#34; title=&#34;How are Secret Chats Different?&#34;&gt;Telegram
+FAQ&lt;/a&gt;, the secret chats are device-specific and can be opened only from
+device they were created from. We now can already conclude the secret chats are
+not scalable (or why would someone limit their usage to only one device?), so
+are not suitable for convenient messaging.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;All secret chats in Telegram are device-specific and are not part of the
+Telegram cloud. This means you can only access messages in a secret chat from
+their device of origin.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Messengers really caring about end-to-end encryption of its clients should
+provide the way to somehow synchronize encrypted chats, or such feature would
+not be used by masses. For example, Signal Protocol, the cryptographic protocol
+used by Signal, does scale, so as its port to XMPP, &lt;a href=&#34;https://xmpp.org/extensions/xep-0384.html&#34; title=&#34;XEP-0384: OMEMO Encryption&#34;&gt;OMEMO&lt;/a&gt;, and
+&lt;a href=&#34;https://github.com/wireapp/proteus&#34;&gt;Proteus&lt;/a&gt;, the port made for Wire messenger. They achieve multi-device
+encryption by encrypting the message separately for every recipient device.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Secret chats don&amp;rsquo;t allow you to start chats at any time&lt;/em&gt;. You&amp;rsquo;ll have to wait
+for the recipient to become online to send him encrypted messages on Telegram,
+when you don&amp;rsquo;t need this if using protocols designed to provide offline messages
+delivery, like &lt;a href=&#34;https://en.wikipedia.org/wiki/Signal_Protocol&#34;&gt;Signal Protocol&lt;/a&gt;, which was already mentioned
+above.&lt;/p&gt;
+&lt;p&gt;Telegram&amp;rsquo;s secret chats are like OTR in XMPP—an old encryption protocol that
+doesn&amp;rsquo;t allow you to neither synchronize messages nor send messages to offline
+devices.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OTR has significant usability drawbacks for inter-client mobility. As OTR
+sessions exist between exactly two clients, the chat history will not be
+synchronized across other clients of the involved parties. Furthermore, OTR
+chats are only possible if both participants are currently online, due to how
+the rolling key agreement scheme of OTR works.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;quote__subtitle&#34;&gt;Introduction to XEP-0384, the motivation to
+replace OTR&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Secret chats don&amp;rsquo;t work on Telegram Desktop&lt;/em&gt;. Here comes another problem of the
+secret chats — they are only available on the mobile phones (and on the Telegram
+client from App Store). Telegram Desktop, the official Telegram app for Windows,
+macOS and Linux, doesn&amp;rsquo;t support secret chats, while this feature was first
+requested at &lt;a href=&#34;https://github.com/telegramdesktop/tdesktop/issues/5&#34;&gt;June 1, 2014&lt;/a&gt;. There were many requests since then (&lt;a href=&#34;https://github.com/telegramdesktop/tdesktop/issues/118&#34;&gt;1&lt;/a&gt;,
+&lt;a href=&#34;https://github.com/telegramdesktop/tdesktop/issues/619&#34;&gt;2&lt;/a&gt;, &lt;a href=&#34;https://github.com/telegramdesktop/tdesktop/issues/871&#34;&gt;3&lt;/a&gt;, etc), but secret chats are still unimplemented as of July 5,
+2017 in the official desktop app of the messenger which claims itself
+secure&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Secret chats don&amp;rsquo;t work in group chats&lt;/em&gt;. You can&amp;rsquo;t end-to-end encrypt Telegram
+group chats at all, that&amp;rsquo;s it. If you want to chat with many people at once
+securely&amp;hellip; you can&amp;rsquo;t, forget it. The E2EE protocol of Telegram doesn&amp;rsquo;t allow
+you to group chat securely, when modern protocols, like Signal Protocol,
+actually allow you to, by the technique already stated above—encrypting messages
+to every recipient separately.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Secret chats just aren&amp;rsquo;t usable&lt;/em&gt;. The whole secret chats thing just does it the
+wrong way. As Telegram&amp;rsquo;s secret chats are not really suitable for multi-device
+environment and do not allow you to use them in group chats, and you have to
+force them by hand, you probably won&amp;rsquo;t use them at all, therefore your messages
+will be easily available to Telegram.&lt;/p&gt;
+&lt;h2 id=&#34;mtproto-security&#34;&gt;MTProto security&lt;/h2&gt;
+&lt;p&gt;Any security protocol should be independently audited to be trusted on being
+secure. MTProto, the homegrown encryption protocol used by Telegram to encrypt
+messages, wasn&amp;rsquo;t audited, but instead a &lt;a href=&#34;https://telegram.org/blog/cryptocontest&#34; title=&#34;$300000 for Cracking Telegram Encryption&#34;&gt;challenge was posted&lt;/a&gt; by
+Pavel Durov to crack the secret chat he started with his brother.&lt;/p&gt;
+&lt;p&gt;The lack of winners noted by Pavel Durov is the thing he mostly admires when
+claiming the protocol security. Why is a marketing promotional better than an
+independent expert audit which would state things better? We only have to guess
+and hope the protocol is really secure.&lt;/p&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/xkcd-153.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/xkcd-153.png&#34; alt=&#34;xkcd #153&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;xkcd #153&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;spreading-fear-and-doubt&#34;&gt;Spreading fear and doubt&lt;/h2&gt;
+&lt;p&gt;Pavel Durov recently &lt;a href=&#34;https://twitter.com/durov/status/872891017418113024&#34;&gt;stated&lt;/a&gt; the encryption of Signal was funded
+by US government, so the backdoor is predicted to be found in 5 years.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The encryption of Signal (=WhatsApp, FB) was funded by the US Government. I
+predict a backdoor will be found there within 5 years from now.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The development of a new crypto is a hard task to accomplish. The cryptoexperts
+funded by the governments know there shouldn&amp;rsquo;t be any backdoors, as any security
+tamper used by &amp;ldquo;good guys&amp;rdquo; can eventually be used by &amp;ldquo;bad guys&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;If the protocol is sound from the bad guys, it is safe and sound from anyone, so
+predicting the protocol to be found vulnerable in just 5 years sounds more like
+spreading FUD&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt; among people to help promoting Telegram. Not only it doesn&amp;rsquo;t
+look like a fair play, it&amp;rsquo;s a very dangerous thing to do as people trusting
+Durov probably will just abandon on things after such statements.&lt;/p&gt;
+&lt;!-- TODO: find out if Hugo does actual abbreviations --&gt;
+&lt;p&gt;
+&lt;p class=&#34;image&#34;&gt;
+    &lt;a href=&#34;https://tdem.in/img/xkcd-1820.png&#34; target=&#34;_blank&#34;&gt;
+        &lt;img src=&#34;https://tdem.in/img/xkcd-1820.png&#34; alt=&#34;xkcd #1820&#34; /&gt;
+    &lt;/a&gt;
+    &lt;span class=&#34;image__subtitle&#34;&gt;xkcd #1820&lt;/span&gt;
+&lt;/p&gt;
+&lt;/p&gt;
+&lt;p&gt;Undermining the competitors isn&amp;rsquo;t a good thing to do. Undermining them with
+spreading FUD among people is even worse.&lt;/p&gt;
+&lt;h2 id=&#34;source-code&#34;&gt;Source Code&lt;/h2&gt;
+&lt;p&gt;Telegram is a program with sources published under the &lt;a href=&#34;https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html&#34;&gt;GNU General Public
+License v2&lt;/a&gt;&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;. Yet the only apps whose recent code is always available
+are Telegram Desktop and Telegram for Web while the mobile apps’ code is updated
+irregularly (&lt;a href=&#34;https://github.com/DrKLO/Telegram/commits/master&#34;&gt;Android&lt;/a&gt;, &lt;a href=&#34;https://github.com/peter-iakovlev/Telegram/commits/public&#34;&gt;iOS&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;The repos linked above face occasional updates with the interval close to 6
+months or something about that. This is a rare case in the open source world,
+where the development almost always goes social, so you can see any interaction
+happened with the app’s code. But Telegram’s mobile apps development goes behind
+closed curtains: no pull requests are accepted, no issues are closed, commits do
+not link to individual changes, but instead consist of huge changesets pushed at
+once.&lt;/p&gt;
+&lt;p&gt;What prevents the messenger’s team from going fully open source as others
+already do? No idea. Still the reason to watch out.&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s summarize the things we&amp;rsquo;ve learned:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Telegram uses its own cryptographic protocol, which hasn&amp;rsquo;t been audited by
+third-parties, but instead was starred in an advertisement promotional;&lt;/li&gt;
+&lt;li&gt;Telegram&amp;rsquo;s secret chats are not scalable, do not allow to sync messages and do
+not apply to group chats;&lt;/li&gt;
+&lt;li&gt;there isn&amp;rsquo;t an implementation of Telegram&amp;rsquo;s end-to-end encryption in the
+official desktop client;&lt;/li&gt;
+&lt;li&gt;there isn&amp;rsquo;t any proof the Telegram servers do not spoof on messages except for
+its creator&amp;rsquo;s statements;&lt;/li&gt;
+&lt;li&gt;Telegram&amp;rsquo;s creator makes FUD statements to promote his own service and
+undermine the competitors;&lt;/li&gt;
+&lt;li&gt;the code for the mobile apps is updated irregularly, no one can tell why.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you&amp;rsquo;re going to use Telegram for secure messaging, you&amp;rsquo;ll have to trust it on
+being secure, and there are many signs you shouldn&amp;rsquo;t. So, why don&amp;rsquo;t you make a
+change then? There are already a few secure messengers on the market that allow
+you to chat securely while handling things like multiple devices much better
+than Telegram does, like &lt;a href=&#34;https://wireapp.com&#34;&gt;Wire&lt;/a&gt; or &lt;a href=&#34;https://whispersystems.org&#34;&gt;Signal&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;It&amp;rsquo;s already July 26, 2021. Four years passed. No change. Still waiting.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
+&lt;p&gt;Fear, uncertainty, and doubt&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:3&#34;&gt;
+&lt;p&gt;The apps licensed under the GNU GPLv2 are &lt;a href=&#34;https://telegram.org/apps&#34;&gt;Telegram’s mobile apps&lt;/a&gt;. Telegram for Web and Telegram Desktop are licensed under the GNU GPLv3.&amp;#160;&lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
+        </item>
+        
+    </channel>
+</rss>
