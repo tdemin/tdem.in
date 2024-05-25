@@ -47,11 +47,8 @@ See [relevant page](/projects) and my [GitHub profile][github].
 ## Links
 
 * **GitHub**: [@tdemin][github]
-* **Personal Git hosting**: [@tdemin](https://git.tdem.in/tdemin)
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/)
   (in Russian)
-* **This blog on Gemini**: [gemini://tdem.in](gemini://tdem.in)
-  (generated with gmnhg)
 * **Music profile**: [music.tdem.in](https://music.tdem.in)
 
 [github]: https://github.com/tdemin

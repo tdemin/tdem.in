@@ -1,9 +1,6 @@
 ---
 title: Projects
 layout: static
-
-# TODO: needs better adaptation for Gemini, the link lists look really
-# verbose at the moment
 ---
 
 My code:
