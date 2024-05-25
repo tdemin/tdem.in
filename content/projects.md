@@ -46,7 +46,6 @@ Historical code (mostly migrated from the now-defunct `git.tdem.in`):
     + [Amber Web][amber_web], the web client built with TypeScript and
       React
     + Amber CLI, the CLI client written in Go, unfinished
-    + [Amber Android][amber_android], the Android client in Java 7
 
 Miscellaneous projects:
 
@@ -65,7 +64,6 @@ Miscellaneous projects:
 [amber]: https://github.com/tdemin/amber
 [amber_web]: https://github.com/tdemin/amber_web
 [amber_cli]: https://github.com/tdemin/amber_cli
-[amber_android]: https://github.com/tdemin/amber_android
 [syg_go]: https://github.com/tdemin/syg_go
 [syg_go-aur]: https://aur.archlinux.org/packages/syg_go
 [sgaur]: https://aur.archlinux.org/packages/syg_go/
