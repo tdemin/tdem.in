@@ -179,7 +179,7 @@ you get file URL sharing directly from Finder.
 
 [^2]: Out-of-the-box
 
-![That is, until it works](/img/icloud_web_crash.png)
+![That is, as long as it works](/img/icloud_web_crash.png)
 
 Calendar events are trivially moved to the relevant calendar in two
 clicks per event. While sounding like a tedious job, that's doable in a
