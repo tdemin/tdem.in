@@ -23,8 +23,8 @@ Preferred:
 
 Less preferred, or may take longer to reply:
 
-* **XMPP**: [`tdemin@404.city`](xmpp:tdemin@404.city) ([OMEMO
-  fingerprints][prints])
+* **XMPP**: [`tdemin@conversations.im`](xmpp:tdemin@conversations.im)
+  ([OMEMO fingerprints][prints])
 
 [prints]: /announcements
 

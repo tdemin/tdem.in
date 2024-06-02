@@ -17,12 +17,12 @@ tool I wrote. Feel free to try it yourself!
 
 * Email: me@tdem.in
 * PGP key: 9DCB446EF5B024CFE88583029EDF3F9D9286FA20
-* XMPP: tdemin@404.city
+* XMPP: tdemin@conversations.im
 * Matrix: @tdemin:unredacted.org
 
 [The PGP key](/pgp.asc)
 [me@tdem.in](mailto:me@tdem.in)
-[tdemin@404.city](xmpp:tdemin@404.city)
+[tdemin@conversations.im](xmpp:tdemin@conversations.im)
 [OMEMO fingerprints](/announcements/index.gmi)
 
 ## Projects
