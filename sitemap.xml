@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://tdem.in/announcements/</loc>
+    <lastmod>2024-06-02T15:48:00+05:00</lastmod>
+  </url><url>
+    <loc>https://tdem.in/</loc>
+    <lastmod>2024-06-02T15:48:00+05:00</lastmod>
+  </url><url>
+    <loc>https://tdem.in/announcements/2024-06-02-xmpp/</loc>
+    <lastmod>2024-06-02T15:48:00+05:00</lastmod>
+  </url><url>
     <loc>https://tdem.in/post/</loc>
     <lastmod>2024-01-28T17:35:00+06:00</lastmod>
   </url><url>
@@ -50,17 +59,11 @@
     <loc>https://tdem.in/tags/</loc>
     <lastmod>2024-01-28T17:35:00+06:00</lastmod>
   </url><url>
-    <loc>https://tdem.in/</loc>
-    <lastmod>2024-01-28T17:35:00+06:00</lastmod>
-  </url><url>
     <loc>https://tdem.in/tags/tiny-tiny-rss/</loc>
     <lastmod>2024-01-28T17:35:00+06:00</lastmod>
   </url><url>
     <loc>https://tdem.in/tags/ttrss/</loc>
     <lastmod>2024-01-28T17:35:00+06:00</lastmod>
-  </url><url>
-    <loc>https://tdem.in/announcements/</loc>
-    <lastmod>2023-11-26T22:52:00+06:00</lastmod>
   </url><url>
     <loc>https://tdem.in/announcements/2023-11-26-omemo/</loc>
     <lastmod>2023-11-26T22:52:00+06:00</lastmod>
