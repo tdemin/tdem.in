@@ -34,8 +34,7 @@ See [relevant page](/projects) and my [GitHub profile][github].
 
 ## Life changelog
 
-* _Sep 2023_ --- _present_: DevOps Engineer at _company name omitted
-  for ethics reasons_
+* _Sep 2023_ --- _present_: DevOps Engineer at E-Finance Center JSC
 * _Dec 2021 &ndash; Jun 2023_: DevOps Engineer at RN-BashNIPIneft LLC
 * _Jul 2021_: successfully completed BSc (Comp) degree at Ufa State
   Petroleum Technological University
