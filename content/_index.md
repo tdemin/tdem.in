@@ -48,6 +48,5 @@ See [relevant page](/projects) and my [GitHub profile][github].
 * **GitHub**: [@tdemin][github]
 * **Blog on Habr**: [@tdemin](https://habr.com/en/users/tdemin/posts/)
   (in Russian)
-* **Music profile**: [music.tdem.in](https://music.tdem.in)
 
 [github]: https://github.com/tdemin
