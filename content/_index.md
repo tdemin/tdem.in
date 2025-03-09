@@ -14,18 +14,19 @@ Preferred:
 
 * **Email**: [me@tdem.in](mailto:me@tdem.in) (PGP: [9DCB 446E F5B0 24CF
   E885 8302 9EDF 3F9D 9286 FA20](/pgp.asc))
-* **Matrix**: [`@tdemin:unredacted.org`][matrix]
+* **Signal**: `@tdemin.09`
 * **LinkedIn**: [@tdemin][linkedin] (also see [CV][cv])
 
-[matrix]: https://matrix.to/#/@tdemin:unredacted.org
 [linkedin]: https://www.linkedin.com/in/tdemin/
 [cv]: https://github.com/tdemin/cv/releases/tag/latest
 
 Less preferred, or may take longer to reply:
 
+* **Matrix**: [`@tdemin:unredacted.org`][matrix]
 * **XMPP**: [`tdemin@conversations.im`](xmpp:tdemin@conversations.im)
   ([OMEMO fingerprints][prints])
 
+[matrix]: https://matrix.to/#/@tdemin:unredacted.org
 [prints]: /announcements
 
 ## Projects
